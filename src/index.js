@@ -1,6 +1,9 @@
 import Phaser from 'phaser'
 import logoImg from './assets/logo.png'
+import playerImg from './assets/player.jpg'
+import bulletImg from './assets/bullet.png'
 import PhaserMatterCollisionPlugin from 'phaser-matter-collision-plugin'
+import Player from './player'
 // baaaad
 let Matter = Phaser.Physics.Matter
 
@@ -41,18 +44,15 @@ const game = new Phaser.Game(config)
 
 function preload () {
   this.load.image('logo', logoImg)
+  this.load.image('player', playerImg)
+  this.load.image('bullet', bulletImg)
 }
 
 function create () {
   Matter = this.matter
   Matter.world.setBounds(0, 0, width, height)
 
-  const player = Matter.add.rectangle(250, 250, 50, 50)
-
-  const cat1 = Matter.world.nextCategory()
-  const cat2 = Matter.world.nextCategory()
-
-  player.collisionFilter.group = -1
+  const player = new Player({ scene: this, x: 250, y: 250 })
 
   this.input.on('pointerdown', (coords) => {
     const force = 0.04
@@ -61,8 +61,7 @@ function create () {
       y: coords.worldY
     }
 
-    applyForceInOppositeDirection(player, mouseVector, force)
-    shoot(player, mouseVector)
+    player.shoot(mouseVector, force)
   })
 
   this.matterCollision.addOnCollideStart({
@@ -77,44 +76,5 @@ function create () {
       // pair is the raw Matter pair data
     },
     context: this // Context to apply to the callback function
-  })
-}
-
-const shoot = (player, mouseVector) => {
-  const force = 0.003
-  const circle = Matter.add.circle(player.position.x, player.position.y, 8)
-  circle.restitution = 2
-  circle.collisionFilter.group = -1
-
-  let targetAngle = Phaser.Math.Angle.Between(
-    mouseVector.x,
-    mouseVector.y,
-    player.position.x,
-    player.position.y
-  )
-
-  targetAngle = targetAngle - Math.PI
-
-  Matter.body.applyForce(circle, { x: circle.position.x, y: circle.position.y }, {
-    x: Math.cos(targetAngle) * force,
-    y: Math.sin(targetAngle) * force
-  })
-}
-
-const applyForceInOppositeDirection = (gameObj, vector, force) => {
-  const playerVector = {
-    x: gameObj.position.x,
-    y: gameObj.position.y
-  }
-  const targetAngle = Phaser.Math.Angle.Between(
-    vector.x,
-    vector.y,
-    playerVector.x,
-    playerVector.y
-  )
-
-  Matter.body.applyForce(gameObj, playerVector, {
-    x: Math.cos(targetAngle) * force,
-    y: Math.sin(targetAngle) * force
   })
 }
