@@ -1,0 +1,5 @@
+blocks bunch up against top of screen
+    destroy bullets 
+    destroy player 
+
+tryout different directions/ speedup conditions 

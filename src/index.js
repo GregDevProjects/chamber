@@ -1,24 +1,15 @@
 import Phaser from 'phaser'
-import logoImg from './assets/logo.png'
-
 import PhaserMatterCollisionPlugin from 'phaser-matter-collision-plugin'
 
 import Loader from './loader'
 import Game from './game'
-// baaaad
-
-const width = 700
-const height = 700
+import { GAME_HEIGHT, GAME_WIDTH } from './constants'
 
 const config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
-  width: width,
-  height: height,
-  scene: {
-    preload: preload
-    // create: create
-  },
+  width: GAME_WIDTH,
+  height: GAME_HEIGHT,
   physics: {
     default: 'matter',
     matter: {
@@ -44,4 +35,5 @@ const config = {
   ]
 }
 
-const game = new Phaser.Game(config)
+// eslint-disable-next-line no-new
+new Phaser.Game(config)

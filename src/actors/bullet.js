@@ -1,8 +1,8 @@
-import Actor from './actor/actor'
+import Actor from './actor'
 
 const MASS = 0.188
 const FORCE = 0.003
-const RESTITUTION = 2
+const RESTITUTION = 1
 // Phaser.Physics.Matter.Image
 class Bullet extends Actor {
   constructor (config) {
@@ -10,7 +10,7 @@ class Bullet extends Actor {
     // this must be called first or collision filter wont work
     this.setCircle(8)
     this.setCollisionCategory(config.collisionCat)
-    this.setCollidesWith([1])
+    this.setCollidesWith([1, config.collisionCat])
     this.body.restitution = RESTITUTION
     this.setMass(MASS)
   }

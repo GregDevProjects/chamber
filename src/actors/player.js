@@ -1,16 +1,17 @@
 import Bullet from './bullet'
-import Actor from './actor/actor'
+import Actor from './actor'
 /* eslint-disable no-undef */
 const MASS = 2.5
 
 class Player extends Actor {
   constructor (config) {
     super(config.scene.matter.world, config.x, config.y, 'player')
+    this.collisions = config.collisions
     // this must be called first or collision filter wont work
     this.setRectangle(20, 30)
-    const playerCollisionCat = config.scene.matter.world.nextCategory()
-    this.bulletCollisionCat = config.scene.matter.world.nextCategory()
-    this.setCollisionCategory(playerCollisionCat)
+    // const playerCollisionCat = config.scene.matter.world.nextCategory()
+    // this.bulletCollisionCat = config.scene.matter.world.nextCategory()
+    this.setCollisionCategory(this.collisions.player)
     // collision id of world
     this.setCollidesWith([1])
     this.setMass(MASS)
@@ -36,7 +37,7 @@ class Player extends Actor {
 
   shoot (mouseVector, force) {
     this.applyForceInOppositeDirection(mouseVector, force)
-    new Bullet({ scene: this.scene, x: this.x, y: this.y, collisionCat: this.bulletCollisionCat })
+    new Bullet({ scene: this.scene, x: this.x, y: this.y, collisionCat: this.collisions.bullet })
       .fire(mouseVector)
   }
 }

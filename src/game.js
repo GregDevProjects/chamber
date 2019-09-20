@@ -1,9 +1,8 @@
-import Player from './player'
+import Player from './actors/player'
+import { GAME_HEIGHT, GAME_WIDTH } from './constants'
 
-const width = 700
-const height = 700
+import Actor from './actors/actor'
 
-// TODO: seperate game and loader
 class Game extends Phaser.Scene {
   constructor (test) {
     super({
@@ -12,10 +11,17 @@ class Game extends Phaser.Scene {
   }
 
   create () {
-    // Matter = this.matter
-    this.matter.world.setBounds(0, 0, width, height)
+    this.blocks = this.add.group()
+    this.matter.world.setBounds(0, 0, GAME_WIDTH, GAME_HEIGHT)
 
-    const player = new Player({ scene: this, x: 250, y: 250 })
+    this.collisionManager = {
+      player: this.matter.world.nextCategory(),
+      bullet: this.matter.world.nextCategory(),
+      block: this.matter.world.nextCategory(),
+      world: 1
+    }
+
+    const player = new Player({ scene: this, x: 250, y: 250, collisions: this.collisionManager })
     // debugger
     this.input.on('pointerdown', (coords) => {
       const force = 0.04
@@ -40,6 +46,65 @@ class Game extends Phaser.Scene {
       },
       context: this // Context to apply to the callback function
     })
+
+    this.spawnGrid()
+
+    this.time.addEvent({
+      delay: 4000,
+      callback: () => {
+        this.spawnGrid()
+      },
+      callbackScope: this,
+      repeat: -1
+    })
+  }
+
+  spawnGrid () {
+    // debugger
+    let widthLeft = GAME_WIDTH
+    const spaceBetween = 50
+    do {
+      const width = Phaser.Math.Between(100, 250)
+      const height = Phaser.Math.Between(100, 250)
+      const block = new Block({ w: width, h: height, x: widthLeft - width / 2, y: GAME_HEIGHT + width / 2, scene: this, collisions: this.collisionManager })
+      this.blocks.add(block)
+      widthLeft -= width
+      widthLeft -= spaceBetween
+    }
+    while (widthLeft > 0)
+
+    // debugger
+  }
+
+  update (time, delta) {
+    this.blocks.children.iterate((block) => {
+      if (!block) {
+        return
+      }
+      block.move(delta)
+      if (block.y + block.width < 0) {
+        block.destroy()
+        // this.blocks.kill(block)
+      }
+    })
+    console.log(this.blocks.getLength())
+    // console.log('jk')
+  }
+}
+
+const MOVE_SPEED = 0.1
+
+class Block extends Actor {
+  constructor (config) {
+    super(config.scene.matter.world, config.x, config.y, 'player')
+    this.setRectangle(config.w, config.h)
+    const collisions = config.collisions
+    this.setCollidesWith([collisions.player, collisions.bullet])
+  }
+
+  move (delta) {
+  //  this.applyForce({ y: 0.002 })
+    this.y -= MOVE_SPEED * delta
   }
 }
 
