@@ -3,3 +3,8 @@ blocks bunch up against top of screen
     destroy player 
 
 tryout different directions/ speedup conditions 
+
+give the blocks different properties 
+    - explode 
+    - bouncy 
+    - 

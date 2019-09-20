@@ -13,6 +13,8 @@ class Bullet extends Actor {
     this.setCollidesWith([1, config.collisionCat])
     this.body.restitution = RESTITUTION
     this.setMass(MASS)
+    this.collisions()
+    this.bounces = 0
   }
 
   fire (mouseVector) {
@@ -28,6 +30,34 @@ class Bullet extends Actor {
     this.applyForce({
       x: Math.cos(targetAngle) * FORCE,
       y: Math.sin(targetAngle) * FORCE
+    })
+  }
+
+  collisions () {
+    this.scene.matterCollision.addOnCollideStart({
+      objectA: this,
+      // objectB: trapDoor,
+      callback: function (eventData) {
+        this.bounces++
+        if (this.bounces > 1) {
+          // might have to move this outside of the class
+          this.destroy()
+          return
+        }
+        this.scene.time.addEvent({
+          delay: 4000,
+          callback: () => {
+            this.destroy()
+          },
+          callbackScope: this
+        })
+        // This function will be invoked any time the player and trap door collide
+        // const { bodyA, bodyB, gameObjectA, gameObjectB, pair } = eventData;
+        // bodyA & bodyB are the Matter bodies of the player and door respectively
+        // gameObjectA & gameObjectB are the player and door respectively
+        // pair is the raw Matter pair data
+      },
+      context: this // Context to apply to the callback function
     })
   }
 }

@@ -37,7 +37,7 @@ class Game extends Phaser.Scene {
       objectA: player,
       // objectB: trapDoor,
       callback: function (eventData) {
-        console.log(eventData)
+        // console.log(eventData)
         // This function will be invoked any time the player and trap door collide
         // const { bodyA, bodyB, gameObjectA, gameObjectB, pair } = eventData;
         // bodyA & bodyB are the Matter bodies of the player and door respectively
@@ -66,9 +66,14 @@ class Game extends Phaser.Scene {
     do {
       const width = Phaser.Math.Between(100, 250)
       const height = Phaser.Math.Between(100, 250)
+      widthLeft -= width
+
+      const spawnChance = Phaser.Math.Between(1, 2)
+      if (spawnChance !== 1) {
+        continue
+      }
       const block = new Block({ w: width, h: height, x: widthLeft - width / 2, y: GAME_HEIGHT + width / 2, scene: this, collisions: this.collisionManager })
       this.blocks.add(block)
-      widthLeft -= width
       widthLeft -= spaceBetween
     }
     while (widthLeft > 0)
@@ -87,7 +92,7 @@ class Game extends Phaser.Scene {
         // this.blocks.kill(block)
       }
     })
-    console.log(this.blocks.getLength())
+
     // console.log('jk')
   }
 }
