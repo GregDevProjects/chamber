@@ -8,3 +8,5 @@ give the blocks different properties
     - explode 
     - bouncy 
     - 
+
+add death lasers at top

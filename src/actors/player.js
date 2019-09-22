@@ -1,5 +1,6 @@
 import Bullet from './bullet'
 import Actor from './actor'
+
 /* eslint-disable no-undef */
 const MASS = 2.5
 
@@ -11,10 +12,11 @@ class Player extends Actor {
     this.setRectangle(20, 30)
     // const playerCollisionCat = config.scene.matter.world.nextCategory()
     // this.bulletCollisionCat = config.scene.matter.world.nextCategory()
-    this.setCollisionCategory(this.collisions.player)
+    this.setCollisionCategory(this.scene.collisionCategories.player)
     // collision id of world
-    this.setCollidesWith([1])
+    this.setCollidesWith(this.scene.collisionCategories.world)
     this.setMass(MASS)
+    this.collisionEvent()
   }
 
   applyForceInOppositeDirection (vector, force) {
@@ -37,8 +39,24 @@ class Player extends Actor {
 
   shoot (mouseVector, force) {
     this.applyForceInOppositeDirection(mouseVector, force)
-    new Bullet({ scene: this.scene, x: this.x, y: this.y, collisionCat: this.collisions.bullet })
+    new Bullet({ scene: this.scene, x: this.x, y: this.y })
       .fire(mouseVector)
+  }
+
+  collisionEvent () {
+    this.scene.matterCollision.addOnCollideStart({
+      objectA: this,
+      // objectB: trapDoor,
+      callback: function (eventData) {
+      // console.log(eventData)
+      // This function will be invoked any time the player and trap door collide
+      // const { bodyA, bodyB, gameObjectA, gameObjectB, pair } = eventData;
+      // bodyA & bodyB are the Matter bodies of the player and door respectively
+      // gameObjectA & gameObjectB are the player and door respectively
+      // pair is the raw Matter pair data
+      },
+      context: this // Context to apply to the callback function
+    })
   }
 }
 
