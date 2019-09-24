@@ -14,9 +14,27 @@ class Player extends Actor {
     // this.bulletCollisionCat = config.scene.matter.world.nextCategory()
     this.setCollisionCategory(this.scene.collisionCategories.player)
     // collision id of world
-    this.setCollidesWith(this.scene.collisionCategories.world)
+    this.setCollidesWith(
+      [
+        this.scene.collisionCategories.world,
+        this.scene.collisionCategories.deathLine
+      ])
     this.setMass(MASS)
     this.collisionEvent()
+    this.startPointer()
+    this.body.restitution = 1
+  }
+
+  startPointer () {
+    this.scene.input.on('pointerdown', (coords) => {
+      const force = 0.04
+      const mouseVector = {
+        x: coords.worldX,
+        y: coords.worldY
+      }
+
+      this.shoot(mouseVector, force)
+    })
   }
 
   applyForceInOppositeDirection (vector, force) {
@@ -48,12 +66,13 @@ class Player extends Actor {
       objectA: this,
       // objectB: trapDoor,
       callback: function (eventData) {
-      // console.log(eventData)
-      // This function will be invoked any time the player and trap door collide
-      // const { bodyA, bodyB, gameObjectA, gameObjectB, pair } = eventData;
-      // bodyA & bodyB are the Matter bodies of the player and door respectively
-      // gameObjectA & gameObjectB are the player and door respectively
-      // pair is the raw Matter pair data
+        const collidedWith = eventData.bodyB.collisionFilter.category
+
+        if (collidedWith === this.scene.collisionCategories.deathLine) {
+          console.log(collidedWith)
+          this.scene.scene.restart()
+          // this.scene.sys.game.destroy()
+        }
       },
       context: this // Context to apply to the callback function
     })

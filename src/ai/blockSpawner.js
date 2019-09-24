@@ -5,15 +5,19 @@ class BlockSpawner {
   constructor (scene) {
     this.scene = scene
     this.blocks = scene.add.group()
-    this.spawnGrid()
+    this.padding = { min: 30, max: 90 }
+    this.width = { min: 100, max: 250 }
+    this.height = { min: 100, max: 250 }
+    this.spawnFrequency = 4000
     this.scene.time.addEvent({
-      delay: 2000,
+      delay: this.spawnFrequency,
       callback: () => {
         this.spawnGrid()
       },
       callbackScope: this,
       repeat: -1
     })
+    this.spawnGrid()
   }
 
   spawnGrid () {
@@ -23,8 +27,8 @@ class BlockSpawner {
     }
 
     do {
-      const width = Phaser.Math.Between(10, 100)
-      const height = Phaser.Math.Between(10, 100)
+      const width = Phaser.Math.Between(this.width.min, this.width.max)
+      const height = Phaser.Math.Between(this.height.min, this.height.max)
       let spawnLocationX = this.getGridPadding(1) + width / 2
       if (lastSpawn.x) {
         spawnLocationX += lastSpawn.width / 2 + lastSpawn.x
@@ -49,7 +53,7 @@ class BlockSpawner {
   }
 
   getGridPadding (difficulty) {
-    return Phaser.Math.Between(10, 20)
+    return Phaser.Math.Between(this.padding.min, this.padding.max)
   }
 
   update (delta) {

@@ -3,6 +3,7 @@ import { GAME_HEIGHT, GAME_WIDTH } from './constants'
 
 // import Block from './actors/block'
 import BlockSpawner from './ai/blockSpawner'
+import DeathLine from './actors/deathLine'
 class Game extends Phaser.Scene {
   constructor (test) {
     super({
@@ -18,21 +19,17 @@ class Game extends Phaser.Scene {
       player: this.matter.world.nextCategory(),
       bullet: this.matter.world.nextCategory(),
       block: this.matter.world.nextCategory(),
+      deathLine: this.matter.world.nextCategory(),
       world: 1
     }
 
-    const player = new Player({ scene: this, x: 250, y: 250, collisions: this.collisionManager })
+    const player = new Player({ scene: this, x: 250, y: 250 })
     this.blockSpawner = new BlockSpawner(this)
 
-    this.input.on('pointerdown', (coords) => {
-      const force = 0.04
-      const mouseVector = {
-        x: coords.worldX,
-        y: coords.worldY
-      }
-
-      player.shoot(mouseVector, force)
-    })
+    const deathLine = new DeathLine({ scene: this, x: GAME_WIDTH / 2, y: 10 })
+    // rect.setRectangle(GAME_WIDTH, 10)
+    // rect.setStatic(true)
+    // console.log(rect)
   }
 
   update (time, delta) {

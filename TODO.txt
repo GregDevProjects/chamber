@@ -1,12 +1,14 @@
-blocks bunch up against top of screen
-    destroy bullets 
-    destroy player 
-
 tryout different directions/ speedup conditions 
+ - blocks can change directions at random
+
 
 give the blocks different properties 
     - explode 
-    - bouncy 
-    - 
+    - bouncy
+        - force player bounce on contact?
 
-add death lasers at top
+add death lasers at bottom / left / right
+
+
+BUG
+- need to reset matter's collision categories on scene reset 
