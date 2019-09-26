@@ -26,7 +26,11 @@ class Game extends Phaser.Scene {
     const player = new Player({ scene: this, x: 250, y: 250 })
     this.blockSpawner = new BlockSpawner(this)
 
-    const deathLine = new DeathLine({ scene: this, x: GAME_WIDTH / 2, y: 10 })
+    const deathLineTop = new DeathLine({ scene: this, x: GAME_WIDTH / 2, y: 10 })
+
+    const deathLineBottom = new DeathLine({ scene: this, x: GAME_WIDTH / 2, y: GAME_HEIGHT - 10 })
+
+    this.cameras.main.setZoom(0.5)
     // rect.setRectangle(GAME_WIDTH, 10)
     // rect.setStatic(true)
     // console.log(rect)

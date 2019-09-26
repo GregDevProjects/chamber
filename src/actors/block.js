@@ -22,8 +22,12 @@ class Block extends Actor {
     }
   }
 
-  move (delta) {
-    this.y -= MOVE_SPEED * delta
+  move (delta, direction) {
+    if (direction === 'up') {
+      this.y -= MOVE_SPEED * delta
+    } else if (direction === 'down') {
+      this.y += MOVE_SPEED * delta
+    }
   }
 }
 
