@@ -23,11 +23,12 @@ class Player extends Actor {
     this.collisionEvent()
     this.startPointer()
     this.body.restitution = 1
+    this.setTexture()
   }
 
   startPointer () {
     this.scene.input.on('pointerdown', (coords) => {
-      const force = 0.04
+      const force = 0.03
       const mouseVector = {
         x: coords.worldX,
         y: coords.worldY

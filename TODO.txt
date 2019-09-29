@@ -1,6 +1,7 @@
 tryout different directions/ speedup conditions 
  - blocks can change directions at random
 
+Give blocks a consistent mass? 
 
 give the blocks different properties 
     - explode 

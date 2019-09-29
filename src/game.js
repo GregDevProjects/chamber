@@ -1,7 +1,7 @@
 import Player from './actors/player'
 import { GAME_HEIGHT, GAME_WIDTH } from './constants'
 
-// import Block from './actors/block'
+import Actor from './actors/actor'
 import BlockSpawner from './ai/blockSpawner'
 import DeathLine from './actors/deathLine'
 class Game extends Phaser.Scene {
@@ -20,6 +20,7 @@ class Game extends Phaser.Scene {
       bullet: this.matter.world.nextCategory(),
       block: this.matter.world.nextCategory(),
       deathLine: this.matter.world.nextCategory(),
+      blockBarrier: this.matter.world.nextCategory(),
       world: 1
     }
 
@@ -30,7 +31,7 @@ class Game extends Phaser.Scene {
 
     const deathLineBottom = new DeathLine({ scene: this, x: GAME_WIDTH / 2, y: GAME_HEIGHT - 10 })
 
-    this.cameras.main.setZoom(0.5)
+    // this.cameras.main.setZoom(0.5)
     // rect.setRectangle(GAME_WIDTH, 10)
     // rect.setStatic(true)
     // console.log(rect)

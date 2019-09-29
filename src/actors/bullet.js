@@ -1,7 +1,7 @@
 import Actor from './actor'
 
 const MASS = 0.188
-const FORCE = 0.003
+const FORCE = 0.005
 const RESTITUTION = 1
 // Phaser.Physics.Matter.Image
 class Bullet extends Actor {
@@ -15,6 +15,7 @@ class Bullet extends Actor {
     this.setMass(MASS)
     this.collisions()
     this.bounces = 0
+    this.setTexture()
   }
 
   fire (mouseVector) {

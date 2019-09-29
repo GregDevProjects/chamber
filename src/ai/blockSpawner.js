@@ -1,5 +1,13 @@
-import { GAME_HEIGHT, GAME_WIDTH } from '../constants'
+import { SPAWN_LOCATION, GAME_HEIGHT, GAME_WIDTH } from '../constants'
 import Block from '../actors/block'
+
+const MAX_BLOCK_WIDTH = 250
+const MAX_BLOCK_HEIGHT = 250
+
+const randomProperty = function (obj) {
+  var keys = Object.keys(obj)
+  return obj[keys[keys.length * Math.random() << 0]]
+}
 
 class BlockSpawner {
   constructor (scene) {
@@ -7,11 +15,11 @@ class BlockSpawner {
     // DEBUG
     this.scene = scene
     this.blocks = scene.add.group()
-    this.padding = { min: 30, max: 90 }
-    this.width = { min: 100, max: 250 }
-    this.height = { min: 100, max: 250 }
-    this.spawnFrequency = 4000
-    this.spawnOrigin = 'bottom'
+    this.padding = { min: 30, max: 40 }
+    this.width = { min: 10, max: 100 }
+    this.height = { min: 10, max: 100 }
+    this.spawnFrequency = 2000
+    this.spawnOrigin = randomProperty(SPAWN_LOCATION)
     this.spawnCount = 1
     this.scene.time.addEvent({
       delay: this.spawnFrequency,
@@ -19,13 +27,29 @@ class BlockSpawner {
         this.spawnGrid()
         this.spawnCount++
         if (this.spawnCount % 4 === 0) {
-          this.spawnOrigin = this.spawnOrigin === 'bottom' ? 'top' : 'bottom'
+          this.spawnOrigin = randomProperty(SPAWN_LOCATION)
         }
       },
       callbackScope: this,
       repeat: -1
     })
     this.spawnGrid()
+    this.spawnSensors()
+  }
+
+  makeSensor (x, y, width, height) {
+    const sensor = this.scene.matter.add.rectangle(x, y, width, height, { isSensor: true, label: 'blockBoundary' })
+    sensor.collisionFilter.category = this.scene.collisionCategories.blockBarrier
+  }
+
+  spawnSensors () {
+    const width = GAME_WIDTH + 600
+    const height = GAME_HEIGHT + 600
+    this.makeSensor(width / 2 - 300, -MAX_BLOCK_WIDTH - 10, width, 10)
+    this.makeSensor(width / 2 - 300, GAME_HEIGHT + MAX_BLOCK_HEIGHT + 10, width, 10)
+
+    this.makeSensor(-MAX_BLOCK_WIDTH - 10, height / 2 - 300, 10, height)
+    this.makeSensor(GAME_WIDTH + MAX_BLOCK_WIDTH + 10, height / 2 - 300, 10, height)
   }
 
   spawnGrid () {
@@ -37,21 +61,26 @@ class BlockSpawner {
     do {
       const width = Phaser.Math.Between(this.width.min, this.width.max)
       const height = Phaser.Math.Between(this.height.min, this.height.max)
-      let spawnLocationX = this.getGridPadding(1) + width / 2
-      if (lastSpawn.x) {
-        spawnLocationX += lastSpawn.width / 2 + lastSpawn.x
-      }
-      lastSpawn = { x: lastSpawn.x = spawnLocationX, width: width }
 
-      if (spawnLocationX + width / 2 > GAME_WIDTH) {
+      const xOrigin = this.getXOrigin(width, lastSpawn)
+      const yOrigin = this.getYOrigin(height, width, lastSpawn)
+
+      lastSpawn = {
+        x: lastSpawn.x = xOrigin,
+        y: yOrigin,
+        width: width,
+        height: height
+      }
+
+      if (!xOrigin || !yOrigin) {
         return
       }
 
       const block = new Block({
         w: width,
         h: height,
-        x: spawnLocationX,
-        y: this.getYOrigin(height),
+        x: xOrigin,
+        y: yOrigin,
         scene: this.scene
       })
 
@@ -60,11 +89,39 @@ class BlockSpawner {
     while (true)
   }
 
-  getYOrigin (height) {
-    if (this.spawnOrigin === 'top') {
+  getXOrigin (width, lastSpawn) {
+    if (this.spawnOrigin === SPAWN_LOCATION.top || this.spawnOrigin === SPAWN_LOCATION.bottom) {
+      let spawnLocationX = this.getGridPadding(1) + width / 2
+      if (lastSpawn.x) {
+        spawnLocationX += lastSpawn.width / 2 + lastSpawn.x
+      }
+
+      if (spawnLocationX + width / 2 > GAME_WIDTH) {
+        return false
+      }
+      return spawnLocationX
+    } else if (this.spawnOrigin === SPAWN_LOCATION.left) {
+      return GAME_WIDTH + width / 2
+    } else if (this.spawnOrigin === SPAWN_LOCATION.right) {
+      return -width / 2
+    }
+  }
+
+  getYOrigin (height, width, lastSpawn) {
+    if (this.spawnOrigin === SPAWN_LOCATION.top) {
       return -height / 2
-    } else if (this.spawnOrigin === 'bottom') {
+    } else if (this.spawnOrigin === SPAWN_LOCATION.bottom) {
       return GAME_HEIGHT + height / 2
+    } else if (this.spawnOrigin === SPAWN_LOCATION.left || this.spawnOrigin === SPAWN_LOCATION.right) {
+      let spawnLocationY = this.getGridPadding(1) + height / 2
+      if (lastSpawn.y) {
+        spawnLocationY += lastSpawn.height / 2 + lastSpawn.y
+      }
+
+      if (spawnLocationY + width / 2 > GAME_HEIGHT) {
+        return false
+      }
+      return spawnLocationY
     }
   }
 
@@ -72,37 +129,24 @@ class BlockSpawner {
     return Phaser.Math.Between(this.padding.min, this.padding.max)
   }
 
-  getBlockMoveDirection () {
-    if (this.spawnOrigin === 'bottom') {
-      return 'up'
-    } else if (this.spawnOrigin === 'top') {
-      return 'down'
-    }
-  }
-
   update (delta) {
     this.blocks.children.iterate((block) => {
       if (!block) {
         return
       }
-      block.move(delta, this.getBlockMoveDirection())
-      if (this.spawnOrigin === 'bottom' && block.y < 0 - block.height) {
-        block.destroy()
-      } else if (this.spawnOrigin === 'top' && block.y > GAME_HEIGHT + block.height) {
-        block.destroy()
-      }
+      block.move(delta, this.spawnOrigin)
     })
-
+    // for debugging
     if (this.cursors.left.isDown) {
-      // player.setVelocityX(-300)
+      this.spawnOrigin = SPAWN_LOCATION.left
     } else if (this.cursors.right.isDown) {
-    //  player.setVelocityX(300)
+      this.spawnOrigin = SPAWN_LOCATION.right
     }
 
     if (this.cursors.up.isDown) {
-      this.spawnOrigin = 'bottom'
+      this.spawnOrigin = SPAWN_LOCATION.bottom
     } else if (this.cursors.down.isDown) {
-      this.spawnOrigin = 'top'
+      this.spawnOrigin = SPAWN_LOCATION.top
     }
   }
 }
