@@ -17,7 +17,8 @@ class Player extends Actor {
     this.setCollidesWith(
       [
         this.scene.collisionCategories.world,
-        this.scene.collisionCategories.deathLine
+        this.scene.collisionCategories.deathLine,
+        this.scene.collisionCategories.block
       ])
     this.setMass(MASS)
     this.collisionEvent()
@@ -65,14 +66,17 @@ class Player extends Actor {
   collisionEvent () {
     this.scene.matterCollision.addOnCollideStart({
       objectA: this,
-      // objectB: trapDoor,
       callback: function (eventData) {
         const collidedWith = eventData.bodyB.collisionFilter.category
 
         if (collidedWith === this.scene.collisionCategories.deathLine) {
-          console.log(collidedWith)
           this.scene.scene.restart()
-          // this.scene.sys.game.destroy()
+        }
+        console.log(collidedWith === this.scene.collisionCategories.block)
+        if (collidedWith === this.scene.collisionCategories.block &&
+          eventData.gameObjectB &&
+          eventData.gameObjectB.killPlayer) {
+          this.scene.scene.restart()
         }
       },
       context: this // Context to apply to the callback function

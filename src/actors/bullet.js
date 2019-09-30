@@ -10,7 +10,7 @@ class Bullet extends Actor {
     // this must be called first or collision filter wont work
     this.setCircle(8)
     this.setCollisionCategory(this.scene.collisionCategories.bullet)
-    this.setCollidesWith([this.scene.collisionCategories.world, this.scene.collisionCategories.bullet])
+    this.setCollidesWith([this.scene.collisionCategories.world, this.scene.collisionCategories.bullet, this.scene.collisionCategories.block])
     this.body.restitution = RESTITUTION
     this.setMass(MASS)
     this.collisions()

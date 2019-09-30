@@ -20,13 +20,11 @@ class Block extends Actor {
 
     this.scaleX = config.w / 128
     this.scaleY = config.h / 128
-    // debugger
-    // this.width = config.w
-    // this.height = config.h
+    this.setCollisionCategory(this.scene.collisionCategories.block)
   }
 
   applyModifier () {
-    const rand = Phaser.Math.Between(1, 3)
+    const rand = Phaser.Math.Between(1, 4)
 
     if (rand === 1) {
       this.setStatic(true)
@@ -37,8 +35,10 @@ class Block extends Actor {
     } else if (rand === 3) {
       this.destroyOnShot = true
       this.setTintFill(0xdaa520)
+    } else if (rand === 4) {
+      this.killPlayer = true
+      this.setTintFill(0xff0000)
     }
-    // this.setTexture('')
   }
 
   move (delta, direction) {

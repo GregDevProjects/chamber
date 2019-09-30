@@ -16,9 +16,9 @@ class BlockSpawner {
     this.scene = scene
     this.blocks = scene.add.group()
     this.padding = { min: 30, max: 40 }
-    this.width = { min: 10, max: 100 }
-    this.height = { min: 10, max: 100 }
-    this.spawnFrequency = 2000
+    this.width = { min: 10, max: 250 }
+    this.height = { min: 10, max: 250 }
+    this.spawnFrequency = 3500
     this.spawnOrigin = randomProperty(SPAWN_LOCATION)
     this.spawnCount = 1
     this.scene.time.addEvent({
