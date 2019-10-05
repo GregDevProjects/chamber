@@ -8,6 +8,9 @@ class Bullet extends Actor {
   constructor (config) {
     super(config.scene.matter.world, config.x, config.y, 'bullet')
     // this must be called first or collision filter wont work
+
+    this.scaleX = 0.3
+    this.scaleY = 0.3
     this.setCircle(8)
     this.setCollisionCategory(this.scene.collisionCategories.bullet)
     this.setCollidesWith([this.scene.collisionCategories.world, this.scene.collisionCategories.bullet, this.scene.collisionCategories.block])
@@ -15,7 +18,8 @@ class Bullet extends Actor {
     this.setMass(MASS)
     this.collisions()
     this.bounces = 0
-    this.setTexture()
+    // this.setTexture()
+    this.setTintFill(0x551a8b)
   }
 
   fire (mouseVector) {
@@ -52,11 +56,6 @@ class Bullet extends Actor {
           },
           callbackScope: this
         })
-        // This function will be invoked any time the player and trap door collide
-        // const { bodyA, bodyB, gameObjectA, gameObjectB, pair } = eventData;
-        // bodyA & bodyB are the Matter bodies of the player and door respectively
-        // gameObjectA & gameObjectB are the player and door respectively
-        // pair is the raw Matter pair data
       },
       context: this // Context to apply to the callback function
     })

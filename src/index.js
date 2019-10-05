@@ -3,17 +3,18 @@ import PhaserMatterCollisionPlugin from 'phaser-matter-collision-plugin'
 
 import Loader from './loader'
 import Game from './game'
-import { GAME_HEIGHT, GAME_WIDTH } from './constants'
+import { GAME_WIDTH, GAME_HEIGHT, FRAME_HEIGHT, FRAME_WIDTH } from './constants'
 
 const config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
-  width: GAME_WIDTH + 100,
-  height: GAME_HEIGHT + 100,
+  width: FRAME_WIDTH,
+  height: FRAME_HEIGHT,
+  backgroundColor: '#392542',
   physics: {
     default: 'matter',
     matter: {
-      debug: true,
+      debug: false,
       gravity: {
         x: 0,
         y: 0

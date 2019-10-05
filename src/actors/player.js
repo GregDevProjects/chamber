@@ -8,6 +8,8 @@ class Player extends Actor {
   constructor (config) {
     super(config.scene.matter.world, config.x, config.y, 'player')
     this.collisions = config.collisions
+    this.scaleX = 20 / 128
+    this.scaleY = 30 / 128
     // this must be called first or collision filter wont work
     this.setRectangle(20, 30)
     // const playerCollisionCat = config.scene.matter.world.nextCategory()
@@ -24,7 +26,7 @@ class Player extends Actor {
     this.collisionEvent()
     this.startPointer()
     this.body.restitution = 1
-    this.setTexture()
+    this.setTintFill(0xffc0cb)
   }
 
   startPointer () {

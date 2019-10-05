@@ -3,6 +3,7 @@ class Actor extends Phaser.Physics.Matter.Sprite {
     super(world, x, y, assetKey, null, {})
     this.matter = world
     this.scene = world.scene
+    this.collisionCategories = this.scene.collisionCategories
     this.scene.add.existing(this)
   }
 

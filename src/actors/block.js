@@ -8,9 +8,10 @@ class Block extends Actor {
     // this.setRectangle(config.w, config.h)
     this.setCollidesWith(
       [
-        this.scene.collisionCategories.player,
-        this.scene.collisionCategories.bullet,
-        this.scene.collisionCategories.blockBarrier
+        this.collisionCategories.player,
+        this.collisionCategories.bullet,
+        this.collisionCategories.blockBarrier,
+        this.collisionCategories.block
       ]
     )
     this.body.restitution = 1
@@ -24,7 +25,7 @@ class Block extends Actor {
   }
 
   applyModifier () {
-    const rand = Phaser.Math.Between(1, 4)
+    const rand = Phaser.Math.Between(1, 5)
 
     if (rand === 1) {
       this.setStatic(true)
@@ -38,6 +39,16 @@ class Block extends Actor {
     } else if (rand === 4) {
       this.killPlayer = true
       this.setTintFill(0xff0000)
+    } else if (rand === 5) {
+      this.setMass(2)
+      this.setTintFill(0x00FF00)
+      this.setCollidesWith(
+        [
+          this.collisionCategories.player,
+          this.collisionCategories.bullet,
+          this.collisionCategories.blockBarrier
+        ]
+      )
     }
   }
 
