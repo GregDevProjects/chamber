@@ -14,7 +14,15 @@ class Loader extends Phaser.Scene {
   }
 
   create () {
-    this.scene.start('Game')
+    const collisionCategories = {
+      player: this.matter.world.nextCategory(),
+      bullet: this.matter.world.nextCategory(),
+      block: this.matter.world.nextCategory(),
+      deathLine: this.matter.world.nextCategory(),
+      blockBarrier: this.matter.world.nextCategory(),
+      world: 1
+    }
+    this.scene.start('Game', { collisionCategories })
   }
 }
 

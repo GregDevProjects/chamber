@@ -8,8 +8,8 @@ import { GAME_HEIGHT, GAME_WIDTH } from './constants'
 const config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
-  width: GAME_WIDTH,
-  height: GAME_HEIGHT,
+  width: GAME_WIDTH + 100,
+  height: GAME_HEIGHT + 100,
   physics: {
     default: 'matter',
     matter: {

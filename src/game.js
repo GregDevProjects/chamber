@@ -11,18 +11,13 @@ class Game extends Phaser.Scene {
     })
   }
 
+  init (test) {
+    this.collisionCategories = test.collisionCategories
+  }
+
   create () {
     this.blocks = this.add.group()
     this.matter.world.setBounds(0, 0, GAME_WIDTH, GAME_HEIGHT)
-
-    this.collisionCategories = {
-      player: this.matter.world.nextCategory(),
-      bullet: this.matter.world.nextCategory(),
-      block: this.matter.world.nextCategory(),
-      deathLine: this.matter.world.nextCategory(),
-      blockBarrier: this.matter.world.nextCategory(),
-      world: 1
-    }
 
     const player = new Player({ scene: this, x: 250, y: 250 })
     this.blockSpawner = new BlockSpawner(this)
