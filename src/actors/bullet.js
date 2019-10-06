@@ -6,7 +6,12 @@ const RESTITUTION = 1
 // Phaser.Physics.Matter.Image
 class Bullet extends Actor {
   constructor (config) {
-    super(config.scene.matter.world, config.x, config.y, 'bullet')
+    super(
+      config.scene.matter.world,
+      config.x,
+      config.y,
+      'bullet'
+    )
     // this must be called first or collision filter wont work
 
     this.scaleX = 0.3

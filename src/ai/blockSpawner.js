@@ -2,6 +2,8 @@ import { SPAWN_LOCATION, GAME_HEIGHT, GAME_WIDTH } from '../constants'
 import Block from '../actors/block'
 import Blinkers from '../blinkers'
 
+import PolyK from 'polyk'
+
 const MAX_BLOCK_WIDTH = 250
 const MAX_BLOCK_HEIGHT = 250
 
@@ -24,6 +26,13 @@ class BlockSpawner {
     this.nextSpawn = randomProperty(SPAWN_LOCATION)
     this.spawnOrigin = randomProperty(SPAWN_LOCATION)
     this.spawnCount = 1
+
+    this.spawnOnTimer()
+    this.spawnGrid()
+    this.spawnSensors()
+  }
+
+  spawnOnTimer () {
     this.scene.time.addEvent({
       delay: this.spawnFrequency,
       callback: () => {
@@ -42,23 +51,49 @@ class BlockSpawner {
       callbackScope: this,
       repeat: -1
     })
-    this.spawnGrid()
-    this.spawnSensors()
   }
 
-  makeSensor (x, y, width, height) {
-    const sensor = this.scene.matter.add.rectangle(x, y, width, height, { isSensor: true, label: 'blockBoundary' })
+  makeSensor (
+    x, y, width, height
+  ) {
+    const sensor = this.scene.matter.add.rectangle(
+      x,
+      y,
+      width,
+      height,
+      { isSensor: true, label: 'blockBoundary' }
+    )
     sensor.collisionFilter.category = this.scene.collisionCategories.blockBarrier
   }
 
   spawnSensors () {
     const width = GAME_WIDTH + 600
     const height = GAME_HEIGHT + 600
-    this.makeSensor(width / 2 - 300, -MAX_BLOCK_WIDTH - 10, width, 10)
-    this.makeSensor(width / 2 - 300, GAME_HEIGHT + MAX_BLOCK_HEIGHT + 10, width, 10)
+    this.makeSensor(
+      width / 2 - 300,
+      -MAX_BLOCK_WIDTH - 10,
+      width,
+      10
+    )
+    this.makeSensor(
+      width / 2 - 300,
+      GAME_HEIGHT + MAX_BLOCK_HEIGHT + 10,
+      width,
+      10
+    )
 
-    this.makeSensor(-MAX_BLOCK_WIDTH - 10, height / 2 - 300, 10, height)
-    this.makeSensor(GAME_WIDTH + MAX_BLOCK_WIDTH + 10, height / 2 - 300, 10, height)
+    this.makeSensor(
+      -MAX_BLOCK_WIDTH - 10,
+      height / 2 - 300,
+      10,
+      height
+    )
+    this.makeSensor(
+      GAME_WIDTH + MAX_BLOCK_WIDTH + 10,
+      height / 2 - 300,
+      10,
+      height
+    )
   }
 
   spawnGrid () {
@@ -68,11 +103,18 @@ class BlockSpawner {
     }
 
     do {
-      const width = Phaser.Math.Between(this.width.min, this.width.max)
-      const height = Phaser.Math.Between(this.height.min, this.height.max)
+      const width = Phaser.Math.Between(this.width.min,
+        this.width.max)
+      const height = Phaser.Math.Between(this.height.min,
+        this.height.max)
 
-      const xOrigin = this.getXOrigin(width, lastSpawn)
-      const yOrigin = this.getYOrigin(height, width, lastSpawn)
+      const xOrigin = this.getXOrigin(width,
+        lastSpawn)
+      const yOrigin = this.getYOrigin(
+        height,
+        width,
+        lastSpawn
+      )
 
       lastSpawn = {
         x: lastSpawn.x = xOrigin,
@@ -116,7 +158,9 @@ class BlockSpawner {
     }
   }
 
-  getYOrigin (height, width, lastSpawn) {
+  getYOrigin (
+    height, width, lastSpawn
+  ) {
     if (this.spawnOrigin === SPAWN_LOCATION.top) {
       return -height / 2
     } else if (this.spawnOrigin === SPAWN_LOCATION.bottom) {
@@ -135,7 +179,8 @@ class BlockSpawner {
   }
 
   getGridPadding (difficulty) {
-    return Phaser.Math.Between(this.padding.min, this.padding.max)
+    return Phaser.Math.Between(this.padding.min,
+      this.padding.max)
   }
 
   update (delta) {
@@ -143,7 +188,8 @@ class BlockSpawner {
       if (!block) {
         return
       }
-      block.move(delta, this.spawnOrigin)
+      block.move(delta,
+        this.spawnOrigin)
     })
     // for debugging
     if (this.cursors.left.isDown) {
@@ -153,11 +199,73 @@ class BlockSpawner {
     }
 
     if (this.cursors.up.isDown) {
+      slice(
+        { x: 0, y: GAME_WIDTH / 2 },
+        { x: GAME_WIDTH, y: GAME_WIDTH / 2 },
+        this.scene,
+        this.blocks.children.entries.map((gameObj) => gameObj.body)
+      )
+
       this.spawnOrigin = SPAWN_LOCATION.bottom
     } else if (this.cursors.down.isDown) {
       this.spawnOrigin = SPAWN_LOCATION.top
     }
   }
+}
+
+const slice = (
+  startLine, endLine, scene, entitiesToSlice
+) => {
+  const bodies = entitiesToSlice// scene.matter.world.localWorld.bodies
+  const toBeSliced = []
+  const toBeCreated = []
+  for (let i = 0; i < bodies.length; i++) {
+    const vertices = bodies[i].parts[0].vertices
+    const pointsArray = []
+    vertices.forEach(function (vertex) {
+      pointsArray.push(vertex.x,
+        vertex.y)
+    })
+    const slicedPolygons = PolyK.Slice(
+      pointsArray,
+      startLine.x,
+      startLine.y,
+      endLine.x,
+      endLine.y
+    )
+    if (slicedPolygons.length > 1) {
+      toBeSliced.push(bodies[i])
+      slicedPolygons.forEach(function (points) {
+        toBeCreated.push(points)
+      })
+    }
+  }
+
+  toBeSliced.forEach(function (body) {
+    scene.matter.world.remove(body)
+  })
+  toBeCreated.forEach(function (points) {
+    const polyObject = []
+    for (let i = 0; i < points.length / 2; i++) {
+      polyObject.push({
+        x: points[i * 2],
+        y: points[i * 2 + 1]
+      })
+    }
+    const sliceCentre = Phaser.Physics.Matter.Matter.Vertices.centre(polyObject)
+
+    if (!isFinite(sliceCentre.x) || !isFinite(sliceCentre.y)) {
+      return
+    }
+    const slicedBody = scene.matter.add.fromVertices(
+      sliceCentre.x,
+      sliceCentre.y,
+      polyObject,
+      {
+        isStatic: false
+      }
+    )
+  })
 }
 
 export default BlockSpawner

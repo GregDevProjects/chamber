@@ -6,22 +6,27 @@ const MASS = 2.5
 
 class Player extends Actor {
   constructor (config) {
-    super(config.scene.matter.world, config.x, config.y, 'player')
+    super(
+      config.scene.matter.world,
+      config.x,
+      config.y,
+      'player'
+    )
     this.collisions = config.collisions
     this.scaleX = 20 / 128
     this.scaleY = 30 / 128
     // this must be called first or collision filter wont work
-    this.setRectangle(20, 30)
+    this.setRectangle(20,
+      30)
     // const playerCollisionCat = config.scene.matter.world.nextCategory()
     // this.bulletCollisionCat = config.scene.matter.world.nextCategory()
     this.setCollisionCategory(this.scene.collisionCategories.player)
     // collision id of world
-    this.setCollidesWith(
-      [
-        this.scene.collisionCategories.world,
-        this.scene.collisionCategories.deathLine,
-        this.scene.collisionCategories.block
-      ])
+    this.setCollidesWith([
+      this.scene.collisionCategories.world,
+      this.scene.collisionCategories.deathLine,
+      this.scene.collisionCategories.block
+    ])
     this.setMass(MASS)
     this.collisionEvent()
     this.startPointer()
@@ -30,15 +35,17 @@ class Player extends Actor {
   }
 
   startPointer () {
-    this.scene.input.on('pointerdown', (coords) => {
-      const force = 0.03
-      const mouseVector = {
-        x: coords.worldX,
-        y: coords.worldY
-      }
+    this.scene.input.on('pointerdown',
+      (coords) => {
+        const force = 0.03
+        const mouseVector = {
+          x: coords.worldX,
+          y: coords.worldY
+        }
 
-      this.shoot(mouseVector, force)
-    })
+        this.shoot(mouseVector,
+          force)
+      })
   }
 
   applyForceInOppositeDirection (vector, force) {
@@ -60,7 +67,8 @@ class Player extends Actor {
   }
 
   shoot (mouseVector, force) {
-    this.applyForceInOppositeDirection(mouseVector, force)
+    this.applyForceInOppositeDirection(mouseVector,
+      force)
     new Bullet({ scene: this.scene, x: this.x, y: this.y })
       .fire(mouseVector)
   }

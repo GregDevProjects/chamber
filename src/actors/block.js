@@ -4,16 +4,19 @@ const MOVE_SPEED = 0.1
 
 class Block extends Actor {
   constructor (config) {
-    super(config.scene.matter.world, config.x, config.y, 'player')
-    // this.setRectangle(config.w, config.h)
-    this.setCollidesWith(
-      [
-        this.collisionCategories.player,
-        this.collisionCategories.bullet,
-        this.collisionCategories.blockBarrier,
-        this.collisionCategories.block
-      ]
+    super(
+      config.scene.matter.world,
+      config.x,
+      config.y,
+      'player'
     )
+
+    this.setCollidesWith([
+      this.collisionCategories.player,
+      this.collisionCategories.bullet,
+      this.collisionCategories.blockBarrier,
+      this.collisionCategories.block
+    ])
     this.body.restitution = 1
     // this.setStatic(true)
     this.applyModifier()
@@ -25,7 +28,8 @@ class Block extends Actor {
   }
 
   applyModifier () {
-    const rand = Phaser.Math.Between(1, 5)
+    const rand = Phaser.Math.Between(1,
+      5)
 
     if (rand === 1) {
       this.setStatic(true)
@@ -44,13 +48,11 @@ class Block extends Actor {
       this.setTintFill(0x00FF00)
       this.setAlpha(0.7)
       this.setDepth(2)
-      this.setCollidesWith(
-        [
-          this.collisionCategories.player,
-          this.collisionCategories.bullet,
-          this.collisionCategories.blockBarrier
-        ]
-      )
+      this.setCollidesWith([
+        this.collisionCategories.player,
+        this.collisionCategories.bullet,
+        this.collisionCategories.blockBarrier
+      ])
     }
   }
 

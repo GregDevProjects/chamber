@@ -1,6 +1,15 @@
 class Actor extends Phaser.Physics.Matter.Sprite {
-  constructor (world, x, y, assetKey) {
-    super(world, x, y, assetKey, null, {})
+  constructor (
+    world, x, y, assetKey
+  ) {
+    super(
+      world,
+      x,
+      y,
+      assetKey,
+      null,
+      {}
+    )
     this.matter = world
     this.scene = world.scene
     this.collisionCategories = this.scene.collisionCategories

@@ -13,13 +13,19 @@ class Loader extends Phaser.Scene {
   }
 
   preload () {
-    this.load.image('player', playerImg)
-    this.load.image('bullet', bulletImg)
+    this.load.image('player',
+      playerImg)
+    this.load.image('bullet',
+      bulletImg)
 
-    this.load.image('arrowTop', arrowTop)
-    this.load.image('arrowBottom', arrowBottom)
-    this.load.image('arrowRight', arrowRight)
-    this.load.image('arrowLeft', arrowLeft)
+    this.load.image('arrowTop',
+      arrowTop)
+    this.load.image('arrowBottom',
+      arrowBottom)
+    this.load.image('arrowRight',
+      arrowRight)
+    this.load.image('arrowLeft',
+      arrowLeft)
   }
 
   create () {
@@ -31,7 +37,8 @@ class Loader extends Phaser.Scene {
       blockBarrier: this.matter.world.nextCategory(),
       world: 1
     }
-    this.scene.start('Game', { collisionCategories })
+    this.scene.start('Game',
+      { collisionCategories })
   }
 }
 

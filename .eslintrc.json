@@ -15,6 +15,9 @@
         "sourceType": "module"
     },
     "rules": {
-        "max-len": [2, {"code": 80}]
+        "max-len": [2, {"code": 100}],
+        "function-call-argument-newline": 2,
+        "object-curly-newline": 2,
+        "function-paren-newline": ["error", { "minItems": 3 }]
     }
 }
