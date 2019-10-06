@@ -1,5 +1,9 @@
 import playerImg from './assets/player.jpg'
 import bulletImg from './assets/bullet.png'
+import arrowTop from './assets/arrow_up.png'
+import arrowBottom from './assets/arrow_down.png'
+import arrowRight from './assets/arrow_right.png'
+import arrowLeft from './assets/arrow_left.png'
 
 class Loader extends Phaser.Scene {
   constructor (test) {
@@ -11,6 +15,11 @@ class Loader extends Phaser.Scene {
   preload () {
     this.load.image('player', playerImg)
     this.load.image('bullet', bulletImg)
+
+    this.load.image('arrowTop', arrowTop)
+    this.load.image('arrowBottom', arrowBottom)
+    this.load.image('arrowRight', arrowRight)
+    this.load.image('arrowLeft', arrowLeft)
   }
 
   create () {

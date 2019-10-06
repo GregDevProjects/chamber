@@ -74,7 +74,7 @@ class Player extends Actor {
         if (collidedWith === this.scene.collisionCategories.deathLine) {
           this.scene.scene.restart()
         }
-        console.log(collidedWith === this.scene.collisionCategories.block)
+
         if (collidedWith === this.scene.collisionCategories.block &&
           eventData.gameObjectB &&
           eventData.gameObjectB.killPlayer) {

@@ -19,7 +19,6 @@ class Game extends Phaser.Scene {
   }
 
   create () {
-    // debugger
     this.cameras.main.setPosition((FRAME_WIDTH - GAME_WIDTH) / 2, (FRAME_HEIGHT - GAME_HEIGHT) / 2)
     this.cameras.main.setSize(GAME_WIDTH, GAME_HEIGHT)
     this.cameras.main.setBackgroundColor('ffffff')
@@ -34,6 +33,7 @@ class Game extends Phaser.Scene {
     const deathLineBottom = new DeathLine({ scene: this, x: GAME_WIDTH / 2, y: GAME_HEIGHT - 10, width: GAME_WIDTH, height: 10 })
     const deathLineRight = new DeathLine({ scene: this, x: GAME_WIDTH - 10, y: GAME_HEIGHT / 2, width: 10, height: GAME_HEIGHT })
     const deathLineLeft = new DeathLine({ scene: this, x: 10, y: GAME_HEIGHT / 2, width: 10, height: GAME_HEIGHT })
+
     // this.cameras.main.backgroundColor.setTo(255, 255, 255)
     // this.cameras.main.setZoom(0.5)
     // rect.setRectangle(GAME_WIDTH, 10)

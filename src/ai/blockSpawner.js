@@ -1,5 +1,6 @@
 import { SPAWN_LOCATION, GAME_HEIGHT, GAME_WIDTH } from '../constants'
 import Block from '../actors/block'
+import Blinkers from '../blinkers'
 
 const MAX_BLOCK_WIDTH = 250
 const MAX_BLOCK_HEIGHT = 250
@@ -11,6 +12,7 @@ const randomProperty = function (obj) {
 
 class BlockSpawner {
   constructor (scene) {
+    this.blinkers = new Blinkers(scene)
     this.cursors = scene.input.keyboard.createCursorKeys()
     // DEBUG
     this.scene = scene
@@ -19,6 +21,7 @@ class BlockSpawner {
     this.width = { min: 10, max: 250 }
     this.height = { min: 10, max: 250 }
     this.spawnFrequency = 3500
+    this.nextSpawn = randomProperty(SPAWN_LOCATION)
     this.spawnOrigin = randomProperty(SPAWN_LOCATION)
     this.spawnCount = 1
     this.scene.time.addEvent({
@@ -26,8 +29,14 @@ class BlockSpawner {
       callback: () => {
         this.spawnGrid()
         this.spawnCount++
+
+        if ((this.spawnCount + 1) % 4 === 0 && this.nextSpawn !== this.spawnOrigin) {
+          this.blinkers.showArrow(this.nextSpawn)
+        }
         if (this.spawnCount % 4 === 0) {
-          this.spawnOrigin = randomProperty(SPAWN_LOCATION)
+          this.spawnOrigin = this.nextSpawn
+          this.nextSpawn = randomProperty(SPAWN_LOCATION)
+          this.blinkers.hideAllArrows()
         }
       },
       callbackScope: this,

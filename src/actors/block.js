@@ -42,6 +42,8 @@ class Block extends Actor {
     } else if (rand === 5) {
       this.setMass(2)
       this.setTintFill(0x00FF00)
+      this.setAlpha(0.7)
+      this.setDepth(2)
       this.setCollidesWith(
         [
           this.collisionCategories.player,
