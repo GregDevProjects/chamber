@@ -3,28 +3,29 @@ import Actor from './actor'
 const MASS = 0.188
 const FORCE = 0.005
 const RESTITUTION = 1
+const RADIOUS = 8
 // Phaser.Physics.Matter.Image
-class Bullet extends Actor {
+class Bullet extends Phaser.GameObjects.Arc {
   constructor (config) {
     super(
-      config.scene.matter.world,
+      config.scene,
       config.x,
       config.y,
-      'bullet'
+      RADIOUS,
+      undefined,
+      undefined,
+      undefined,
+      0x551a8b
     )
-    // this must be called first or collision filter wont work
-
-    this.scaleX = 0.3
-    this.scaleY = 0.3
-    this.setCircle(8)
+    this.scene.add.existing(this)
+    this.scene.matter.add.gameObject(this)
+    this.setCircle(RADIOUS)
     this.setCollisionCategory(this.scene.collisionCategories.bullet)
     this.setCollidesWith([this.scene.collisionCategories.world, this.scene.collisionCategories.bullet, this.scene.collisionCategories.block])
     this.body.restitution = RESTITUTION
     this.setMass(MASS)
     this.collisions()
     this.bounces = 0
-    // this.setTexture()
-    this.setTintFill(0x551a8b)
   }
 
   fire (mouseVector) {

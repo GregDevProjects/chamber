@@ -40,58 +40,10 @@ class Game extends Phaser.Scene {
     const deathLineBottom = new DeathLine({ scene: this, x: GAME_WIDTH / 2, y: GAME_HEIGHT - 10, width: GAME_WIDTH, height: 10 })
     const deathLineRight = new DeathLine({ scene: this, x: GAME_WIDTH - 10, y: GAME_HEIGHT / 2, width: 10, height: GAME_HEIGHT })
     const deathLineLeft = new DeathLine({ scene: this, x: 10, y: GAME_HEIGHT / 2, width: 10, height: GAME_HEIGHT })
-
-    // debugger
-    new Test(
-      this.matter.world,
-      200,
-      200
-    )
-    // https://github.com/photonstorm/phaser/blob/8af70d02d1f42a0b56e618840d27b2d1807848cf/src/physics/matter-js/lib/render/Render.js#L59
-    // this.cameras.main.backgroundColor.setTo(255, 255, 255)
-    // this.cameras.main.setZoom(0.5)
-    // rect.setRectangle(GAME_WIDTH, 10)
-    // rect.setStatic(true)
-    // console.log(rect)
   }
 
   update (time, delta) {
     this.blockSpawner.update(delta)
-  }
-}
-
-class Test extends Phaser.Physics.Matter.Sprite {
-  constructor (
-    world, x, y
-  ) {
-    super(
-      world,
-      x,
-      y,
-      'player',
-      null,
-      {
-        vertices: [
-          { x: 10, y: 10 },
-          { x: 30, y: 30 },
-          { x: 500, y: 10 }
-        ],
-        render: {
-          fillStyle: 'red',
-          strokeStyle: 'blue',
-          lineWidth: 3,
-          wireframes: false
-        }
-      }
-    )
-    this.matter = world
-    this.scene = world.scene
-    this.collisionCategories = this.scene.collisionCategories
-    this.scene.add.existing(this)
-  }
-
-  getRightX () {
-    return this.width / 2 + this.x
   }
 }
 

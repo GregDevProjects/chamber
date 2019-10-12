@@ -1,18 +1,23 @@
 import { GAME_WIDTH } from '../constants'
 import Actor from './actor'
 
-class DeathLine extends Actor {
+class DeathLine extends Phaser.GameObjects.Rectangle {
   constructor (config) {
-    super(config.scene.matter.world, config.x, config.y, 'player', { isSensor: true })
-    this.scaleX = config.width / 128
-    this.scaleY = config.height / 128
-    this.setTintFill(0xc90707)
-    this.setRectangle(config.width, config.height)
+    super(
+      config.scene,
+      config.x,
+      config.y,
+      config.width,
+      config.height,
+      0xc90707
+    )
+
+    this.scene.add.existing(this)
+    this.scene.matter.add.gameObject(this,
+      { isSensor: true })
     this.setCollidesWith([this.scene.collisionCategories.player, this.scene.collisionCategories.bullet])
-    // this.setStatic(true)
     this.setDepth(1)
     this.setCollisionCategory(this.scene.collisionCategories.deathLine)
-    // this.setTexture()
   }
 }
 
