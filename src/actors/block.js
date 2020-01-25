@@ -38,6 +38,9 @@ class Block extends Phaser.GameObjects.Polygon {
     const rand = Phaser.Math.Between(1,
       5)
 
+      this.setAngle(Phaser.Math.Between(0,
+        360))
+
     if (rand === 1) {
       this.setStatic(true)
       this.setFillStyle(0x000000)

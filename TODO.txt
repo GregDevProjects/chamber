@@ -10,6 +10,6 @@ give the blocks different properties
 
 add death lasers at bottom / left / right
 
+use wasd for something 
+- limited movement with gravity? 
 
-BUG
-- need to reset matter's collision categories on scene reset 

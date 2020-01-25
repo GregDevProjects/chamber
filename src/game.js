@@ -33,7 +33,7 @@ class Game extends Phaser.Scene {
       GAME_HEIGHT
     )
 
-    const player = new Player({ scene: this, x: 250, y: 250 })
+    this.player = new Player({ scene: this, x: 250, y: 250 })
     this.blockSpawner = new BlockSpawner(this)
 
     const deathLineTop = new DeathLine({ scene: this, x: GAME_WIDTH / 2, y: 10, width: GAME_WIDTH, height: 10 })
@@ -44,6 +44,7 @@ class Game extends Phaser.Scene {
 
   update (time, delta) {
     this.blockSpawner.update(delta)
+    this.player.update(delta)
   }
 }
 
