@@ -1,4 +1,4 @@
-import Player from './actors/player'
+import Player from './actors/player/index'
 import { GAME_HEIGHT, GAME_WIDTH, FRAME_WIDTH, FRAME_HEIGHT } from './constants'
 
 import Actor from './actors/actor'

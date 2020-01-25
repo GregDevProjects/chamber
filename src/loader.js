@@ -27,11 +27,13 @@ class Loader extends Phaser.Scene {
       arrowRight)
     this.load.image('arrowLeft',
       arrowLeft)
-      this.load.image('gun', gun)
+    this.load.image('gun',
+      gun)
   }
 
   create () {
     const collisionCategories = {
+      head: this.matter.world.nextCategory(),
       player: this.matter.world.nextCategory(),
       bullet: this.matter.world.nextCategory(),
       block: this.matter.world.nextCategory(),

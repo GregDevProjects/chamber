@@ -1,5 +1,3 @@
-import Actor from './actor'
-
 const MASS = 0.188
 const FORCE = 0.005
 const RESTITUTION = 1

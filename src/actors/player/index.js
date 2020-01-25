@@ -1,8 +1,12 @@
-import Bullet from './bullet'
-import Actor from './actor'
+import Bullet from '../bullet'
+import Actor from '../actor'
+import Head from './head'
+import Controller from './controller'
+import Gun from './gun'
 
 /* eslint-disable no-undef */
 const MASS = 2.5
+const RECOIL_FORCE = 0.03
 
 class Player extends Actor {
   constructor (config) {
@@ -18,8 +22,7 @@ class Player extends Actor {
     // this must be called first or collision filter wont work
     this.setRectangle(20,
       30)
-    // const playerCollisionCat = config.scene.matter.world.nextCategory()
-    // this.bulletCollisionCat = config.scene.matter.world.nextCategory()
+
     this.setCollisionCategory(this.scene.collisionCategories.player)
     // collision id of world
     this.setCollidesWith([
@@ -32,19 +35,22 @@ class Player extends Actor {
     this.startPointer()
     this.body.restitution = 1
     this.setTintFill(0xffc0cb)
+
+    this.head = new Head({ scene: this.scene, player: this })
+    this.controller = new Controller(this)
+    this.gun = new Gun(this)
   }
 
   startPointer () {
     this.scene.input.on('pointerdown',
       (coords) => {
-        const force = 0.03
         const mouseVector = {
           x: coords.worldX,
           y: coords.worldY
         }
 
         this.shoot(mouseVector,
-          force)
+          RECOIL_FORCE)
       })
   }
 
@@ -66,6 +72,10 @@ class Player extends Actor {
     })
   }
 
+  death () {
+    this.scene.scene.restart()
+  }
+
   shoot (mouseVector, force) {
     this.applyForceInOppositeDirection(mouseVector,
       force)
@@ -80,21 +90,24 @@ class Player extends Actor {
         const collidedWith = eventData.bodyB.collisionFilter.category
 
         if (collidedWith === this.scene.collisionCategories.deathLine) {
-          this.scene.scene.restart()
+          this.death()
         }
 
         if (collidedWith === this.scene.collisionCategories.block &&
           eventData.gameObjectB &&
           eventData.gameObjectB.killPlayer) {
-          this.scene.scene.restart()
+          this.death()
         }
       },
       context: this // Context to apply to the callback function
     })
   }
 
-  update () {
-    
+  update (delta) {
+    // console.log(this.body.angularVelocity)
+    this.controller.update(delta)
+    this.gun.update()
+    this.head.update()
   }
 }
 
