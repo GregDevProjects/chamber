@@ -7,8 +7,7 @@ class Actor extends Phaser.Physics.Matter.Sprite {
       x,
       y,
       assetKey,
-      null,
-      {}
+      null
     )
     this.matter = world
     this.scene = world.scene

@@ -1,5 +1,3 @@
-import { GAME_WIDTH } from '../constants'
-import Actor from './actor'
 
 class DeathLine extends Phaser.GameObjects.Rectangle {
   constructor (config) {
@@ -18,6 +16,7 @@ class DeathLine extends Phaser.GameObjects.Rectangle {
     this.setCollidesWith([this.scene.collisionCategories.player, this.scene.collisionCategories.bullet])
     this.setDepth(1)
     this.setCollisionCategory(this.scene.collisionCategories.deathLine)
+    this.setIgnoreGravity(true)
   }
 }
 

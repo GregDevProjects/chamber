@@ -1,7 +1,7 @@
 {
-  "name": "phaser3-project-template",
+  "name": "Chamber",
   "version": "1.1.0",
-  "description": "A Phaser 3 Project Template",
+  "description": "A Phaser 3 Game",
   "main": "src/index.js",
   "scripts": {
     "build": "webpack --config webpack/prod.js ",
@@ -39,7 +39,7 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "phaser": "^3.19.0",
+    "phaser": "^3.22.0",
     "phaser-matter-collision-plugin": "^0.10.2",
     "polyk": "^0.24.0"
   }

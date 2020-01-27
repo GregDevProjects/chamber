@@ -30,7 +30,7 @@ class Block extends Phaser.GameObjects.Polygon {
     this.body.restitution = 1
     this.applyModifier()
     this.collisionEvent()
-
+    this.setIgnoreGravity(true)
     this.setCollisionCategory(this.scene.collisionCategories.block)
   }
 
@@ -38,8 +38,8 @@ class Block extends Phaser.GameObjects.Polygon {
     const rand = Phaser.Math.Between(1,
       5)
 
-      this.setAngle(Phaser.Math.Between(0,
-        360))
+    this.setAngle(Phaser.Math.Between(0,
+      360))
 
     if (rand === 1) {
       this.setStatic(true)

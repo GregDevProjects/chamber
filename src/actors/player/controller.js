@@ -1,4 +1,4 @@
-const ROTATE_SPEED = 0.002
+const ROTATE_SPEED = 0.0015
 
 class Controller {
   constructor (player) {

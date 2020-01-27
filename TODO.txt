@@ -1,3 +1,33 @@
+---TODO------------------------------------------------
+- make a level
+- implement gravity 
+- implement side lasers
+- make an enemy
+
+---Gameplay------------------------------------------------
+Shooting 
+ - should it kill all blocks?
+
+Gravity
+
+Block Rotation?
+
+---Levels------------------------------------------------
+
+1
+- show the basics of movement
+- protect your head
+- shoot to move
+
+2
+- gravity 
+
+Tunnel level
+
+---IDEAS-----------------------------------------------
+
+trampoline block for gravity levels
+
 tryout different directions/ speedup conditions 
  - blocks can change directions at random
 
@@ -8,8 +38,6 @@ give the blocks different properties
     - bouncy
         - force player bounce on contact?
 
-add death lasers at bottom / left / right
-
-use wasd for something 
-- limited movement with gravity? 
-
+---BUGS-----------------------------------------------
+- gun doesn't aim when mouse is moved on the purple border
+- player's center of rotation doesn't include his head

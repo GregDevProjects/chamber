@@ -16,6 +16,7 @@ class Player extends Actor {
       config.y,
       'player'
     )
+
     this.collisions = config.collisions
     this.scaleX = 20 / 128
     this.scaleY = 30 / 128
@@ -39,6 +40,18 @@ class Player extends Actor {
     this.head = new Head({ scene: this.scene, player: this })
     this.controller = new Controller(this)
     this.gun = new Gun(this)
+
+    // const offset = { x: 0.5, y: 20 }
+
+    // this.body.position.x += offset.x
+    // this.body.position.y += offset.y
+    // this.body.positionPrev.x += offset.x
+    // this.body.positionPrev.y += offset.y
+    // this.render
+
+    // this.body.centerOffset = { x: 10, y: 30 }
+
+    // debugger
   }
 
   startPointer () {

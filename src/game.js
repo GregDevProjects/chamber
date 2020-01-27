@@ -1,9 +1,10 @@
 import Player from './actors/player/index'
 import { GAME_HEIGHT, GAME_WIDTH, FRAME_WIDTH, FRAME_HEIGHT } from './constants'
 
-import Actor from './actors/actor'
-import BlockSpawner from './ai/blockSpawner'
-import DeathLine from './actors/deathLine'
+import createBlockBarrier from './ai/blockBarrier'
+import BlocksController from './ai/blocksController'
+import createPlayerBarrier from './ai/playerBarrier'
+
 class Game extends Phaser.Scene {
   constructor (test) {
     super({
@@ -25,7 +26,6 @@ class Game extends Phaser.Scene {
       GAME_HEIGHT)
     this.cameras.main.setBackgroundColor('ffffff')
 
-    this.blocks = this.add.group()
     this.matter.world.setBounds(
       0,
       0,
@@ -34,16 +34,24 @@ class Game extends Phaser.Scene {
     )
 
     this.player = new Player({ scene: this, x: 250, y: 250 })
-    this.blockSpawner = new BlockSpawner(this)
+    this.blockGroup = this.add.group()
 
-    const deathLineTop = new DeathLine({ scene: this, x: GAME_WIDTH / 2, y: 10, width: GAME_WIDTH, height: 10 })
-    const deathLineBottom = new DeathLine({ scene: this, x: GAME_WIDTH / 2, y: GAME_HEIGHT - 10, width: GAME_WIDTH, height: 10 })
-    const deathLineRight = new DeathLine({ scene: this, x: GAME_WIDTH - 10, y: GAME_HEIGHT / 2, width: 10, height: GAME_HEIGHT })
-    const deathLineLeft = new DeathLine({ scene: this, x: 10, y: GAME_HEIGHT / 2, width: 10, height: GAME_HEIGHT })
+    this.blocksController = new BlocksController(this)
+    this.blocksController.startRandomSpawning()
+    createBlockBarrier(this)
+    createPlayerBarrier(this)
+
+    // this.matter.world.setGravity(
+    //   0,
+    //   1,
+    //   0.0001
+    // )
   }
 
   update (time, delta) {
-    this.blockSpawner.update(delta)
+    // debugger
+    this.blocksController.update(delta)
+
     this.player.update(delta)
   }
 }
