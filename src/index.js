@@ -2,8 +2,10 @@ import Phaser from 'phaser'
 import PhaserMatterCollisionPlugin from 'phaser-matter-collision-plugin'
 
 import Loader from './loader'
-import Game from './game'
 import { FRAME_HEIGHT, FRAME_WIDTH } from './constants'
+import MainMenu from './scenes/menu'
+import Level1 from './scenes/level1'
+import Level2 from './scenes/level2'
 
 const config = {
   type: Phaser.AUTO,
@@ -32,7 +34,9 @@ const config = {
   },
   scene: [
     Loader,
-    Game
+    MainMenu,
+    Level1,
+    Level2
   ]
 }
 

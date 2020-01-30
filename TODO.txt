@@ -1,4 +1,5 @@
 ---TODO------------------------------------------------
+!! the text needs to be able to bleed out of the game area !!
 - make a level
 - implement gravity 
 - implement side lasers
@@ -41,3 +42,20 @@ give the blocks different properties
 ---BUGS-----------------------------------------------
 - gun doesn't aim when mouse is moved on the purple border
 - player's center of rotation doesn't include his head
+
+
+
+
+
+
+
+--TEXT DIALOGUE-----------------------------------------------
+what it needs to do:
+    - wrap words
+    - continue when a button is pressed 
+    - spell out dynamically
+    - float next to the character
+
+thoughts:
+    - animated bubble depending on emotion 
+    - different colors 

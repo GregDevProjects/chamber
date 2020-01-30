@@ -41,7 +41,7 @@ class Loader extends Phaser.Scene {
       blockBarrier: this.matter.world.nextCategory(),
       world: 1
     }
-    this.scene.start('Game',
+    this.scene.start('main_menu',
       { collisionCategories })
   }
 }
