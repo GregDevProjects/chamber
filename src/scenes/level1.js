@@ -38,7 +38,8 @@ class Level1 extends Phaser.Scene {
     this.blockGroup = this.add.group()
 
     this.dialogue = new DialogueManager(this)
-    this.dialogue.setAnchor(this.player)
+    this.dialogue.setAnchor(this.player.head,
+      this.player)
     this.dialogue.setText('What is this.. where the hell am I? What is this.. where the hell am I?')
     // this.blocksController = new BlocksController(this)
     // this.blocksController.startRandomSpawning()
@@ -68,74 +69,31 @@ class DialogueManager {
     this.text = ''
     this.anchor = null
     this.dialogueBox = null
+
+    this.graphics = this.scene.add.graphics()
   }
 
-  setAnchor (anchor) {
+  setAnchor (anchor, body) {
     this.anchor = anchor
+    this.body = body
+  }
+
+  textPositionAboveAnchor (x, y) {
+    y -= 130
+    x += 30
+    return [x, y]
   }
 
   moveText () {
-    const [x, y] = this.textPositionAboveAnchor(this.anchor.x,
-      this.anchor.y)
+    const [x, y] = this.textPositionAboveAnchor(this.body.x,
+      this.body.y)
     // debugger
     this.text.setPosition(x,
       y)
   }
 
-  moveDialogueBox () {
-    const [x, y] = this.dialogueBoxPosition(this.anchor.x,
-      this.anchor.y)
-    // debugger
-    this.dialogueBox.setPosition(x,
-      y)
-  }
-
-  makeDialogueBox (x, y) {
-    const graphics = this.scene.add.graphics()
-    graphics.lineStyle(
-      5,
-      'black',
-      1.0
-    )
-    graphics.fillStyle(0xffff00,
-      1)
-
-    //  32px radius on the corners
-    graphics.fillRoundedRect(
-      x,
-      y,
-      400,
-      100,
-      32
-    )
-
-    graphics.strokeRoundedRect(
-      x,
-      y,
-      400,
-      100,
-      32
-    )
-
-    this.dialogueBox = graphics
-  }
-
-  dialogueBoxPosition (x, y) {
-    y -= 400
-    x -= 240
-    return [x, y]
-  }
-
-  textPositionAboveAnchor (x, y) {
-    y -= 125
-    x += 30
-    return [x, y]
-  }
-
   setText (text) {
-    this.makeDialogueBox(this.anchor.x,
-      this.anchor.y)
-
+    // TODO: play a sound here
     const style = {
       fontSize: 24,
       fontFamily: 'Arial',
@@ -147,18 +105,87 @@ class DialogueManager {
     this.text = this.scene.add.text(
       this.anchor.x,
       this.anchor.y,
-      text,
+      '',
       style
     )
+
+    this.textCharacterArray = text.split('')
+    this.textDisplay = ''
+
+    const onEvent = () => {
+      this.textDisplay += this.textCharacterArray.shift()
+      this.text.setText(this.textDisplay)
+    }
+
+    this.scene.time.addEvent({
+      delay: 60,
+      callback:
+      onEvent,
+      callbackScope: this,
+      repeat: this.textCharacterArray.length - 1
+    })
+  }
+
+  drawDialogueBubble () {
+    this.graphics.clear()
+
+    this.graphics.lineStyle(
+      6,
+      0x000000,
+      1
+    )
+
+    this.graphics.fillStyle(0xffff00,
+      1)
+
+    const x = this.anchor.x
+    const y = this.anchor.y
+
+    this.graphics.beginPath()
+
+    this.graphics.lineTo(x + 10,
+      y - 10) // head
+
+    this.graphics.lineTo(this.body.x + 70,
+      this.body.y - 70)
+
+    this.graphics.moveTo(this.body.x + 130,
+      this.body.y - 70)
+
+    this.graphics.lineTo(this.body.x + 400,
+      this.body.y - 70)
+
+    this.graphics.lineTo(this.body.x + 400,
+      this.body.y - 140)
+
+    this.graphics.lineTo(this.body.x + 20,
+      this.body.y - 140)
+
+    this.graphics.lineTo(this.body.x + 20,
+      this.body.y - 71)
+
+    this.graphics.lineTo(this.body.x + 20,
+      this.body.y - 70)
+
+    this.graphics.lineTo(this.body.x + 50,
+      this.body.y - 70)
+
+    this.graphics.lineTo(x + 10,
+      y - 10) // head
+
+    this.graphics.closePath()
+    this.graphics.strokePath()
+    this.graphics.fillPath()
   }
 
   update () {
     if (!this.anchor || !this.text) {
       return
     }
+    // this.yo += 'a'
 
     this.moveText()
-    this.moveDialogueBox()
+    this.drawDialogueBubble()
   }
 }
 

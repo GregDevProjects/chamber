@@ -1,5 +1,4 @@
 ---TODO------------------------------------------------
-!! the text needs to be able to bleed out of the game area !!
 - make a level
 - implement gravity 
 - implement side lasers
@@ -51,10 +50,7 @@ give the blocks different properties
 
 --TEXT DIALOGUE-----------------------------------------------
 what it needs to do:
-    - wrap words
-    - continue when a button is pressed 
-    - spell out dynamically
-    - float next to the character
+!! the text needs to be able to bleed out of the game area !!
 
 thoughts:
     - animated bubble depending on emotion 
