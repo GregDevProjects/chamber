@@ -13,7 +13,6 @@ class Head extends Phaser.GameObjects.Arc {
       0x0000ff
     )
     this.player = config.player
-    this.scene.x = 'GREG'
     this.scene.add.existing(this)
 
     this.scene.matter.add.gameObject(this)

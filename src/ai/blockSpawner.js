@@ -1,6 +1,7 @@
 import { SPAWN_LOCATION, GAME_HEIGHT, GAME_WIDTH } from '../constants'
 import Block from '../actors/block'
 import Blinkers from '../blinkers'
+import { gamePosition } from '../helpers'
 
 const randomProperty = function (obj) {
   var keys = Object.keys(obj)
@@ -56,7 +57,9 @@ class BlockSpawner {
   spawnGrid () {
     let lastSpawn = {
       x: 0,
-      width: 0
+      y: 0,
+      width: 0,
+      height: 0
     }
 
     do {
@@ -87,8 +90,8 @@ class BlockSpawner {
       const block = new Block({
         w: width,
         h: height,
-        x: xOrigin,
-        y: yOrigin,
+        x: gamePosition(xOrigin),
+        y: gamePosition(yOrigin),
         scene: this.scene
       })
 

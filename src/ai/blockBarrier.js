@@ -1,4 +1,5 @@
 import { GAME_HEIGHT, GAME_WIDTH } from '../constants'
+import { gamePosition } from '../helpers'
 
 const MAX_BLOCK_WIDTH = 250
 const MAX_BLOCK_HEIGHT = 250
@@ -11,8 +12,8 @@ const makeSensor = (
   x, y, width, height, scene
 ) => {
   const sensor = scene.matter.add.rectangle(
-    x,
-    y,
+    gamePosition(x),
+    gamePosition(y),
     width,
     height,
     { isSensor: true, label: 'blockBoundary' }

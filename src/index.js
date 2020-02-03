@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import PhaserMatterCollisionPlugin from 'phaser-matter-collision-plugin'
 
 import Loader from './loader'
-import { FRAME_HEIGHT, FRAME_WIDTH } from './constants'
+import { FRAME_HEIGHT, FRAME_WIDTH, GAME_WIDTH, GAME_HEIGHT } from './constants'
 import MainMenu from './scenes/menu'
 import Level1 from './scenes/level1'
 import Level2 from './scenes/level2'
@@ -12,11 +12,11 @@ const config = {
   parent: 'phaser-example',
   width: FRAME_WIDTH,
   height: FRAME_HEIGHT,
-  backgroundColor: '#392542',
   physics: {
     default: 'matter',
     matter: {
-      debug: false,
+      setBounds: { x: 150, y: 150, width: GAME_WIDTH, height: GAME_HEIGHT },
+      debug: true,
       gravity: {
         x: 0,
         y: 0
