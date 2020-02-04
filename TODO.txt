@@ -50,7 +50,7 @@ give the blocks different properties
 
 --TEXT DIALOGUE-----------------------------------------------
 what it needs to do:
-!! the text needs to be able to bleed out of the game area !!
+    - system for advancing dialogue
 
 thoughts:
     - animated bubble depending on emotion 

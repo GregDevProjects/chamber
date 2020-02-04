@@ -1,26 +1,27 @@
 import { GAME_HEIGHT, GAME_WIDTH, SPAWN_LOCATION } from './constants'
+import { gamePosition } from './helpers'
 
 class Blinkers {
   constructor (scene) {
     this.scene = scene
     this.arrowTop = this.scene.add.image(
-      GAME_WIDTH / 2,
-      GAME_HEIGHT / 3,
+      gamePosition(GAME_WIDTH / 2),
+      gamePosition(GAME_HEIGHT / 3),
       'arrowTop'
     )
     this.arrowRight = this.scene.add.image(
-      GAME_WIDTH - GAME_WIDTH / 3,
-      GAME_HEIGHT / 2,
+      gamePosition(GAME_WIDTH - GAME_WIDTH / 3),
+      gamePosition(GAME_HEIGHT / 2),
       'arrowRight'
     )
     this.arrowBottom = this.scene.add.image(
-      GAME_WIDTH / 2,
-      GAME_HEIGHT - GAME_HEIGHT / 3,
+      gamePosition(GAME_WIDTH / 2),
+      gamePosition(GAME_HEIGHT - GAME_HEIGHT / 3),
       'arrowBottom'
     )
     this.arrowLeft = this.scene.add.image(
-      GAME_WIDTH / 3,
-      GAME_HEIGHT / 2,
+      gamePosition(GAME_WIDTH / 3),
+      gamePosition(GAME_HEIGHT / 2),
       'arrowLeft'
     )
 

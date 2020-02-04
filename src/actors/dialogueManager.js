@@ -10,6 +10,7 @@ class DialogueManager {
 
     this.graphics = this.scene.add.graphics()
     this.graphics.setDepth(DIALOGUE_BOX_DEPTH)
+    this.doUpdate = false
   }
 
   setAnchor (anchor, body) {
@@ -53,6 +54,9 @@ class DialogueManager {
     this.textDisplay = ''
 
     const onEvent = () => {
+      if (!this.doUpdate) {
+        return
+      }
       this.textDisplay += this.textCharacterArray.shift()
       this.text.setText(this.textDisplay)
     }
@@ -64,6 +68,7 @@ class DialogueManager {
       callbackScope: this,
       repeat: this.textCharacterArray.length - 1
     })
+    this.doUpdate = true
   }
 
   drawDialogueBubble () {
@@ -118,11 +123,16 @@ class DialogueManager {
     this.graphics.fillPath()
   }
 
+  destroy () {
+    this.doUpdate = false
+    this.text.destroy()
+    this.graphics.clear()
+  }
+
   update () {
-    if (!this.anchor || !this.text) {
+    if (!this.doUpdate) {
       return
     }
-    // this.yo += 'a'
 
     this.moveText()
     this.drawDialogueBubble()
