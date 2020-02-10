@@ -9,7 +9,7 @@ const drawBackground = (scene) => {
     1
   )
 
-  scene.graphics.fillStyle(0x00FFFF,
+  scene.graphics.fillStyle(0x989898,
     1)
 
   const framePadding = 150

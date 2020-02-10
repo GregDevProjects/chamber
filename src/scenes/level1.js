@@ -48,6 +48,7 @@ class Level1 extends Phaser.Scene {
     this.test = new robotDialogue(this,
       { x: 500, y: 500 })
 
+    this.test.draw()
     // robotDialogue(this,
     //   { x: 500, y: 500 })
 
@@ -85,35 +86,39 @@ class Level1 extends Phaser.Scene {
     // ddthis.blocksController.update(delta)
 
     this.player.update(delta)
-
+    this.test.draw()
     this.dialogue.update()
-
-    if (this.test.step > 10) {
-      this.asc = false
-    }
-
-    if (this.test.step <= 1) {
-      this.asc = true
-    }
-
-    if (this.asc) {
-      this.test.step += 0.05
-      this.test.radius += 0.5
-      this.test.draw()
-    } else {
-      this.test.step -= 0.05
-      this.test.radius -= 0.5
-      this.test.draw()
-    }
   }
 }
 
 class robotDialogue {
   constructor (scene, anchor) {
+    this.scene = scene
     this.graphics = scene.add.graphics()
     this.anchor = anchor
-    this.step = 1
-    this.radius = 100
+    this.step = 30
+    this.radius = 70
+    this.movingPoints = []
+    this.growRate = 0.5
+    this.framesToSpendGrowing = 200
+  }
+
+  degreesToRadians (degrees) {
+    return degrees * Math.PI / 180
+  }
+
+  nextSpikeMovement (index) {
+    // this.movingPoints[index].radius = 200
+
+    // debugger
+    const sinWave = Math.abs(Math.sin(this.scene.time.now / 1000)) * 30
+
+    const newRad = this.movingPoints[index].radius + sinWave
+
+    const newx = (this.radius + newRad) * Math.cos(this.degreesToRadians(index + this.step / 2)) + this.anchor.x
+    const newy = (this.radius + newRad) * Math.sin(this.degreesToRadians(index + this.step / 2)) + this.anchor.y
+
+    return { x: newx, y: newy }
   }
 
   draw () {
@@ -122,7 +127,7 @@ class robotDialogue {
       1)
 
     this.graphics.lineStyle(
-      2,
+      6,
       0x000000,
       1
     )
@@ -131,23 +136,39 @@ class robotDialogue {
       1)
 
     // const radius = 100
+
     for (let i = 0; i < 360; i += this.step) {
-      const x = this.radius * Math.cos(i) + this.anchor.x
-      const y = this.radius * Math.sin(i) + this.anchor.y
-      if (i === 0) {
-        this.graphics.moveTo(x,
-          y)
-        continue
-      }
+      const x = this.radius * Math.cos(this.degreesToRadians(i)) + this.anchor.x
+      const y = this.radius * Math.sin(this.degreesToRadians(i)) + this.anchor.y
+
       this.graphics.lineTo(x,
         y)
+
+      // find a point between this one and the next, give it a random radius
+      if (!this.movingPoints[i]) {
+        const newRad = Phaser.Math.Between(20,
+          100)
+        const newx = this.movingPoints[i] ? this.movingPoints[i].x
+          : (this.radius + newRad) * Math.cos(this.degreesToRadians(i + this.step / 2)) + this.anchor.x
+        const newy = this.movingPoints[i] ? this.movingPoints[i].y
+          : (this.radius + newRad) * Math.sin(this.degreesToRadians(i + this.step / 2)) + this.anchor.y
+
+        this.movingPoints[i] = { x: newx, y: newy, radius: newRad }
+      }
+
+      // handle shrink.grow of points
+      const animatePoints = this.nextSpikeMovement(i)
+      // console.log(animatePoints)
+      this.graphics.lineTo(animatePoints.x,
+        animatePoints.y)
     }
+    // console.log(this.movingPoints)
 
     this.graphics.closePath()
 
     this.graphics.strokePath()
 
-    // this.graphics.fillPath()
+    this.graphics.fillPath()
   }
 }
 

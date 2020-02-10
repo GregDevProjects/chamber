@@ -1,8 +1,13 @@
 ---TODO------------------------------------------------
+- refactor dialogue
+- make model for level events 
+
 - make a level
+    - make an enemy
+    - cursor become crosshair
+
 - implement gravity 
 - implement side lasers
-- make an enemy
 
 ---Gameplay------------------------------------------------
 Shooting 
