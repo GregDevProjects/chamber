@@ -1,11 +1,13 @@
 ---TODO------------------------------------------------
-- refactor dialogue
-- make model for level events 
+- game over screen
+- robot text should be an oval, not a circle
 
-- make a level
-    - make an enemy
-    - cursor become crosshair
-
+- level 1
+    - movement (rotation) feels wrong
+        - angular velocity increases as key is pressed?
+        - change rotation point on player?
+    
+- cursor become crosshair
 - implement gravity 
 - implement side lasers
 
@@ -44,9 +46,9 @@ give the blocks different properties
         - force player bounce on contact?
 
 ---BUGS-----------------------------------------------
-- gun doesn't aim when mouse is moved on the purple border
 - player's center of rotation doesn't include his head
-
+- apply some rotational drag
+- block overlaps gun
 
 
 

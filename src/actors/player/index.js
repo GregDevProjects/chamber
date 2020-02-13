@@ -40,7 +40,7 @@ class Player extends Actor {
     this.head = new Head({ scene: this.scene, player: this })
     this.controller = new Controller(this)
     this.gun = new Gun(this)
-
+    this.allowMovement = true
     // const offset = { x: 0.5, y: 20 }
 
     // this.body.position.x += offset.x
@@ -57,6 +57,10 @@ class Player extends Actor {
   startPointer () {
     this.scene.input.on('pointerdown',
       (coords) => {
+        if (!this.gun.active) {
+          return
+        }
+
         const mouseVector = {
           x: coords.worldX,
           y: coords.worldY
@@ -86,7 +90,7 @@ class Player extends Actor {
   }
 
   death () {
-    this.scene.scene.restart()
+    this.scene.resetScene()
   }
 
   shoot (mouseVector, force) {
@@ -94,6 +98,22 @@ class Player extends Actor {
       force)
     new Bullet({ scene: this.scene, x: this.x, y: this.y })
       .fire(mouseVector)
+  }
+
+  removeGun () {
+    this.gun.destroy()
+  }
+
+  giveGun () {
+    this.gun = new Gun(this)
+  }
+
+  removeControls () {
+    this.allowMovement = false
+  }
+
+  giveControls () {
+    this.allowMovement = true
   }
 
   collisionEvent () {
@@ -118,8 +138,14 @@ class Player extends Actor {
 
   update (delta) {
     // console.log(this.body.angularVelocity)
-    this.controller.update(delta)
-    this.gun.update()
+    if (this.allowMovement) {
+      this.controller.update(delta)
+    }
+
+    if (this.gun) {
+      this.gun.update()
+    }
+
     this.head.update()
   }
 }

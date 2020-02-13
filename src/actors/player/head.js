@@ -36,7 +36,8 @@ class Head extends Phaser.GameObjects.Arc {
         const collidedWith = eventData.bodyB.collisionFilter.category
         if (
           collidedWith === this.scene.collisionCategories.block ||
-          collidedWith === this.scene.collisionCategories.deathLine
+          collidedWith === this.scene.collisionCategories.deathLine ||
+          collidedWith === this.scene.collisionCategories.world
         ) {
           this.player.death()
         }

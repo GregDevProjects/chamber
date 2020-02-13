@@ -4,8 +4,11 @@ import { FRAME_WIDTH, FRAME_HEIGHT, GAME_HEIGHT, GAME_WIDTH } from '../constants
 import createBlockBarrier from '../ai/blockBarrier'
 import BlocksController from '../ai/blocksController'
 import createPlayerBarrier from '../ai/playerBarrier'
-import DialogueManager from '../actors/dialogueManager'
+import DialogueManager from '../dialogue/dialogueManager'
 import drawBackground from '../ai/frameBackground'
+
+import RobotDialogue from '../dialogue/RobotDialogue'
+import HumanDialogue from '../dialogue/HumanDialogue'
 
 class Level1 extends Phaser.Scene {
   constructor (test) {
@@ -21,55 +24,107 @@ class Level1 extends Phaser.Scene {
     this.collisionCategories = collisionCategories
   }
 
-  create () {
+  setupPlayer () {
+    this.player = new Player({ scene: this, x: 500, y: 250 })
+    this.player.removeGun()
+    this.player.removeControls()
+  }
+
+  setupCamera () {
     this.cameras.main.setBackgroundColor('ffffff')
     this.cameras.main.setZoom(1)
-    this.player = new Player({ scene: this, x: 500, y: 250 })
+  }
 
-    this.dialogue = new DialogueManager(this)
-    this.dialogue.setAnchor(this.player.head,
+  startGameplay () {
+    this.musicScene.setVolume(1)
+    this.robotDialogue.destroy()
+    this.blocksController.setPadding(70,
+      150)
+    this.blocksController.changeBlockType(2)
+    this.blocksController.startRandomSpawning()
+    this.time.addEvent({
+      delay: 3000,
+      callback:
+        () => {
+          this.humanDialogue.setText('This helmet seems pretty flimsy, better watch my HEAD')
+        },
+      callbackScope: this
+    })
+  }
+
+  resetScene () {
+    this.scene.restart()
+  }
+
+  create () {
+    this.setupPlayer()
+    this.setupCamera()
+    this.rotatePlayer = true
+    this.blocksController = new BlocksController(this)
+
+    this.humanDialogue = new HumanDialogue(this)
+    this.humanDialogue.setAnchor(this.player.head,
       this.player)
-    this.dialogue.setText('What is this...')
+    this.humanDialogue.setText('What is this...')
 
+    this.musicScene = this.scene.get('music')
+    this.musicScene.setVolume(0.2)
     // this.blockGroup = this.add.group()
-    // this.blocksController = new BlocksController(this)
-    // this.blocksController.startRandomSpawning()
 
     const onSpacePress = (timesPressed) => {
-      console.log(timesPressed)
+      this.humanDialogue.destroy()
+      this.robotDialogue.destroy()
+
       if (timesPressed === 1) {
-        this.dialogue.destroy()
-        this.dialogue.setText('Where the hell am I?')
+        this.humanDialogue.setText('Where the hell am I?')
+      }
+      if (timesPressed === 2) {
+        this.robotDialogue.setAnchor({ x: 500, y: 500 })
+        this.robotDialogue.setText('Do not be afraid, I can help')
+      }
+      if (timesPressed === 3) {
+        this.robotDialogue.setAnchor({ x: 250, y: 600 })
+        this.robotDialogue.setText('Use the A and D keys to rotate')
+        this.player.giveControls()
+        this.rotatePlayer = false
+      }
+      if (timesPressed === 4) {
+        this.robotDialogue.destroy()
+        this.robotDialogue.setAnchor({ x: 700, y: 400 })
+        this.robotDialogue.setText('Use W to accelerate')
+      }
+      if (timesPressed === 5) {
+        this.robotDialogue.destroy()
+        this.humanDialogue.setText('You didn\'t answer my question!')
+      }
+      if (timesPressed === 6) {
+        this.humanDialogue.destroy()
+        this.robotDialogue.setAnchor({ x: 250, y: 200 })
+        this.robotDialogue.setText('This is low priority information compared to SURVIVAL')
+      }
+      if (timesPressed === 7) {
+        this.humanDialogue.destroy()
+        this.robotDialogue.setAnchor({ x: 800, y: 200 })
+        this.robotDialogue.setText('Move towards the center')
+      }
+      if (timesPressed === 8) {
+        this.startGameplay()
       }
     }
+
     this.spaceCounter = new SpaceCounter(this,
       onSpacePress)
 
-    this.test = new robotDialogue(this,
-      { x: 500, y: 500 })
-
-    this.test.draw()
+    this.robotDialogue = new RobotDialogue(this)
+    this.robotDialogue.setAnchor({ x: 500, y: 500 })
+    // this.robotDialogue.setText('Do not be afraid')
+    // this.robotDialogue.drawDialogueBubble()
     // robotDialogue(this,
     //   { x: 500, y: 500 })
 
     createBlockBarrier(this)
-    createPlayerBarrier(this)
+    // dcreatePlayerBarrier(this)
     drawBackground(this)
-
-    const style = {
-      fontSize: 24,
-      fontFamily: 'Arial',
-      align: 'left',
-      wordWrap: { width: 370, useAdvancedWrap: true },
-      color: 'black'
-    }
-
-    this.text = this.add.text(
-      this.player.x - 100,
-      this.player.y + 50,
-      'PRESS SPACE TO ADVANCE DIALOGUE',
-      style
-    )
 
     // this.matter.world.setGravity(
     //   0,
@@ -83,92 +138,15 @@ class Level1 extends Phaser.Scene {
   update (time, delta) {
     // debugger
 
-    // ddthis.blocksController.update(delta)
+    this.blocksController.update(delta)
 
     this.player.update(delta)
-    this.test.draw()
-    this.dialogue.update()
-  }
-}
-
-class robotDialogue {
-  constructor (scene, anchor) {
-    this.scene = scene
-    this.graphics = scene.add.graphics()
-    this.anchor = anchor
-    this.step = 30
-    this.radius = 70
-    this.movingPoints = []
-    this.growRate = 0.5
-    this.framesToSpendGrowing = 200
-  }
-
-  degreesToRadians (degrees) {
-    return degrees * Math.PI / 180
-  }
-
-  nextSpikeMovement (index) {
-    // this.movingPoints[index].radius = 200
-
-    // debugger
-    const sinWave = Math.abs(Math.sin(this.scene.time.now / 1000)) * 30
-
-    const newRad = this.movingPoints[index].radius + sinWave
-
-    const newx = (this.radius + newRad) * Math.cos(this.degreesToRadians(index + this.step / 2)) + this.anchor.x
-    const newy = (this.radius + newRad) * Math.sin(this.degreesToRadians(index + this.step / 2)) + this.anchor.y
-
-    return { x: newx, y: newy }
-  }
-
-  draw () {
-    this.graphics.clear()
-    this.graphics.fillStyle(0xffff00,
-      1)
-
-    this.graphics.lineStyle(
-      6,
-      0x000000,
-      1
-    )
-
-    this.graphics.fillStyle(0xffff00,
-      1)
-
-    // const radius = 100
-
-    for (let i = 0; i < 360; i += this.step) {
-      const x = this.radius * Math.cos(this.degreesToRadians(i)) + this.anchor.x
-      const y = this.radius * Math.sin(this.degreesToRadians(i)) + this.anchor.y
-
-      this.graphics.lineTo(x,
-        y)
-
-      // find a point between this one and the next, give it a random radius
-      if (!this.movingPoints[i]) {
-        const newRad = Phaser.Math.Between(20,
-          100)
-        const newx = this.movingPoints[i] ? this.movingPoints[i].x
-          : (this.radius + newRad) * Math.cos(this.degreesToRadians(i + this.step / 2)) + this.anchor.x
-        const newy = this.movingPoints[i] ? this.movingPoints[i].y
-          : (this.radius + newRad) * Math.sin(this.degreesToRadians(i + this.step / 2)) + this.anchor.y
-
-        this.movingPoints[i] = { x: newx, y: newy, radius: newRad }
-      }
-
-      // handle shrink.grow of points
-      const animatePoints = this.nextSpikeMovement(i)
-      // console.log(animatePoints)
-      this.graphics.lineTo(animatePoints.x,
-        animatePoints.y)
+    if (this.rotatePlayer) {
+      this.player.setAngularVelocity(0.02)
     }
-    // console.log(this.movingPoints)
 
-    this.graphics.closePath()
-
-    this.graphics.strokePath()
-
-    this.graphics.fillPath()
+    this.robotDialogue.update()
+    this.humanDialogue.update()
   }
 }
 

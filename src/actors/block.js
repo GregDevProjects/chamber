@@ -28,32 +28,34 @@ class Block extends Phaser.GameObjects.Polygon {
     ])
 
     this.body.restitution = 1
-    this.applyModifier()
+    this.applyModifier(config.type)
     this.collisionEvent()
     this.setIgnoreGravity(true)
     this.setCollisionCategory(this.scene.collisionCategories.block)
   }
 
-  applyModifier () {
-    const rand = Phaser.Math.Between(1,
-      5)
+  applyModifier (type) {
+    if (!type) {
+      type = Phaser.Math.Between(1,
+        5)
+    }
 
     // this.setAngle(Phaser.Math.Between(0,
     //   360))
 
-    if (rand === 1) {
+    if (type === 1) {
       this.setStatic(true)
       this.setFillStyle(0x000000)
-    } else if (rand === 2) {
+    } else if (type === 2) {
       this.setMass(5)
       this.setFillStyle(0xadd8e6)
-    } else if (rand === 3) {
+    } else if (type === 3) {
       this.destroyOnShot = true
       this.setFillStyle(0xdaa520)
-    } else if (rand === 4) {
+    } else if (type === 4) {
       this.killPlayer = true
       this.setFillStyle(0xff0000)
-    } else if (rand === 5) {
+    } else if (type === 5) {
       this.setMass(2)
       this.setFillStyle(0x00FF00,
         0.6)

@@ -22,6 +22,11 @@ class BlockSpawner {
     this.nextSpawn = randomProperty(SPAWN_LOCATION)
     this.spawnOrigin = randomProperty(SPAWN_LOCATION)
     this.spawnCount = 1
+    this.type = null
+  }
+
+  setBlockType (type) {
+    this.type = type
   }
 
   start () {
@@ -92,7 +97,8 @@ class BlockSpawner {
         h: height,
         x: gamePosition(xOrigin),
         y: gamePosition(yOrigin),
-        scene: this.scene
+        scene: this.scene,
+        type: this.type
       })
 
       this.blocks.add(block)

@@ -6,6 +6,7 @@ import { FRAME_HEIGHT, FRAME_WIDTH, GAME_WIDTH, GAME_HEIGHT } from './constants'
 import MainMenu from './scenes/menu'
 import Level1 from './scenes/level1'
 import Level2 from './scenes/level2'
+import Music from './scenes/music'
 
 const config = {
   type: Phaser.AUTO,
@@ -36,7 +37,8 @@ const config = {
     Loader,
     MainMenu,
     Level1,
-    Level2
+    Level2,
+    Music
   ]
 }
 

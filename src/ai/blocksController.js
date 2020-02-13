@@ -4,12 +4,24 @@ class BlocksController {
   constructor (scene) {
     this.scene = scene
     this.blockGroup = this.scene.add.group()
+    this.allowUpdate = false
+
+    this.blockSpawner = new BlockSpawner(this.scene,
+      this.blockGroup)
   }
 
   startRandomSpawning () {
-    this.blockSpawner = new BlockSpawner(this.scene,
-      this.blockGroup)
+    this.allowUpdate = true
+
     this.blockSpawner.start()
+  }
+
+  setPadding (min, max) {
+    this.blockSpawner.padding = { min, max }
+  }
+
+  changeBlockType (type) {
+    this.blockSpawner.setBlockType(type)
   }
 
   changeColorOfAllBLocks (color) {
@@ -22,6 +34,9 @@ class BlocksController {
   }
 
   update (delta) {
+    if (!this.allowUpdate) {
+      return
+    }
     this.blockSpawner.update(delta)
   }
 }

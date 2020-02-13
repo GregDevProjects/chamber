@@ -13,6 +13,7 @@ class Loader extends Phaser.Scene {
     })
   }
 
+  // https://gamedevacademy.org/creating-a-preloading-screen-in-phaser-3/?a=13
   preload () {
     this.load.image('player',
       playerImg)
@@ -29,6 +30,8 @@ class Loader extends Phaser.Scene {
       arrowLeft)
     this.load.image('gun',
       gun)
+    this.load.audio('ticker',
+      'src/assets/music/Ticker.mp3')
   }
 
   create () {
@@ -41,8 +44,9 @@ class Loader extends Phaser.Scene {
       blockBarrier: this.matter.world.nextCategory(),
       world: 1
     }
+    const music = this.scene.start('music')
     this.scene.start('main_menu',
-      { collisionCategories })
+      { collisionCategories, music })
   }
 }
 
