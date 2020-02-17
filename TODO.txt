@@ -1,13 +1,16 @@
 ---TODO------------------------------------------------
 - game over screen
 - robot text should be an oval, not a circle
-
-- level 1
-    - movement (rotation) feels wrong
-        - angular velocity increases as key is pressed?
-        - change rotation point on player?
-    
+- bounce blocks away on hit with torso
+- add some friction to the rotation 
 - cursor become crosshair
+- patterns for blocks
+
+    RIGHT NOW
+    - stop using a set force when block collides with player 
+    - adjust what position force is applied at
+    - play with player rotational thrust
+
 - implement gravity 
 - implement side lasers
 
@@ -46,7 +49,6 @@ give the blocks different properties
         - force player bounce on contact?
 
 ---BUGS-----------------------------------------------
-- player's center of rotation doesn't include his head
 - apply some rotational drag
 - block overlaps gun
 

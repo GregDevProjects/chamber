@@ -27,7 +27,7 @@ class Level1 extends Phaser.Scene {
   setupPlayer () {
     this.player = new Player({ scene: this, x: 500, y: 250 })
     this.player.removeGun()
-    this.player.removeControls()
+    // this.player.removeControls()
   }
 
   setupCamera () {
@@ -46,31 +46,15 @@ class Level1 extends Phaser.Scene {
       delay: 3000,
       callback:
         () => {
-          this.humanDialogue.setText('This helmet seems pretty flimsy, better watch my HEAD')
+          // this.humanDialogue.setText('This helmet seems pretty flimsy, better watch my HEAD')
         },
       callbackScope: this
     })
   }
 
-  resetScene () {
-    this.scene.restart()
-  }
-
-  create () {
-    this.setupPlayer()
-    this.setupCamera()
+  startLevel () {
     this.rotatePlayer = true
-    this.blocksController = new BlocksController(this)
-
-    this.humanDialogue = new HumanDialogue(this)
-    this.humanDialogue.setAnchor(this.player.head,
-      this.player)
     this.humanDialogue.setText('What is this...')
-
-    this.musicScene = this.scene.get('music')
-    this.musicScene.setVolume(0.2)
-    // this.blockGroup = this.add.group()
-
     const onSpacePress = (timesPressed) => {
       this.humanDialogue.destroy()
       this.robotDialogue.destroy()
@@ -114,6 +98,25 @@ class Level1 extends Phaser.Scene {
 
     this.spaceCounter = new SpaceCounter(this,
       onSpacePress)
+  }
+
+  resetScene () {
+    this.scene.restart()
+  }
+
+  create () {
+    this.setupPlayer()
+    this.setupCamera()
+    this.rotatePlayer = false
+    this.blocksController = new BlocksController(this)
+
+    this.humanDialogue = new HumanDialogue(this)
+    this.humanDialogue.setAnchor(this.player.head,
+      this.player)
+
+    this.musicScene = this.scene.get('music')
+    this.musicScene.setVolume(0.2)
+    // this.blockGroup = this.add.group()
 
     this.robotDialogue = new RobotDialogue(this)
     this.robotDialogue.setAnchor({ x: 500, y: 500 })
@@ -126,6 +129,7 @@ class Level1 extends Phaser.Scene {
     // dcreatePlayerBarrier(this)
     drawBackground(this)
 
+    this.startGameplay()
     // this.matter.world.setGravity(
     //   0,
     //   1,
@@ -136,8 +140,6 @@ class Level1 extends Phaser.Scene {
   }
 
   update (time, delta) {
-    // debugger
-
     this.blocksController.update(delta)
 
     this.player.update(delta)

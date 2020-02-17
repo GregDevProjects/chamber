@@ -1,36 +1,38 @@
-const RADIOUS = 9
+const RADIUS = 9
 
-class Head extends Phaser.GameObjects.Arc {
+class Head {
   constructor (config) {
-    super(
+    this.scene = config.scene
+    this.player = config.player
+
+    this.visual = new Phaser.GameObjects.Arc(
       config.scene,
       config.player.x,
       config.player.y,
-      RADIOUS,
+      RADIUS,
       undefined,
       undefined,
       undefined,
       0x0000ff
     )
-    this.player = config.player
-    this.scene.add.existing(this)
 
-    this.scene.matter.add.gameObject(this)
-
-    this.setCircle(RADIOUS)
-    this.setCollisionCategory(this.scene.collisionCategories.bullet)
-    this.setCollidesWith([
-      this.scene.collisionCategories.world,
-      this.scene.collisionCategories.block,
-      this.scene.collisionCategories.deathLine
-    ])
-
-    this.collisions()
+    this.scene.add.existing(this.visual)
   }
 
-  collisions () {
+  getBody (x, y) {
+    const head = Phaser.Physics.Matter.Matter.Bodies.circle(
+      x,
+      y - 15,
+      RADIUS,
+      { isSensor: true }
+    )
+    this.collisions(head)
+    return head
+  }
+
+  collisions (head) {
     this.scene.matterCollision.addOnCollideStart({
-      objectA: this,
+      objectA: head,
       // bullet too?
       callback: function (eventData) {
         const collidedWith = eventData.bodyB.collisionFilter.category
@@ -51,10 +53,11 @@ class Head extends Phaser.GameObjects.Arc {
   }
 
   update () {
+    // TODO: find a way to attach the visuals directly to the body
     const playerAngle = this.player.angle
-    const x = this.player.x + 25 * Math.cos(this.degreesToRadians(playerAngle - 90))
-    const y = this.player.y + 25 * Math.sin(this.degreesToRadians(playerAngle - 90))
-    this.setPosition(x,
+    const x = this.player.x + 17 * Math.cos(this.degreesToRadians(playerAngle - 90))
+    const y = this.player.y + 17 * Math.sin(this.degreesToRadians(playerAngle - 90))
+    this.visual.setPosition(x,
       y)
   }
 }

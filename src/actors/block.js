@@ -42,7 +42,7 @@ class Block extends Phaser.GameObjects.Polygon {
 
     // this.setAngle(Phaser.Math.Between(0,
     //   360))
-
+    this.restitution = 1
     if (type === 1) {
       this.setStatic(true)
       this.setFillStyle(0x000000)
@@ -85,10 +85,28 @@ class Block extends Phaser.GameObjects.Polygon {
       objectA: this,
       // objectB: trapDoor,
       callback: function (eventData) {
-        const collidedWith = eventData.bodyB.collisionFilter.category
-        if (collidedWith === this.scene.collisionCategories.blockBarrier) {
+        const collidedWith = eventData.gameObjectB ? eventData.gameObjectB.body.collisionFilter.category : null
+        if (collidedWith === this.scene.collisionCategories.blowckBarrier) {
           this.destroy()
           return
+        }
+
+        if (collidedWith === this.scene.collisionCategories.player) {
+          const force = 3// eventData.gameObjectB.body.speed * 2
+
+          const contactPointA = eventData.pair.collision.bodyA.position
+          const contactPointB = eventData.pair.collision.bodyB.position
+
+          const angle = Phaser.Math.Angle.BetweenPoints(contactPointA,
+            contactPointB)
+
+          this.setVelocity(Math.cos(angle) * force,
+            Math.sin(angle) * force)
+
+          const playerAngle = angle + Math.PI
+          const playerForce = 2
+          eventData.gameObjectB.setVelocity(Math.cos(playerAngle) * playerForce,
+            Math.sin(playerAngle) * playerForce)
         }
 
         if (collidedWith === this.scene.collisionCategories.bullet &&

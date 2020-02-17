@@ -3,55 +3,68 @@ import Actor from '../actor'
 import Head from './head'
 import Controller from './controller'
 import Gun from './gun'
-
+import Torso from './torso'
 /* eslint-disable no-undef */
-const MASS = 2.5
+const MASS = 1
 const RECOIL_FORCE = 0.03
 
-class Player extends Actor {
+class Player extends Phaser.Physics.Matter.Image {
   constructor (config) {
     super(
       config.scene.matter.world,
-      config.x,
-      config.y,
-      'player'
+      200,
+      200,
+      ''
     )
-
+    this.scene = config.scene
     this.collisions = config.collisions
-    this.scaleX = 20 / 128
-    this.scaleY = 30 / 128
-    // this must be called first or collision filter wont work
-    this.setRectangle(20,
-      30)
 
-    this.setCollisionCategory(this.scene.collisionCategories.player)
+    // this.setCollisionCategory(this.scene.collisionCategories.player)
     // collision id of world
+
+    // this.collisionEvent()
+    this.startPointer()
+    this.body.restitution = 1
+
+    // this.setTintFill(0xffc0cb)
+    // this.torso = new Torso({ scene: this.scene, player: this })
+    // this.head = new Head({ scene: this.scene, player: this })
+    this.controller = new Controller(this)
+    this.gun = new Gun(this)
+    this.head = new Head({ scene: this.scene, player: this })
+    this.torso = new Torso({ scene: this.scene, player: this })
+    this.allowMovement = true
+
+    var M = Phaser.Physics.Matter.Matter
+    // const parent = M.Bodies.rectangle(
+    //   config.x,
+    //   config.y,
+    //   20,
+    //   50,
+    //   { isSensor: true }
+    // )
+
+    var compoundBody = M.Body.create({
+      parts: [
+        // parent,
+        this.torso.getBody(config.x,
+          config.y),
+        this.head.getBody(config.x,
+          config.y)
+      ],
+      friction: 0.01,
+      restitution: 1 // Prevent body from sticking against a wall
+    })
+
+    this.setExistingBody(compoundBody)
+    this.setMass(MASS)
+    this.setCollisionCategory(this.scene.collisionCategories.player)
+    // debugger
     this.setCollidesWith([
       this.scene.collisionCategories.world,
       this.scene.collisionCategories.deathLine,
       this.scene.collisionCategories.block
     ])
-    this.setMass(MASS)
-    this.collisionEvent()
-    this.startPointer()
-    this.body.restitution = 1
-    this.setTintFill(0xffc0cb)
-
-    this.head = new Head({ scene: this.scene, player: this })
-    this.controller = new Controller(this)
-    this.gun = new Gun(this)
-    this.allowMovement = true
-    // const offset = { x: 0.5, y: 20 }
-
-    // this.body.position.x += offset.x
-    // this.body.position.y += offset.y
-    // this.body.positionPrev.x += offset.x
-    // this.body.positionPrev.y += offset.y
-    // this.render
-
-    // this.body.centerOffset = { x: 10, y: 30 }
-
-    // debugger
   }
 
   startPointer () {
@@ -116,26 +129,6 @@ class Player extends Actor {
     this.allowMovement = true
   }
 
-  collisionEvent () {
-    this.scene.matterCollision.addOnCollideStart({
-      objectA: this,
-      callback: function (eventData) {
-        const collidedWith = eventData.bodyB.collisionFilter.category
-
-        if (collidedWith === this.scene.collisionCategories.deathLine) {
-          this.death()
-        }
-
-        if (collidedWith === this.scene.collisionCategories.block &&
-          eventData.gameObjectB &&
-          eventData.gameObjectB.killPlayer) {
-          this.death()
-        }
-      },
-      context: this // Context to apply to the callback function
-    })
-  }
-
   update (delta) {
     // console.log(this.body.angularVelocity)
     if (this.allowMovement) {
@@ -147,6 +140,7 @@ class Player extends Actor {
     }
 
     this.head.update()
+    this.torso.update()
   }
 }
 

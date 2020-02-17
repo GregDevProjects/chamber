@@ -19,7 +19,7 @@ export class Music extends Phaser.Scene {
   create () {
     this.music = this.sound.add('ticker',
       { loop: true })
-    this.music.play()
+    // this.music.play()
   }
 }
 
