@@ -85,8 +85,8 @@ class Block extends Phaser.GameObjects.Polygon {
       objectA: this,
       // objectB: trapDoor,
       callback: function (eventData) {
-        const collidedWith = eventData.gameObjectB ? eventData.gameObjectB.body.collisionFilter.category : null
-        if (collidedWith === this.scene.collisionCategories.blowckBarrier) {
+        const collidedWith = eventData.gameObjectB ? eventData.gameObjectB.body.collisionFilter.category : eventData.bodyB.collisionFilter.category
+        if (collidedWith === this.scene.collisionCategories.blockBarrier) {
           this.destroy()
           return
         }

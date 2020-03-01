@@ -1,7 +1,6 @@
 import Player from '../actors/player/index'
 import { FRAME_WIDTH, FRAME_HEIGHT, GAME_HEIGHT, GAME_WIDTH } from '../constants'
 
-import createBlockBarrier from '../ai/blockBarrier'
 import BlocksController from '../ai/blocksController'
 import createPlayerBarrier from '../ai/playerBarrier'
 import DialogueManager from '../dialogue/dialogueManager'
@@ -28,6 +27,9 @@ class Level1 extends Phaser.Scene {
     this.player = new Player({ scene: this, x: 500, y: 250 })
     this.player.removeGun()
     // this.player.removeControls()
+    this.humanDialogue = new HumanDialogue(this)
+    this.humanDialogue.setAnchor(this.player.head,
+      this.player)
   }
 
   setupCamera () {
@@ -110,10 +112,6 @@ class Level1 extends Phaser.Scene {
     this.rotatePlayer = false
     this.blocksController = new BlocksController(this)
 
-    this.humanDialogue = new HumanDialogue(this)
-    this.humanDialogue.setAnchor(this.player.head,
-      this.player)
-
     this.musicScene = this.scene.get('music')
     this.musicScene.setVolume(0.2)
     // this.blockGroup = this.add.group()
@@ -125,8 +123,6 @@ class Level1 extends Phaser.Scene {
     // robotDialogue(this,
     //   { x: 500, y: 500 })
 
-    createBlockBarrier(this)
-    // dcreatePlayerBarrier(this)
     drawBackground(this)
 
     this.startGameplay()
@@ -135,8 +131,6 @@ class Level1 extends Phaser.Scene {
     //   1,
     //   0.0001
     // )
-
-    this.asc = true
   }
 
   update (time, delta) {

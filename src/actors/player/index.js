@@ -59,7 +59,7 @@ class Player extends Phaser.Physics.Matter.Image {
     this.setExistingBody(compoundBody)
     this.setMass(MASS)
     this.setCollisionCategory(this.scene.collisionCategories.player)
-    // debugger
+
     this.setCollidesWith([
       this.scene.collisionCategories.world,
       this.scene.collisionCategories.deathLine,

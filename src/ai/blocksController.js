@@ -1,5 +1,6 @@
 import BlockSpawner from './blockSpawner'
-
+import createBlockBarrier from '../ai/blockBarrier'
+// createBlockBarrier(this)
 class BlocksController {
   constructor (scene) {
     this.scene = scene
@@ -14,6 +15,7 @@ class BlocksController {
     this.allowUpdate = true
 
     this.blockSpawner.start()
+    createBlockBarrier(this.scene)
   }
 
   setPadding (min, max) {

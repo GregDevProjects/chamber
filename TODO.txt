@@ -7,9 +7,9 @@
 - patterns for blocks
 
     RIGHT NOW
-    - stop using a set force when block collides with player 
-    - adjust what position force is applied at
-    - play with player rotational thrust
+    - player bounces when hitting a wall?
+    - refactor
+    - an effect when player collides with block
 
 - implement gravity 
 - implement side lasers
