@@ -64,7 +64,6 @@ export class MainMenu extends Phaser.Scene {
     //         this.collisionCategories)
     //     }, this
     //   )
-    console.log(this.collisionCategories)
   }
 }
 

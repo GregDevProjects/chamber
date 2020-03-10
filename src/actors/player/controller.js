@@ -9,6 +9,7 @@ class Controller {
     this.a = player.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
     this.d = player.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
     this.w = player.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
+    this.space = player.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
   }
 
   clampRotateSpeed (angularVelocity) {
@@ -20,6 +21,10 @@ class Controller {
   }
 
   update (delta) {
+    if (this.space.isDown) {
+      this.player.startKick()
+    }
+
     if (this.w.isDown) {
       this.player.thrustLeft(delta * FORWARD_SPEED)
     }

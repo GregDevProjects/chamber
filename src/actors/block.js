@@ -85,28 +85,40 @@ class Block extends Phaser.GameObjects.Polygon {
       objectA: this,
       // objectB: trapDoor,
       callback: function (eventData) {
-        const collidedWith = eventData.gameObjectB ? eventData.gameObjectB.body.collisionFilter.category : eventData.bodyB.collisionFilter.category
+        let collidedWith = eventData.bodyB.collisionFilter.category // ? eventData.bodyB.collisionFilter.category : eventData.gameObjectB ?  eventData.gameObjectB.body.collisionFilter.category
+
+        if (eventData.gameObjectB && eventData.gameObjectB.body && eventData.gameObjectB.body.collisionFilter) {
+          collidedWith = eventData.gameObjectB.body.collisionFilter.category
+        }
+
         if (collidedWith === this.scene.collisionCategories.blockBarrier) {
           this.destroy()
           return
         }
 
         if (collidedWith === this.scene.collisionCategories.player) {
+          // debugger
+          console.log(eventData.pair.collision.bodyB.positionPrev)
+
           const force = 3// eventData.gameObjectB.body.speed * 2
 
           const contactPointA = eventData.pair.collision.bodyA.position
-          const contactPointB = eventData.pair.collision.bodyB.position
+          const contactPointB = eventData.pair.collision.supports[0]
 
+          // block
+          this.setAngularVelocity(Phaser.Math.RND.pick([0, 1]) ? 0.02 : -0.02)
           const angle = Phaser.Math.Angle.BetweenPoints(contactPointA,
             contactPointB)
 
           this.setVelocity(Math.cos(angle) * force,
             Math.sin(angle) * force)
 
-          const playerAngle = angle + Math.PI
-          const playerForce = 2
-          eventData.gameObjectB.setVelocity(Math.cos(playerAngle) * playerForce,
-            Math.sin(playerAngle) * playerForce)
+          // player {x: 397.77256671308317, y: 352.5}
+
+          // const playerAngle = angle + Math.PI
+          // const playerForce = 2
+          // eventData.gameObjectB.setVelocity(Math.cos(playerAngle) * playerForce,
+          //   Math.sin(playerAngle) * playerForce)
         }
 
         if (collidedWith === this.scene.collisionCategories.bullet &&

@@ -6,7 +6,8 @@ import Gun from './gun'
 import Torso from './torso'
 /* eslint-disable no-undef */
 const MASS = 1
-const RECOIL_FORCE = 0.03
+const RECOIL_FORCE = 0.015
+const KICK_SPEED = 0.50
 
 class Player extends Phaser.Physics.Matter.Image {
   constructor (config) {
@@ -19,16 +20,9 @@ class Player extends Phaser.Physics.Matter.Image {
     this.scene = config.scene
     this.collisions = config.collisions
 
-    // this.setCollisionCategory(this.scene.collisionCategories.player)
-    // collision id of world
-
-    // this.collisionEvent()
     this.startPointer()
     this.body.restitution = 1
 
-    // this.setTintFill(0xffc0cb)
-    // this.torso = new Torso({ scene: this.scene, player: this })
-    // this.head = new Head({ scene: this.scene, player: this })
     this.controller = new Controller(this)
     this.gun = new Gun(this)
     this.head = new Head({ scene: this.scene, player: this })
@@ -36,13 +30,6 @@ class Player extends Phaser.Physics.Matter.Image {
     this.allowMovement = true
 
     var M = Phaser.Physics.Matter.Matter
-    // const parent = M.Bodies.rectangle(
-    //   config.x,
-    //   config.y,
-    //   20,
-    //   50,
-    //   { isSensor: true }
-    // )
 
     var compoundBody = M.Body.create({
       parts: [
@@ -65,6 +52,17 @@ class Player extends Phaser.Physics.Matter.Image {
       this.scene.collisionCategories.deathLine,
       this.scene.collisionCategories.block
     ])
+
+    this.kick = {
+      duration: 0,
+      isKicking: false,
+      startAngle: 0,
+      endAngle: 0
+    }
+  }
+
+  startKick () {
+    this.kick.isKicking = true
   }
 
   startPointer () {
@@ -130,7 +128,6 @@ class Player extends Phaser.Physics.Matter.Image {
   }
 
   update (delta) {
-    // console.log(this.body.angularVelocity)
     if (this.allowMovement) {
       this.controller.update(delta)
     }
@@ -139,8 +136,35 @@ class Player extends Phaser.Physics.Matter.Image {
       this.gun.update()
     }
 
+    if (this.kick.isKicking) {
+      this.twirl360(delta)
+    }
+
     this.head.update()
     this.torso.update()
+  }
+
+  twirl360 (delta) {
+    if (this.kick.duration === 0) {
+      this.kick.startAngle = this.angle
+      this.kick.endAngle = Phaser.Math.Angle.Wrap(this.rotation + (Math.PI * 2))
+    }
+
+    this.kick.duration++
+    this.angle += KICK_SPEED * delta
+
+    const threshold = 0.1
+
+    if (Phaser.Math.Within(
+      this.rotation,
+      this.kick.endAngle,
+      threshold
+    ) &&
+    this.kick.duration > 10) {
+      this.kick.isKicking = false
+      this.kick.duration = 0
+      this.setAngularVelocity(0)
+    }
   }
 }
 

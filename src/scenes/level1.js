@@ -25,7 +25,7 @@ class Level1 extends Phaser.Scene {
 
   setupPlayer () {
     this.player = new Player({ scene: this, x: 500, y: 250 })
-    this.player.removeGun()
+    // this.player.removeGun()
     // this.player.removeControls()
     this.humanDialogue = new HumanDialogue(this)
     this.humanDialogue.setAnchor(this.player.head,

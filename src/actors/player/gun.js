@@ -11,6 +11,7 @@ class Gun extends Phaser.GameObjects.Image {
       0.5)
     this.player.scene.add.existing(this)
     this.angleToPointer()
+    this.setDepth(2)
   }
 
   angleToPointer () {
