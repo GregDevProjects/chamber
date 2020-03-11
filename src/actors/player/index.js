@@ -15,7 +15,7 @@ class Player extends Phaser.Physics.Matter.Image {
       config.scene.matter.world,
       200,
       200,
-      ''
+      'transparent'
     )
     this.scene = config.scene
     this.collisions = config.collisions

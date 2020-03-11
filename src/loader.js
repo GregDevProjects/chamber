@@ -5,6 +5,7 @@ import arrowBottom from './assets/arrow_down.png'
 import arrowRight from './assets/arrow_right.png'
 import arrowLeft from './assets/arrow_left.png'
 import gun from './assets/gun.png'
+import transparent from './assets/transparent.png'
 
 class Loader extends Phaser.Scene {
   constructor (test) {
@@ -32,6 +33,8 @@ class Loader extends Phaser.Scene {
       gun)
     this.load.audio('ticker',
       'src/assets/music/Ticker.mp3')
+    this.load.image('transparent',
+      transparent)
   }
 
   create () {
