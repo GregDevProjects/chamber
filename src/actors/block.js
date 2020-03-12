@@ -17,6 +17,7 @@ class Block extends Phaser.GameObjects.Polygon {
       0x6666ff
 
     )
+    this.scene = config.scene
     this.scene.add.existing(this)
     this.scene.matter.add.gameObject(this)
 
@@ -80,6 +81,29 @@ class Block extends Phaser.GameObjects.Polygon {
     }
   }
 
+  spark (position) {
+    const image = this.scene.add.image(
+      position.x,
+      position.y,
+      'spark'
+    )
+
+    image.setAngle(Phaser.Math.Between(0,
+      360))
+
+    this.scene.tweens.add({
+      targets: image,
+      scaleX: 2,
+      scaleY: 2,
+      alpha: 0,
+      duration: 500,
+      onComplete: (greg, test) => {
+        test[0].destroy()
+      },
+      onCompleteParams: [image]
+    })
+  }
+
   collisionEvent () {
     this.scene.matterCollision.addOnCollideStart({
       objectA: this,
@@ -104,7 +128,7 @@ class Block extends Phaser.GameObjects.Polygon {
 
           const contactPointA = eventData.pair.collision.bodyA.position
           const contactPointB = eventData.pair.collision.supports[0]
-
+          this.spark(contactPointB)
           // block
           this.setAngularVelocity(Phaser.Math.RND.pick([0, 1]) ? 0.02 : -0.02)
           const angle = Phaser.Math.Angle.BetweenPoints(contactPointA,

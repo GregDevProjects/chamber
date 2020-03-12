@@ -7,9 +7,14 @@
 - patterns for blocks
 
     RIGHT NOW
-    - player bounces when hitting a wall?
     - refactor
-    - an effect when player collides with block
+    - replace collision image
+    - should spin towards turn direction
+    - overload mode
+        - harder to control
+        - invulnerable 
+        - bouncy
+        - kill stuff on contact 
 
 - implement gravity 
 - implement side lasers
