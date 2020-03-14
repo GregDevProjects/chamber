@@ -1,3 +1,5 @@
+import { spark } from '../../effects/spark'
+
 const WIDTH = 20
 const HEIGHT = 30 // 30
 
@@ -30,6 +32,29 @@ class Torso {
     return torso
   }
 
+  blockCollision (eventData) {
+    const contactPointA = eventData.pair.collision.bodyA.position
+    const contactPointB = eventData.pair.collision.supports[0]
+
+    spark(contactPointB,
+      this.scene)
+    const angle = Phaser.Math.Angle.BetweenPoints(contactPointA,
+      contactPointB)
+
+    const playerAngle = angle + Math.PI
+    const playerForce = 2
+    this.player.setVelocity(Math.cos(playerAngle) * playerForce,
+      Math.sin(playerAngle) * playerForce)
+  }
+
+  worldBoundryCollision (wallBody) {
+    const topCollision = this.scene.matter.world.walls.top.id === wallBody.id
+    if (topCollision) {
+      console.log('top')
+      // todo: add wall collision events
+    }
+  }
+
   collisions (torso) {
     this.scene.matterCollision.addOnCollideStart({
       objectA: torso,
@@ -40,22 +65,12 @@ class Torso {
           this.player.death()
         }
 
-        if (collidedWith === this.scene.collisionCategories.block &&
-          eventData.gameObjectB &&
-          eventData.gameObjectB.killPlayer) {
-          this.player.death()
-        }
         if (collidedWith === this.scene.collisionCategories.block) {
-          const contactPointA = eventData.pair.collision.bodyA.position
-          const contactPointB = eventData.pair.collision.supports[0]
+          this.blockCollision(eventData)
+        }
 
-          const angle = Phaser.Math.Angle.BetweenPoints(contactPointA,
-            contactPointB)
-
-          const playerAngle = angle + Math.PI
-          const playerForce = 2
-          eventData.gameObjectA.setVelocity(Math.cos(playerAngle) * playerForce,
-            Math.sin(playerAngle) * playerForce)
+        if (collidedWith === this.scene.collisionCategories.world) {
+          this.worldBoundryCollision(eventData.bodyB)
         }
       },
       context: this // Context to apply to the callback function
@@ -74,22 +89,6 @@ class Torso {
       y)
     this.visual.setAngle(this.player.angle)
   }
-}
-
-const makeDot = (scene, position) => {
-  var graphics = scene.add.graphics()
-
-  var color = 0x000000
-  var alpha = 1
-
-  graphics.fillStyle(color,
-    alpha)
-  graphics.fillRect(
-    position.x,
-    position.y,
-    10,
-    10
-  )
 }
 
 export default Torso

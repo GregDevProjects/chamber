@@ -9,6 +9,8 @@ import drawBackground from '../ai/frameBackground'
 import RobotDialogue from '../dialogue/RobotDialogue'
 import HumanDialogue from '../dialogue/HumanDialogue'
 
+import Spinner from '../actors/spinner'
+
 class Level1 extends Phaser.Scene {
   constructor (test) {
     super({
@@ -43,7 +45,7 @@ class Level1 extends Phaser.Scene {
     this.blocksController.setPadding(70,
       150)
     this.blocksController.changeBlockType(2)
-    this.blocksController.startRandomSpawning()
+    // this.blocksController.startRandomSpawning()
     this.time.addEvent({
       delay: 3000,
       callback:
@@ -126,6 +128,8 @@ class Level1 extends Phaser.Scene {
     drawBackground(this)
 
     this.startGameplay()
+
+    this._TEST_SPINNER = new Spinner({ x: 300, y: 300, scene: this })
     // this.matter.world.setGravity(
     //   0,
     //   1,
@@ -143,6 +147,7 @@ class Level1 extends Phaser.Scene {
 
     this.robotDialogue.update()
     this.humanDialogue.update()
+    this._TEST_SPINNER.update()
   }
 }
 

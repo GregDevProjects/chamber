@@ -81,29 +81,6 @@ class Block extends Phaser.GameObjects.Polygon {
     }
   }
 
-  spark (position) {
-    const image = this.scene.add.image(
-      position.x,
-      position.y,
-      'spark'
-    )
-
-    image.setAngle(Phaser.Math.Between(0,
-      360))
-
-    this.scene.tweens.add({
-      targets: image,
-      scaleX: 2,
-      scaleY: 2,
-      alpha: 0,
-      duration: 500,
-      onComplete: (greg, test) => {
-        test[0].destroy()
-      },
-      onCompleteParams: [image]
-    })
-  }
-
   collisionEvent () {
     this.scene.matterCollision.addOnCollideStart({
       objectA: this,
@@ -122,13 +99,11 @@ class Block extends Phaser.GameObjects.Polygon {
 
         if (collidedWith === this.scene.collisionCategories.player) {
           // debugger
-          console.log(eventData.pair.collision.bodyB.positionPrev)
 
           const force = 3// eventData.gameObjectB.body.speed * 2
 
           const contactPointA = eventData.pair.collision.bodyA.position
           const contactPointB = eventData.pair.collision.supports[0]
-          this.spark(contactPointB)
           // block
           this.setAngularVelocity(Phaser.Math.RND.pick([0, 1]) ? 0.02 : -0.02)
           const angle = Phaser.Math.Angle.BetweenPoints(contactPointA,
@@ -136,13 +111,6 @@ class Block extends Phaser.GameObjects.Polygon {
 
           this.setVelocity(Math.cos(angle) * force,
             Math.sin(angle) * force)
-
-          // player {x: 397.77256671308317, y: 352.5}
-
-          // const playerAngle = angle + Math.PI
-          // const playerForce = 2
-          // eventData.gameObjectB.setVelocity(Math.cos(playerAngle) * playerForce,
-          //   Math.sin(playerAngle) * playerForce)
         }
 
         if (collidedWith === this.scene.collisionCategories.bullet &&

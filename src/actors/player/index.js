@@ -1,9 +1,9 @@
 import Bullet from '../bullet'
-import Actor from '../actor'
 import Head from './head'
 import Controller from './controller'
 import Gun from './gun'
 import Torso from './torso'
+
 /* eslint-disable no-undef */
 const MASS = 1
 const RECOIL_FORCE = 0.015
@@ -18,7 +18,6 @@ class Player extends Phaser.Physics.Matter.Image {
       'transparent'
     )
     this.scene = config.scene
-    this.collisions = config.collisions
 
     this.startPointer()
     this.body.restitution = 1
