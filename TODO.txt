@@ -9,10 +9,11 @@
     RIGHT NOW
     - refactor
     - replace collision image
-    - should spin towards turn direction
+    - bounce off sides
     - overload mode
         - harder to control
         - invulnerable 
+        - grid flow on sin wave
         - bouncy
         - kill stuff on contact 
 

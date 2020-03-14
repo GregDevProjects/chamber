@@ -151,7 +151,16 @@ class Player extends Phaser.Physics.Matter.Image {
     }
 
     this.kick.duration++
-    this.angle += KICK_SPEED * delta
+
+    const setAngle = () => {
+      if (this.body.angularVelocity < 0) {
+        this.angle -= KICK_SPEED * delta
+        return
+      }
+      this.angle += KICK_SPEED * delta
+    }
+
+    setAngle()
 
     const threshold = 0.1
 
