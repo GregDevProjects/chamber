@@ -22,7 +22,8 @@ class Bullet extends Phaser.GameObjects.Arc {
     this.setCollidesWith([
       this.scene.collisionCategories.world,
       this.scene.collisionCategories.bullet,
-      this.scene.collisionCategories.block
+      this.scene.collisionCategories.block,
+      this.scene.collisionCategories.spinner
     ]);
     this.body.restitution = RESTITUTION;
     this.setMass(MASS);

@@ -37,6 +37,7 @@ class Loader extends Phaser.Scene {
       block: this.matter.world.nextCategory(),
       deathLine: this.matter.world.nextCategory(),
       blockBarrier: this.matter.world.nextCategory(),
+      spinner: this.matter.world.nextCategory(),
       world: 1
     };
     const music = this.scene.start("music");

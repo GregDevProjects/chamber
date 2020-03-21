@@ -48,7 +48,7 @@ class Level1 extends Phaser.Scene {
     this.robotDialogue.destroy();
     this.blocksController.setPadding(70, 150);
     this.blocksController.changeBlockType(2);
-    // this.blocksController.startRandomSpawning()
+    this.blocksController.startRandomSpawning();
     this.time.addEvent({
       delay: 3000,
       callback: () => {

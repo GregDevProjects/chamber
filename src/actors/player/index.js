@@ -1,179 +1,167 @@
-import Bullet from '../bullet'
-import Head from './head'
-import Controller from './controller'
-import Gun from './gun'
-import Torso from './torso'
+import Bullet from "../bullet";
+import Head from "./head";
+import Controller from "./controller";
+import Gun from "./gun";
+import Torso from "./torso";
 
 /* eslint-disable no-undef */
-const MASS = 1
-const RECOIL_FORCE = 0.015
-const KICK_SPEED = 0.50
+const MASS = 1;
+const RECOIL_FORCE = 0.015;
+const KICK_SPEED = 0.5;
 
 class Player extends Phaser.Physics.Matter.Image {
-  constructor (config) {
-    super(
-      config.scene.matter.world,
-      200,
-      200,
-      'transparent'
-    )
-    this.scene = config.scene
+  constructor(config) {
+    super(config.scene.matter.world, 200, 200, "transparent");
+    this.scene = config.scene;
 
-    this.startPointer()
-    this.body.restitution = 1
+    this.startPointer();
+    this.body.restitution = 1;
 
-    this.controller = new Controller(this)
-    this.gun = new Gun(this)
-    this.head = new Head({ scene: this.scene, player: this })
-    this.torso = new Torso({ scene: this.scene, player: this })
-    this.allowMovement = true
+    this.controller = new Controller(this);
+    this.gun = new Gun(this);
+    this.head = new Head({ scene: this.scene, player: this });
+    this.torso = new Torso({ scene: this.scene, player: this });
+    this.allowMovement = true;
 
-    var M = Phaser.Physics.Matter.Matter
+    var M = Phaser.Physics.Matter.Matter;
 
     var compoundBody = M.Body.create({
       parts: [
         // parent,
-        this.torso.getBody(config.x,
-          config.y),
-        this.head.getBody(config.x,
-          config.y)
+        this.torso.getBody(config.x, config.y),
+        this.head.getBody(config.x, config.y)
       ],
       friction: 0.01,
       restitution: 1 // Prevent body from sticking against a wall
-    })
+    });
 
-    this.setExistingBody(compoundBody)
-    this.setMass(MASS)
-    this.setCollisionCategory(this.scene.collisionCategories.player)
+    this.setExistingBody(compoundBody);
+    this.setMass(MASS);
+    this.setCollisionCategory(this.scene.collisionCategories.player);
 
     this.setCollidesWith([
       this.scene.collisionCategories.world,
       this.scene.collisionCategories.deathLine,
-      this.scene.collisionCategories.block
-    ])
+      this.scene.collisionCategories.block,
+      this.scene.collisionCategories.spinner
+    ]);
 
     this.kick = {
       duration: 0,
       isKicking: false,
       startAngle: 0,
       endAngle: 0
-    }
+    };
   }
 
-  startKick () {
-    this.kick.isKicking = true
+  startKick() {
+    this.kick.isKicking = true;
   }
 
-  startPointer () {
-    this.scene.input.on('pointerdown',
-      (coords) => {
-        if (!this.gun.active) {
-          return
-        }
+  startPointer() {
+    this.scene.input.on("pointerdown", coords => {
+      if (!this.gun.active) {
+        return;
+      }
 
-        const mouseVector = {
-          x: coords.worldX,
-          y: coords.worldY
-        }
+      const mouseVector = {
+        x: coords.worldX,
+        y: coords.worldY
+      };
 
-        this.shoot(mouseVector,
-          RECOIL_FORCE)
-      })
+      this.shoot(mouseVector, RECOIL_FORCE);
+    });
   }
 
-  applyForceInOppositeDirection (vector, force) {
+  applyForceInOppositeDirection(vector, force) {
     const playerVector = {
       x: this.x,
       y: this.y
-    }
+    };
     const targetAngle = Phaser.Math.Angle.Between(
       vector.x,
       vector.y,
       playerVector.x,
       playerVector.y
-    )
+    );
 
     this.applyForce({
       x: Math.cos(targetAngle) * force,
       y: Math.sin(targetAngle) * force
-    })
+    });
   }
 
-  death () {
-    this.scene.resetScene()
+  death() {
+    this.scene.resetScene();
   }
 
-  shoot (mouseVector, force) {
-    this.applyForceInOppositeDirection(mouseVector,
-      force)
-    new Bullet({ scene: this.scene, x: this.x, y: this.y })
-      .fire(mouseVector)
+  shoot(mouseVector, force) {
+    this.applyForceInOppositeDirection(mouseVector, force);
+    new Bullet({ scene: this.scene, x: this.x, y: this.y }).fire(mouseVector);
   }
 
-  removeGun () {
-    this.gun.destroy()
+  removeGun() {
+    this.gun.destroy();
   }
 
-  giveGun () {
-    this.gun = new Gun(this)
+  giveGun() {
+    this.gun = new Gun(this);
   }
 
-  removeControls () {
-    this.allowMovement = false
+  removeControls() {
+    this.allowMovement = false;
   }
 
-  giveControls () {
-    this.allowMovement = true
+  giveControls() {
+    this.allowMovement = true;
   }
 
-  update (delta) {
+  update(delta) {
     if (this.allowMovement) {
-      this.controller.update(delta)
+      this.controller.update(delta);
     }
 
     if (this.gun) {
-      this.gun.update()
+      this.gun.update();
     }
 
     if (this.kick.isKicking) {
-      this.twirl360(delta)
+      this.twirl360(delta);
     }
 
-    this.head.update()
-    this.torso.update()
+    this.head.update();
+    this.torso.update();
   }
 
-  twirl360 (delta) {
+  twirl360(delta) {
     if (this.kick.duration === 0) {
-      this.kick.startAngle = this.angle
-      this.kick.endAngle = Phaser.Math.Angle.Wrap(this.rotation + (Math.PI * 2))
+      this.kick.startAngle = this.angle;
+      this.kick.endAngle = Phaser.Math.Angle.Wrap(this.rotation + Math.PI * 2);
     }
 
-    this.kick.duration++
+    this.kick.duration++;
 
     const setAngle = () => {
       if (this.body.angularVelocity < 0) {
-        this.angle -= KICK_SPEED * delta
-        return
+        this.angle -= KICK_SPEED * delta;
+        return;
       }
-      this.angle += KICK_SPEED * delta
-    }
+      this.angle += KICK_SPEED * delta;
+    };
 
-    setAngle()
+    setAngle();
 
-    const threshold = 0.1
+    const threshold = 0.1;
 
-    if (Phaser.Math.Within(
-      this.rotation,
-      this.kick.endAngle,
-      threshold
-    ) &&
-    this.kick.duration > 10) {
-      this.kick.isKicking = false
-      this.kick.duration = 0
-      this.setAngularVelocity(0)
+    if (
+      Phaser.Math.Within(this.rotation, this.kick.endAngle, threshold) &&
+      this.kick.duration > 10
+    ) {
+      this.kick.isKicking = false;
+      this.kick.duration = 0;
+      this.setAngularVelocity(0);
     }
   }
 }
 
-export default Player
+export default Player;

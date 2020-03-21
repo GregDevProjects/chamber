@@ -1,21 +1,21 @@
 ---TODO------------------------------------------------
 - game over screen
 - robot text should be an oval, not a circle
-- bounce blocks away on hit with torso
 - add some friction to the rotation 
 - cursor become crosshair
 - patterns for blocks
+- overload mode
+    - harder to control
+    - invulnerable 
+    - grid flow on sin wave
+    - bouncy
+    - kill stuff on contact
 
-    RIGHT NOW
+    RIGHT NOW, TO FINISH LEVEL 1
     - refactor
-    - replace collision image
     - bounce off sides
-    - overload mode
-        - harder to control
-        - invulnerable 
-        - grid flow on sin wave
-        - bouncy
-        - kill stuff on contact 
+    - death animations 
+    - pickup gun to end the level 
 
 - implement gravity 
 - implement side lasers

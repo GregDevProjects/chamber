@@ -1,4 +1,6 @@
 import { SPAWN_LOCATION } from "../constants";
+import { setVelocityTowardsPoint } from "../helpers";
+
 const MOVE_SPEED = 0.1;
 
 class Block extends Phaser.GameObjects.Polygon {
@@ -18,7 +20,8 @@ class Block extends Phaser.GameObjects.Polygon {
       this.scene.collisionCategories.player,
       this.scene.collisionCategories.bullet,
       this.scene.collisionCategories.blockBarrier,
-      this.scene.collisionCategories.block
+      this.scene.collisionCategories.block,
+      this.scene.collisionCategories.spinner
     ]);
 
     this.body.restitution = 1;
