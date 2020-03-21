@@ -1,46 +1,45 @@
-import BlockSpawner from './blockSpawner'
-import createBlockBarrier from '../ai/blockBarrier'
+import BlockSpawner from "./blockSpawner";
+import createBlockBarrier from "../ai/blockBarrier";
 // createBlockBarrier(this)
 class BlocksController {
-  constructor (scene) {
-    this.scene = scene
-    this.blockGroup = this.scene.add.group()
-    this.allowUpdate = false
+  constructor(scene) {
+    this.scene = scene;
+    this.blockGroup = this.scene.add.group();
+    this.allowUpdate = false;
 
-    this.blockSpawner = new BlockSpawner(this.scene,
-      this.blockGroup)
+    this.blockSpawner = new BlockSpawner(this.scene, this.blockGroup);
   }
 
-  startRandomSpawning () {
-    this.allowUpdate = true
+  startRandomSpawning() {
+    this.allowUpdate = true;
 
-    this.blockSpawner.start()
-    createBlockBarrier(this.scene)
+    this.blockSpawner.start();
+    createBlockBarrier(this.scene);
   }
 
-  setPadding (min, max) {
-    this.blockSpawner.padding = { min, max }
+  setPadding(min, max) {
+    this.blockSpawner.padding = { min, max };
   }
 
-  changeBlockType (type) {
-    this.blockSpawner.setBlockType(type)
+  changeBlockType(type) {
+    this.blockSpawner.setBlockType(type);
   }
 
-  changeColorOfAllBLocks (color) {
-    this.blocks.children.iterate((block) => {
+  changeColorOfAllBLocks(color) {
+    this.blocks.children.iterate(block => {
       if (!block) {
-        return
+        return;
       }
-      block.setFillStyle(color)
-    })
+      block.setFillStyle(color);
+    });
   }
 
-  update (delta) {
+  update(delta) {
     if (!this.allowUpdate) {
-      return
+      return;
     }
-    this.blockSpawner.update(delta)
+    this.blockSpawner.update(delta);
   }
 }
 
-export default BlocksController
+export default BlocksController;

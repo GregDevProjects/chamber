@@ -1,21 +1,15 @@
-const WIDTH = 15
-const HEIGHT = 60
+const WIDTH = 15;
+const HEIGHT = 60;
 
 class Spinner extends Phaser.Physics.Matter.Image {
-  constructor (config) {
-    super(
-      config.scene.matter.world,
-      config.x,
-      config.y,
-      'transparent'
-    )
+  constructor(config) {
+    super(config.scene.matter.world, config.x, config.y, "transparent");
 
-    this.setExistingBody(this.getBody(config))
-    console.log('io')
+    this.setExistingBody(this.getBody(config));
   }
 
-  getBody (config) {
-    var M = Phaser.Physics.Matter.Matter
+  getBody(config) {
+    var M = Phaser.Physics.Matter.Matter;
 
     const one = Phaser.Physics.Matter.Matter.Bodies.rectangle(
       config.x,
@@ -23,7 +17,7 @@ class Spinner extends Phaser.Physics.Matter.Image {
       WIDTH,
       HEIGHT,
       { angle: 1.5708 }
-    )
+    );
 
     // one.angle = 2
 
@@ -32,23 +26,20 @@ class Spinner extends Phaser.Physics.Matter.Image {
       config.y,
       WIDTH,
       HEIGHT
-    //   { angle: 5.1050881 } // 292.5 degrees
-    )
+      //   { angle: 5.1050881 } // 292.5 degrees
+    );
 
     return M.Body.create({
-      parts: [
-        one,
-        two
-      ]
-    })
+      parts: [one, two]
+    });
   }
 
-  update () {
-    this.setAngularVelocity(0.01)
+  update() {
+    this.setAngularVelocity(0.01);
     // gameObject.applyForceFrom(position, force);
     // need to apply thrust towards player
-    this.thrust(0.0001)
+    this.thrust(0.0001);
   }
 }
 
-export default Spinner
+export default Spinner;

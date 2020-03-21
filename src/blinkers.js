@@ -1,40 +1,43 @@
-import { GAME_HEIGHT, GAME_WIDTH, SPAWN_LOCATION } from './constants'
-import { gamePosition } from './helpers'
+import { GAME_HEIGHT, GAME_WIDTH, SPAWN_LOCATION } from "./constants";
+import { gamePosition } from "./helpers";
 
 class Blinkers {
-  constructor (scene) {
-    this.scene = scene
+  constructor(scene) {
+    this.scene = scene;
     this.arrowTop = this.scene.add.image(
       gamePosition(GAME_WIDTH / 2),
       gamePosition(GAME_HEIGHT / 3),
-      'arrowTop'
-    )
+      "arrowTop"
+    );
     this.arrowRight = this.scene.add.image(
       gamePosition(GAME_WIDTH - GAME_WIDTH / 3),
       gamePosition(GAME_HEIGHT / 2),
-      'arrowRight'
-    )
+      "arrowRight"
+    );
     this.arrowBottom = this.scene.add.image(
       gamePosition(GAME_WIDTH / 2),
       gamePosition(GAME_HEIGHT - GAME_HEIGHT / 3),
-      'arrowBottom'
-    )
+      "arrowBottom"
+    );
     this.arrowLeft = this.scene.add.image(
       gamePosition(GAME_WIDTH / 3),
       gamePosition(GAME_HEIGHT / 2),
-      'arrowLeft'
-    )
+      "arrowLeft"
+    );
 
     this.allArrows = [
       this.arrowTop,
       this.arrowBottom,
       this.arrowLeft,
       this.arrowRight
-    ]
+    ];
 
-    this.allArrows.forEach((arrow) => {
-      arrow.setDepth(2).setAlpha(0.9).setVisible(false)
-    })
+    this.allArrows.forEach(arrow => {
+      arrow
+        .setDepth(2)
+        .setAlpha(0.9)
+        .setVisible(false);
+    });
 
     this.scene.tweens.add({
       targets: this.allArrows,
@@ -43,32 +46,32 @@ class Blinkers {
       yoyo: true,
       repeat: -1,
       paused: false
-    })
+    });
   }
 
-  hideAllArrows () {
-    this.allArrows.forEach((arrow) => {
-      arrow.setVisible(false)
-    })
+  hideAllArrows() {
+    this.allArrows.forEach(arrow => {
+      arrow.setVisible(false);
+    });
   }
 
-  showArrow (spawnLocation) {
-    this.hideAllArrows()
+  showArrow(spawnLocation) {
+    this.hideAllArrows();
     switch (spawnLocation) {
       case SPAWN_LOCATION.top:
-        this.arrowBottom.setVisible(true)
-        break
+        this.arrowBottom.setVisible(true);
+        break;
       case SPAWN_LOCATION.bottom:
-        this.arrowTop.setVisible(true)
-        break
+        this.arrowTop.setVisible(true);
+        break;
       case SPAWN_LOCATION.left:
-        this.arrowLeft.setVisible(true)
-        break
+        this.arrowLeft.setVisible(true);
+        break;
       case SPAWN_LOCATION.right:
-        this.arrowRight.setVisible(true)
-        break
+        this.arrowRight.setVisible(true);
+        break;
     }
   }
 }
 
-export default Blinkers
+export default Blinkers;

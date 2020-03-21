@@ -1,5 +1,5 @@
-const gamePosition = (coordinate) => {
-  return coordinate + 150
-}
+const gamePosition = coordinate => {
+  return coordinate + 150;
+};
 
-export { gamePosition }
+export { gamePosition };

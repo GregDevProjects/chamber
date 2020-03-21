@@ -1,19 +1,17 @@
-import { FRAME_WIDTH, FRAME_HEIGHT } from '../constants'
+import { FRAME_WIDTH, FRAME_HEIGHT } from "../constants";
 
 export class MainMenu extends Phaser.Scene {
-  constructor (test) {
-    super({ key: 'main_menu', active: false })
+  constructor(test) {
+    super({ key: "main_menu", active: false });
   }
 
-  init (test) {
-    this.collisionCategories = test.collisionCategories
+  init(test) {
+    this.collisionCategories = test.collisionCategories;
   }
 
-  preload () {
+  preload() {}
 
-  }
-
-  create () {
+  create() {
     // this.add.image(
     //   FRAME_WIDTH / 2,
     //   FRAME_HEIGHT / 2,
@@ -21,34 +19,31 @@ export class MainMenu extends Phaser.Scene {
     // )
     // TODO: get interactive cursor working .setInteractive({ cursor: 'url(assets/main_menu_pizza.png), pointer'})
 
-    this.start()
+    this.start();
 
     // this.scene.stop();
     // this.scene.start( 'win' );
   }
 
-  levelButton (level) {
-    return this.add.text(
-      FRAME_WIDTH / 2,
-      50 + 100 * level + 1,
-      'LEVEL ' + level,
-      { font: '30px Arial' }
-    ).setInteractive().on('pointerdown',
-      (event) => {
-        this.scene.stop()
-        this.scene.start(level.toString(),
-          this.collisionCategories)
+  levelButton(level) {
+    return this.add
+      .text(FRAME_WIDTH / 2, 50 + 100 * level + 1, "LEVEL " + level, {
+        font: "30px Arial"
       })
+      .setInteractive()
+      .on("pointerdown", event => {
+        this.scene.stop();
+        this.scene.start(level.toString(), this.collisionCategories);
+      });
   }
 
-  start () {
-    this.levelButton(1)
+  start() {
+    this.levelButton(1);
 
-    this.levelButton(2)
+    this.levelButton(2);
 
-    this.scene.stop()
-    this.scene.start('1',
-      this.collisionCategories)
+    this.scene.stop();
+    this.scene.start("1", this.collisionCategories);
 
     // const start = this.add.image(
     //   FRAME_WIDTH / 2,
@@ -67,4 +62,4 @@ export class MainMenu extends Phaser.Scene {
   }
 }
 
-export default MainMenu
+export default MainMenu;

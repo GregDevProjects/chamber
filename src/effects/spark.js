@@ -1,12 +1,7 @@
 const spark = (position, scene) => {
-  const image = scene.add.image(
-    position.x,
-    position.y,
-    'spark'
-  )
+  const image = scene.add.image(position.x, position.y, "spark");
 
-  image.setAngle(Phaser.Math.Between(0,
-    360))
+  image.setAngle(Phaser.Math.Between(0, 360));
 
   scene.tweens.add({
     targets: image,
@@ -15,26 +10,20 @@ const spark = (position, scene) => {
     alpha: 0,
     duration: 500,
     onComplete: (greg, test) => {
-      test[0].destroy()
+      test[0].destroy();
     },
     onCompleteParams: [image]
-  })
-}
+  });
+};
 
 const makeDot = (scene, position) => {
-  var graphics = scene.add.graphics()
+  var graphics = scene.add.graphics();
 
-  var color = 0x000000
-  var alpha = 1
+  var color = 0x000000;
+  var alpha = 1;
 
-  graphics.fillStyle(color,
-    alpha)
-  graphics.fillRect(
-    position.x,
-    position.y,
-    10,
-    10
-  )
-}
+  graphics.fillStyle(color, alpha);
+  graphics.fillRect(position.x, position.y, 10, 10);
+};
 
-export { spark, makeDot }
+export { spark, makeDot };

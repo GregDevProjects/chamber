@@ -1,6 +1,5 @@
-
 class DeathLine extends Phaser.GameObjects.Rectangle {
-  constructor (config) {
+  constructor(config) {
     super(
       config.scene,
       config.x,
@@ -8,16 +7,18 @@ class DeathLine extends Phaser.GameObjects.Rectangle {
       config.width,
       config.height,
       0xc90707
-    )
+    );
 
-    this.scene.add.existing(this)
-    this.scene.matter.add.gameObject(this,
-      { isSensor: true })
-    this.setCollidesWith([this.scene.collisionCategories.player, this.scene.collisionCategories.bullet])
-    this.setDepth(1)
-    this.setCollisionCategory(this.scene.collisionCategories.deathLine)
-    this.setIgnoreGravity(true)
+    this.scene.add.existing(this);
+    this.scene.matter.add.gameObject(this, { isSensor: true });
+    this.setCollidesWith([
+      this.scene.collisionCategories.player,
+      this.scene.collisionCategories.bullet
+    ]);
+    this.setDepth(1);
+    this.setCollisionCategory(this.scene.collisionCategories.deathLine);
+    this.setIgnoreGravity(true);
   }
 }
 
-export default DeathLine
+export default DeathLine;
