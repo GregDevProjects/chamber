@@ -59,6 +59,7 @@ class Player extends Phaser.Physics.Matter.Image {
   }
 
   stopKick() {
+    this.torso.stopFlashing();
     this.isKicking = false;
     this.setAngularVelocity(0);
   }

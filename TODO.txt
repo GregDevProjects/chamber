@@ -7,7 +7,7 @@
 - overload mode
     - harder to control
     - invulnerable 
-    - grid flow on sin wave
+    - 
     - bouncy
     - kill stuff on contact
 
@@ -19,6 +19,20 @@
 
     LEVEL 2
     - refine spinning 
+
+-spinners
+    - brief invulnerable after getting hit so it can't be killed instantly
+    - something happens when it collides with a block
+        - kills the block if in death state
+        - if not? ...
+
+-blocks
+    - grid flow on sin wave
+    - how does it react to kick?
+
+- life/power gauge
+    - 
+
 
 - implement gravity 
 - implement side lasers

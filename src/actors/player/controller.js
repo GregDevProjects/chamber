@@ -23,6 +23,10 @@ class Controller {
     player.scene.input.keyboard.on("keyup_SPACE", event => {
       this.player.stopKick();
     });
+
+    player.scene.input.keyboard.on("keydown_SPACE", event => {
+      this.player.torso.startFlashing();
+    });
   }
 
   clampRotateSpeed(angularVelocity) {

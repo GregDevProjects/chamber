@@ -1,5 +1,5 @@
 import { spark } from "../../effects/spark";
-import { bounceCollisionReversed } from "../../helpers";
+import { bounceCollisionReversed, flashTween } from "../../helpers";
 
 const WIDTH = 20;
 const HEIGHT = 30; // 30
@@ -20,6 +20,29 @@ class Torso {
     );
 
     this.scene.add.existing(this.visual);
+
+    this.flashing = new Phaser.GameObjects.Rectangle(
+      config.scene,
+      config.player.x,
+      config.player.y,
+      WIDTH,
+      HEIGHT,
+      0xdff2800,
+      1
+    );
+    this.flashing.setAlpha(0);
+    this.flashing.setDepth(-1);
+    this.scene.add.existing(this.flashing);
+    this.flashTween = flashTween(this.scene, this.flashing);
+  }
+
+  startFlashing() {
+    this.flashing.setDepth(1);
+  }
+
+  stopFlashing() {
+    console.log("stop");
+    this.flashing.setDepth(-1);
   }
 
   getBody(x, y) {
@@ -85,6 +108,9 @@ class Torso {
       this.player.y - 7 * Math.sin(this.degreesToRadians(playerAngle - 90));
     this.visual.setPosition(x, y);
     this.visual.setAngle(this.player.angle);
+
+    this.flashing.setPosition(x, y);
+    this.flashing.setAngle(this.player.angle);
   }
 }
 
