@@ -1,4 +1,4 @@
-import { setVelocityTowardsPoint } from "../helpers";
+import { setVelocityTowardsPoint, bounceCollision } from "../helpers";
 
 const WIDTH = 20;
 const HEIGHT = 80;
@@ -6,10 +6,9 @@ const HEIGHT = 80;
 const ROTATE_SPEED = 0.02;
 const MOVEMENT_SPEED = 1;
 const CHARGING_SPEED = 2.5;
-
 const COLOR = 0x0000ff;
-
 const MASS = 0.001;
+const BOUNCE_VELOCITY = 8;
 
 const states = { NORMAL: 1, SPINNING: 2, CHARGING: 3, DEAD: 4 };
 
@@ -72,9 +71,10 @@ class Spinner extends Phaser.Physics.Matter.Image {
           return;
         }
 
+        //collides with a kicking player
         if (
           collidedWith === this.scene.collisionCategories.player &&
-          this.player.kick.isKicking
+          this.player.isKicking
         ) {
           if (this.state === states.NORMAL) {
             this.state = states.SPINNING;
@@ -82,19 +82,7 @@ class Spinner extends Phaser.Physics.Matter.Image {
           if (this.state === states.CHARGING) {
             this.state = states.DEAD;
           }
-
-          const force = 8; // eventData.gameObjectB.body.speed * 2
-
-          const contactPointA = eventData.pair.collision.bodyA.position;
-          const contactPointB = eventData.pair.collision.supports[0];
-          // block
-          //this.setAngularVelocity(Phaser.Math.RND.pick([0, 1]) ? 0.02 : -0.02);
-          const angle = Phaser.Math.Angle.BetweenPoints(
-            contactPointA,
-            contactPointB
-          );
-
-          this.setVelocity(Math.cos(angle) * force, Math.sin(angle) * force);
+          bounceCollision(eventData, this, BOUNCE_VELOCITY);
           if (this.player.angularVelocity > 0) {
             this.setAngularVelocity(0.3);
           } else {
@@ -102,8 +90,11 @@ class Spinner extends Phaser.Physics.Matter.Image {
           }
         }
 
-        if (collidedWith === this.scene.collisionCategories.bullet) {
-          this.kill();
+        if (
+          collidedWith === this.scene.collisionCategories.bullet &&
+          this.state === states.CHARGING
+        ) {
+          this.state = states.DEAD;
         }
       },
       context: this // Context to apply to the callback function

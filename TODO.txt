@@ -17,6 +17,9 @@
     - death animations 
     - pickup gun to end the level 
 
+    LEVEL 2
+    - refine spinning 
+
 - implement gravity 
 - implement side lasers
 

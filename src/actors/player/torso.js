@@ -1,7 +1,9 @@
 import { spark } from "../../effects/spark";
+import { bounceCollisionReversed } from "../../helpers";
 
 const WIDTH = 20;
 const HEIGHT = 30; // 30
+const BOUNCE_VELOCITY = 2;
 
 class Torso {
   constructor(config) {
@@ -33,18 +35,8 @@ class Torso {
   }
 
   blockCollision(eventData) {
-    const contactPointA = eventData.pair.collision.bodyA.position;
-    const contactPointB = eventData.pair.collision.supports[0];
-
-    spark(contactPointB, this.scene);
-    const angle = Phaser.Math.Angle.BetweenPoints(contactPointA, contactPointB);
-
-    const playerAngle = angle + Math.PI;
-    const playerForce = 2;
-    this.player.setVelocity(
-      Math.cos(playerAngle) * playerForce,
-      Math.sin(playerAngle) * playerForce
-    );
+    spark(eventData.pair.collision.supports[0], this.scene);
+    bounceCollisionReversed(eventData, this.player, BOUNCE_VELOCITY);
   }
 
   worldBoundryCollision(wallBody) {

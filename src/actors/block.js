@@ -1,7 +1,8 @@
 import { SPAWN_LOCATION } from "../constants";
-import { setVelocityTowardsPoint } from "../helpers";
+import { bounceCollision } from "../helpers";
 
 const MOVE_SPEED = 0.1;
+const BOUNCE_VELOCITY = 3;
 
 class Block extends Phaser.GameObjects.Polygon {
   constructor(config) {
@@ -96,20 +97,8 @@ class Block extends Phaser.GameObjects.Polygon {
         }
 
         if (collidedWith === this.scene.collisionCategories.player) {
-          // debugger
-
-          const force = 3; // eventData.gameObjectB.body.speed * 2
-
-          const contactPointA = eventData.pair.collision.bodyA.position;
-          const contactPointB = eventData.pair.collision.supports[0];
-          // block
+          bounceCollision(eventData, this, BOUNCE_VELOCITY);
           this.setAngularVelocity(Phaser.Math.RND.pick([0, 1]) ? 0.02 : -0.02);
-          const angle = Phaser.Math.Angle.BetweenPoints(
-            contactPointA,
-            contactPointB
-          );
-
-          this.setVelocity(Math.cos(angle) * force, Math.sin(angle) * force);
         }
 
         if (

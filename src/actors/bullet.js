@@ -1,3 +1,5 @@
+import { spark } from "../effects/spark";
+
 const MASS = 0.188;
 const FORCE = 0.005;
 const RESTITUTION = 1;
@@ -15,6 +17,7 @@ class Bullet extends Phaser.GameObjects.Arc {
       undefined,
       0x551a8b
     );
+    this.scene = config.scene;
     this.scene.add.existing(this);
     this.scene.matter.add.gameObject(this);
     this.setCircle(RADIOUS);
@@ -47,21 +50,36 @@ class Bullet extends Phaser.GameObjects.Arc {
     });
   }
 
+  kill() {
+    spark(this, this.scene);
+    this.destroy();
+  }
+
   collisions() {
     this.scene.matterCollision.addOnCollideStart({
       objectA: this,
       // objectB: trapDoor,
-      callback: function(eventData) {
+      callback: eventData => {
+        const collidedWith = eventData.bodyB.collisionFilter.category;
+
+        if (collidedWith === this.scene.collisionCategories.spinner) {
+          this.kill();
+          return;
+        }
+
         this.bounces++;
         if (this.bounces > 1) {
           // might have to move this outside of the class
-          this.destroy();
+          this.kill();
           return;
         }
         this.scene.time.addEvent({
           delay: 4000,
           callback: () => {
-            this.destroy();
+            if (!this.active) {
+              return;
+            }
+            this.kill();
           },
           callbackScope: this
         });

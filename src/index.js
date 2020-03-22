@@ -14,7 +14,7 @@ import Level2 from "./scenes/level2";
 import Music from "./scenes/music";
 
 const config = {
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   parent: "phaser-example",
   width: FRAME_WIDTH,
   height: FRAME_HEIGHT,

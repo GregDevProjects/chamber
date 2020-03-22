@@ -7,7 +7,7 @@ import Torso from "./torso";
 /* eslint-disable no-undef */
 const MASS = 1;
 const RECOIL_FORCE = 0.015;
-const KICK_SPEED = 0.5;
+const KICK_SPEED = 7;
 
 class Player extends Phaser.Physics.Matter.Image {
   constructor(config) {
@@ -46,16 +46,21 @@ class Player extends Phaser.Physics.Matter.Image {
       this.scene.collisionCategories.spinner
     ]);
 
-    this.kick = {
-      duration: 0,
-      isKicking: false,
-      startAngle: 0,
-      endAngle: 0
-    };
+    this.isKicking = false;
   }
 
-  startKick() {
-    this.kick.isKicking = true;
+  kick(rotateClockwise) {
+    this.isKicking = true;
+    if (rotateClockwise) {
+      this.angle += KICK_SPEED;
+      return;
+    }
+    this.angle -= KICK_SPEED;
+  }
+
+  stopKick() {
+    this.isKicking = false;
+    this.setAngularVelocity(0);
   }
 
   startPointer() {
@@ -125,42 +130,8 @@ class Player extends Phaser.Physics.Matter.Image {
       this.gun.update();
     }
 
-    if (this.kick.isKicking) {
-      this.twirl360(delta);
-    }
-
     this.head.update();
     this.torso.update();
-  }
-
-  twirl360(delta) {
-    if (this.kick.duration === 0) {
-      this.kick.startAngle = this.angle;
-      this.kick.endAngle = Phaser.Math.Angle.Wrap(this.rotation + Math.PI * 2);
-    }
-
-    this.kick.duration++;
-
-    const setAngle = () => {
-      if (this.body.angularVelocity < 0) {
-        this.angle -= KICK_SPEED * delta;
-        return;
-      }
-      this.angle += KICK_SPEED * delta;
-    };
-
-    setAngle();
-
-    const threshold = 0.1;
-
-    if (
-      Phaser.Math.Within(this.rotation, this.kick.endAngle, threshold) &&
-      this.kick.duration > 10
-    ) {
-      this.kick.isKicking = false;
-      this.kick.duration = 0;
-      this.setAngularVelocity(0);
-    }
   }
 }
 
