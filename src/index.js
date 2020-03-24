@@ -22,7 +22,7 @@ const config = {
     default: "matter",
     matter: {
       setBounds: { x: 150, y: 150, width: GAME_WIDTH, height: GAME_HEIGHT },
-      debug: true,
+      debug: false,
       gravity: {
         x: 0,
         y: 0

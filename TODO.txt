@@ -7,18 +7,18 @@
 - overload mode
     - harder to control
     - invulnerable 
-    - 
     - bouncy
     - kill stuff on contact
 
     RIGHT NOW, TO FINISH LEVEL 1
     - refactor
-    - bounce off sides
     - death animations 
-    - pickup gun to end the level 
+    - pickup gun
+    - blocks get more intense 
 
     LEVEL 2
-    - refine spinning 
+    - running from spinner 
+    - learn kick 
 
 -spinners
     - brief invulnerable after getting hit so it can't be killed instantly

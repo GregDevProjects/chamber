@@ -9,13 +9,11 @@ const setVelocityTowardsPoint = (matterObj, point, velocity) => {
 
 const setThrustTowardsPoint = (matterObj, point, velocity) => {
   const angle = Phaser.Math.Angle.BetweenPoints(matterObj, point);
-  // matterObj.applyForce(Math.cos(angle) * velocity, Math.sin(angle) * velocity);
 
   const vector = {
     x: velocity * Math.cos(angle),
     y: velocity * Math.sin(angle)
   };
-  // debugger;
   Phaser.Physics.Matter.Matter.Body.applyForce(
     matterObj.body,
     { x: matterObj.x, y: matterObj.y },

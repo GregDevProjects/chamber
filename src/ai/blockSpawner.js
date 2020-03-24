@@ -23,6 +23,7 @@ class BlockSpawner {
     this.spawnOrigin = randomProperty(SPAWN_LOCATION);
     this.spawnCount = 1;
     this.type = null;
+    this.randomRotation = false;
   }
 
   setBlockType(type) {
@@ -36,6 +37,10 @@ class BlockSpawner {
 
   stop() {
     this.timer.remove();
+  }
+
+  setRandomRotationForBlocks(randomRotation) {
+    this.randomRotation = randomRotation;
   }
 
   spawnOnTimer() {
@@ -94,7 +99,8 @@ class BlockSpawner {
         x: gamePosition(xOrigin),
         y: gamePosition(yOrigin),
         scene: this.scene,
-        type: this.type
+        type: this.type,
+        randomRotation: this.randomRotation
       });
 
       this.blocks.add(block);

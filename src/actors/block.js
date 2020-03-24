@@ -16,6 +16,7 @@ class Block extends Phaser.GameObjects.Polygon {
     this.scene = config.scene;
     this.scene.add.existing(this);
     this.scene.matter.add.gameObject(this);
+    this.randomRotation = config.randomRotation;
 
     this.setCollidesWith([
       this.scene.collisionCategories.player,
@@ -37,8 +38,10 @@ class Block extends Phaser.GameObjects.Polygon {
       type = Phaser.Math.Between(1, 5);
     }
 
-    // this.setAngle(Phaser.Math.Between(0,
-    //   360))
+    if (this.randomRotation) {
+      this.setAngle(Phaser.Math.Between(0, 360));
+    }
+
     this.restitution = 1;
     if (type === 1) {
       this.setStatic(true);

@@ -21,10 +21,17 @@ class Controller {
     );
 
     player.scene.input.keyboard.on("keyup_SPACE", event => {
+      if (!this.player.allowMovement) {
+        return;
+      }
+
       this.player.stopKick();
     });
 
     player.scene.input.keyboard.on("keydown_SPACE", event => {
+      if (!this.player.allowMovement) {
+        return;
+      }
       this.player.torso.startFlashing();
     });
   }

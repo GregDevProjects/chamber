@@ -3,6 +3,8 @@ const spark = (position, scene) => {
 
   image.setAngle(Phaser.Math.Between(0, 360));
 
+  image.setDepth(100);
+
   scene.tweens.add({
     targets: image,
     scaleX: 2,

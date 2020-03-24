@@ -25,6 +25,10 @@ class BlocksController {
     this.blockSpawner.setBlockType(type);
   }
 
+  setRandomRotation(randomRotation) {
+    this.blockSpawner.setRandomRotationForBlocks(randomRotation);
+  }
+
   changeColorOfAllBLocks(color) {
     this.blocks.children.iterate(block => {
       if (!block) {

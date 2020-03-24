@@ -27,8 +27,8 @@ class RobotDialogue extends DialogueManager {
 
     this.graphics.fillStyle(0xffff00, 1);
 
-    const x = this.anchor.x;
-    const y = this.anchor.y;
+    const x = this.anchor.visual.x;
+    const y = this.anchor.visual.y;
 
     this.graphics.beginPath();
 

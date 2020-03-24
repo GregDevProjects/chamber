@@ -1,9 +1,15 @@
 import { spark } from "../../effects/spark";
-import { bounceCollisionReversed, flashTween } from "../../helpers";
+import {
+  bounceCollisionReversed,
+  flashTween,
+  setThrustTowardsPoint
+} from "../../helpers";
 
 const WIDTH = 20;
 const HEIGHT = 30; // 30
 const BOUNCE_VELOCITY = 2;
+
+const wall_id = {};
 
 class Torso {
   constructor(config) {
@@ -62,12 +68,26 @@ class Torso {
     bounceCollisionReversed(eventData, this.player, BOUNCE_VELOCITY);
   }
 
-  worldBoundryCollision(wallBody) {
-    const topCollision = this.scene.matter.world.walls.top.id === wallBody.id;
-    if (topCollision) {
-      console.log("top");
-      // todo: add wall collision events
+  worldBoundryCollision(eventData) {
+    spark(eventData.pair.collision.supports[0], this.scene);
+    const wallBody = eventData.bodyB;
+    let location = {};
+    switch (wallBody.id) {
+      case this.scene.wallCollisionIds.top:
+        location = { x: this.player.x, y: this.player.y + 200 };
+        break;
+      case this.scene.wallCollisionIds.bottom:
+        location = { x: this.player.x, y: this.player.y - 200 };
+        break;
+      case this.scene.wallCollisionIds.right:
+        location = { x: this.player.x - 200, y: this.player.y };
+        break;
+      case this.scene.wallCollisionIds.left:
+        location = { x: this.player.x + 200, y: this.player.y };
+        break;
     }
+
+    setThrustTowardsPoint(this.player, location, 0.1);
   }
 
   collisions(torso) {
@@ -89,7 +109,7 @@ class Torso {
         }
 
         if (collidedWith === this.scene.collisionCategories.world) {
-          this.worldBoundryCollision(eventData.bodyB);
+          this.worldBoundryCollision(eventData);
         }
       },
       context: this // Context to apply to the callback function

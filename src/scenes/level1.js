@@ -26,14 +26,23 @@ class Level1 extends Phaser.Scene {
     });
   }
 
+  setWallCollisions() {
+    this.wallCollisionIds = {
+      top: this.matter.world.walls.top.id,
+      bottom: this.matter.world.walls.bottom.id,
+      left: this.matter.world.walls.left.id,
+      right: this.matter.world.walls.right.id
+    };
+  }
+
   init(collisionCategories) {
     this.collisionCategories = collisionCategories;
   }
 
   setupPlayer() {
     this.player = new Player({ scene: this, x: 500, y: 250 });
-    // this.player.removeGun()
-    // this.player.removeControls()
+    this.player.removeGun();
+    this.player.removeControls();
     this.humanDialogue = new HumanDialogue(this);
     this.humanDialogue.setAnchor(this.player.head, this.player);
   }
@@ -44,15 +53,19 @@ class Level1 extends Phaser.Scene {
   }
 
   startGameplay() {
+    this.player.giveControls();
     this.musicScene.setVolume(1);
-    this.robotDialogue.destroy();
-    this.blocksController.setPadding(70, 150);
-    this.blocksController.changeBlockType(2);
-    this.blocksController.startRandomSpawning();
+    // this.robotDialogue.destroy();
+    // this.blocksController.setPadding(70, 150);
+    // this.blocksController.changeBlockType(2);
+    // this.blocksController.setRandomRotation(true);
+    // this.blocksController.startRandomSpawning();
     this.time.addEvent({
       delay: 3000,
       callback: () => {
-        // this.humanDialogue.setText('This helmet seems pretty flimsy, better watch my HEAD')
+        // this.humanDialogue.setText(
+        //   "This helmet seems pretty flimsy, better watch my HEAD"
+        // );
       },
       callbackScope: this
     });
@@ -112,6 +125,8 @@ class Level1 extends Phaser.Scene {
   }
 
   create() {
+    //will need this on every scene
+    this.setWallCollisions();
     this.setupPlayer();
     this.setupCamera();
     this.rotatePlayer = false;
@@ -119,25 +134,21 @@ class Level1 extends Phaser.Scene {
 
     this.musicScene = this.scene.get("music");
     this.musicScene.setVolume(0.2);
-    // this.blockGroup = this.add.group()
 
     this.robotDialogue = new RobotDialogue(this);
     this.robotDialogue.setAnchor({ x: 500, y: 500 });
-    // this.robotDialogue.setText('Do not be afraid')
-    // this.robotDialogue.drawDialogueBubble()
-    // robotDialogue(this,
-    //   { x: 500, y: 500 })
 
     drawBackground(this);
+    //this.startLevel();
 
     this.startGameplay();
 
-    this._TEST_SPINNER = new Spinner({
-      x: 300,
-      y: 300,
-      scene: this,
-      player: this.player
-    });
+    // this._TEST_SPINNER = new Spinner({
+    //   x: 300,
+    //   y: 300,
+    //   scene: this,
+    //   player: this.player
+    // });
     // this.matter.world.setGravity(0, 1, 0.0001);
   }
 
@@ -151,7 +162,7 @@ class Level1 extends Phaser.Scene {
 
     this.robotDialogue.update();
     this.humanDialogue.update();
-    this._TEST_SPINNER.update();
+    // this._TEST_SPINNER.update();
   }
 }
 
@@ -163,7 +174,7 @@ class SpaceCounter {
   }
 
   counterEvent(scene) {
-    scene.input.keyboard.on("keydown_SPACE", event => {
+    scene.input.keyboard.on("keydown_E", event => {
       event.preventDefault();
       this.timesSpaceWasPressed++;
       this.onSpacePress(this.timesSpaceWasPressed);
