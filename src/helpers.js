@@ -9,7 +9,7 @@ const setVelocityTowardsPoint = (matterObj, point, velocity) => {
 
 const setThrustTowardsPoint = (matterObj, point, velocity) => {
   const angle = Phaser.Math.Angle.BetweenPoints(matterObj, point);
-
+  // debugger;
   const vector = {
     x: velocity * Math.cos(angle),
     y: velocity * Math.sin(angle)

@@ -2,7 +2,8 @@ import { spark } from "../../effects/spark";
 import {
   bounceCollisionReversed,
   flashTween,
-  setThrustTowardsPoint
+  setThrustTowardsPoint,
+  setVelocityTowardsPoint
 } from "../../helpers";
 
 const WIDTH = 20;
@@ -87,7 +88,7 @@ class Torso {
         break;
     }
 
-    setThrustTowardsPoint(this.player, location, 0.1);
+    setVelocityTowardsPoint(this.player, location, BOUNCE_VELOCITY);
   }
 
   collisions(torso) {

@@ -72,8 +72,7 @@ give the blocks different properties
         - force player bounce on contact?
 
 ---BUGS-----------------------------------------------
-- apply some rotational drag
-- block overlaps gun
+- world walls only bounce player in one direction
 
 
 
