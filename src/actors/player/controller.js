@@ -16,6 +16,11 @@ class Controller {
     this.w = player.scene.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.W
     );
+
+    this.s = player.scene.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.S
+    );
+
     this.space = player.scene.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
@@ -75,6 +80,9 @@ class Controller {
         this.player.body.angularVelocity + ROTATE_SPEED
       );
       this.player.setAngularVelocity(angularVelocity);
+    }
+    if (this.s.isDown) {
+      this.player.thrustRight(delta * FORWARD_SPEED);
     }
   }
 }

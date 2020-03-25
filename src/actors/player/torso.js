@@ -67,28 +67,29 @@ class Torso {
   blockCollision(eventData) {
     spark(eventData.pair.collision.supports[0], this.scene);
     bounceCollisionReversed(eventData, this.player, BOUNCE_VELOCITY);
+
+    const angularVelocity = this.player.angularVelocity > 0 ? 0.1 : -0.1;
+    this.player.setAngularVelocity(angularVelocity);
   }
 
   worldBoundryCollision(eventData) {
     spark(eventData.pair.collision.supports[0], this.scene);
-    const wallBody = eventData.bodyB;
-    let location = {};
-    switch (wallBody.id) {
-      case this.scene.wallCollisionIds.top:
-        location = { x: this.player.x, y: this.player.y + 200 };
-        break;
-      case this.scene.wallCollisionIds.bottom:
-        location = { x: this.player.x, y: this.player.y - 200 };
-        break;
-      case this.scene.wallCollisionIds.right:
-        location = { x: this.player.x - 200, y: this.player.y };
-        break;
-      case this.scene.wallCollisionIds.left:
-        location = { x: this.player.x + 200, y: this.player.y };
-        break;
-    }
 
-    setVelocityTowardsPoint(this.player, location, BOUNCE_VELOCITY);
+    const angle =
+      Phaser.Math.Angle.BetweenPoints(
+        this.player,
+        eventData.pair.collision.supports[0]
+      ) - Math.PI;
+
+    this.player.setVelocity(
+      Math.cos(angle) * BOUNCE_VELOCITY,
+      Math.sin(angle) * BOUNCE_VELOCITY
+    );
+
+    const angularVelocity = this.player.angularVelocity > 0 ? 0.1 : -0.1;
+    this.player.setAngularVelocity(angularVelocity);
+
+    //setVelocityTowardsPoint(this.player, location, BOUNCE_VELOCITY);
   }
 
   collisions(torso) {

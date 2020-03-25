@@ -3,6 +3,7 @@ import Head from "./head";
 import Controller from "./controller";
 import Gun from "./gun";
 import Torso from "./torso";
+import DeathAnimation from "../../effects/DeathAnimation";
 
 /* eslint-disable no-undef */
 const MASS = 1;
@@ -98,7 +99,18 @@ class Player extends Phaser.Physics.Matter.Image {
   }
 
   death() {
-    this.scene.resetScene();
+    if (!this.head.visual.active) {
+      return;
+    }
+
+    this.deathAnimation = new DeathAnimation(this.scene, this);
+    this.head.visual.destroy();
+    //
+    const angle = this.rotation + 1.5708;
+    this.setAngularVelocity(0.1);
+    // debugger;
+    this.setVelocity(Math.cos(angle) * 3, Math.sin(angle) * 3);
+    // this.scene.resetScene();
   }
 
   shoot(mouseVector, force) {
@@ -129,6 +141,10 @@ class Player extends Phaser.Physics.Matter.Image {
 
     if (this.gun) {
       this.gun.update();
+    }
+
+    if (this.deathAnimation) {
+      this.deathAnimation.update();
     }
 
     this.head.update();

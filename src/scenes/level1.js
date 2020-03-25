@@ -55,53 +55,20 @@ class Level1 extends Phaser.Scene {
   startGameplay() {
     this.player.giveControls();
     this.musicScene.setVolume(1);
-    // this.robotDialogue.destroy();
-    // this.blocksController.setPadding(70, 150);
-    // this.blocksController.changeBlockType(2);
-    // this.blocksController.setRandomRotation(true);
-    // this.blocksController.startRandomSpawning();
+    this.robotDialogue.destroy();
+    this.blocksController.setPadding(70, 150);
+    this.blocksController.changeBlockType(2);
+    this.blocksController.setRandomRotation(true);
+    this.blocksController.startRandomSpawning();
     this.time.addEvent({
       delay: 3000,
       callback: () => {
-        // this.humanDialogue.setText(
-        //   "This helmet seems pretty flimsy, better watch my HEAD"
-        // );
+        this.humanDialogue.setText(
+          "This helmet seems pretty flimsy, better watch my HEAD"
+        );
       },
       callbackScope: this
     });
-  }
-
-  circleTest(start, end) {
-    var graphics = this.add.graphics();
-
-    graphics.fillStyle(0x00ff00, 1);
-
-    const radius = 100;
-
-    graphics.beginPath();
-    graphics.arc(
-      500,
-      500,
-      radius,
-      start,
-      end
-      // true,
-      // 0.01
-    );
-
-    const test = graphics.slice(
-      400,
-      300,
-      200,
-      Phaser.Math.DegToRad(340),
-      Phaser.Math.DegToRad(20),
-      false
-    );
-
-    graphics.fillPath();
-    graphics.closePath();
-    this.add.existing(test);
-    // this.matter.add.gameObject(test);
   }
 
   startLevel() {
@@ -158,7 +125,6 @@ class Level1 extends Phaser.Scene {
   }
 
   create() {
-    this.circleTest(0, 90);
     // this.circleTest(180, 0);
     //will need this on every scene
     this.setWallCollisions();
@@ -186,7 +152,7 @@ class Level1 extends Phaser.Scene {
     // });
     // this.matter.world.setGravity(0, 1, 0.0001);
 
-    this.DeathAnimation = new DeathAnimation(this, this.player);
+    // this.DeathAnimation = new DeathAnimation(this, this.player);
   }
 
   update(time, delta) {
@@ -201,7 +167,7 @@ class Level1 extends Phaser.Scene {
     this.humanDialogue.update();
     // this._TEST_SPINNER.update();
 
-    this.DeathAnimation.update();
+    // this.DeathAnimation.update();
   }
 }
 
@@ -223,33 +189,6 @@ class SpaceCounter {
   timesPressed() {
     return this.timesSpaceWasPressed;
   }
-}
-
-class DeathAnimation {
-  constructor(scene, player) {
-    this.scene = scene;
-    this.player = player;
-    this.graphics = this.scene.add.graphics();
-  }
-
-  drawPie(startAngle, endAngle) {
-    this.graphics.fillStyle(0x00ff00, 1);
-
-    this.test = this.graphics.slice(
-      400,
-      300,
-      200,
-      Phaser.Math.DegToRad(startAngle),
-      Phaser.Math.DegToRad(endAngle),
-      false
-    );
-
-    this.graphics.fillPath();
-    this.graphics.closePath();
-    debugger;
-  }
-
-  update() {}
 }
 
 export default Level1;

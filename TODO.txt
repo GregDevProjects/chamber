@@ -1,7 +1,5 @@
 ---TODO------------------------------------------------
 - game over screen
-- robot text should be an oval, not a circle
-- add some friction to the rotation 
 - cursor become crosshair
 - patterns for blocks
 - overload mode
@@ -15,10 +13,14 @@
     - death animations 
     - pickup gun
     - blocks get more intense 
+    - control bullets with mouse
 
     LEVEL 2
     - running from spinner 
     - learn kick 
+
+    Level 3
+    - teleport movement?
 
 -spinners
     - brief invulnerable after getting hit so it can't be killed instantly
@@ -33,6 +35,9 @@
 - life/power gauge
     - 
 
+spinning 
+    - keep spinning to combo 
+    - get extra spin on sucessful kick
 
 - implement gravity 
 - implement side lasers
@@ -51,6 +56,7 @@ Block Rotation?
 - show the basics of movement
 - protect your head
 - shoot to move
+    - blocks that explode
 
 2
 - gravity 
@@ -80,9 +86,11 @@ give the blocks different properties
 
 
 --TEXT DIALOGUE-----------------------------------------------
-what it needs to do:
-    - system for advancing dialogue
-
 thoughts:
     - animated bubble depending on emotion 
     - different colors 
+
+bounce physics improvements 
+    - create a new object a few pixels away
+    - give it a angle/position that mimics the parent 
+    - fling it at the collided object at the same position 
