@@ -1,5 +1,5 @@
 const MAX_ROTATE_SPEED = 0.0778;
-const ROTATE_SPEED = 0.001;
+const ROTATE_SPEED = 0.0001; // 0.001;
 
 const FORWARD_SPEED = 0.000015; // 0.000025
 
@@ -57,6 +57,10 @@ class Controller {
     this.player.kick(true);
   }
 
+  getRotateSpeed(delta) {
+    return delta * ROTATE_SPEED;
+  }
+
   update(delta) {
     if (this.space.isDown) {
       this.kick();
@@ -67,9 +71,11 @@ class Controller {
       this.player.thrustLeft(delta * FORWARD_SPEED);
     }
 
+    console.log(this.getRotateSpeed(delta));
+
     if (this.a.isDown) {
       const angularVelocity = this.clampRotateSpeed(
-        this.player.body.angularVelocity - ROTATE_SPEED
+        this.player.body.angularVelocity - this.getRotateSpeed(delta)
       );
       this.player.setAngularVelocity(angularVelocity);
 
@@ -77,10 +83,11 @@ class Controller {
     }
     if (this.d.isDown) {
       const angularVelocity = this.clampRotateSpeed(
-        this.player.body.angularVelocity + ROTATE_SPEED
+        this.player.body.angularVelocity + this.getRotateSpeed(delta)
       );
       this.player.setAngularVelocity(angularVelocity);
     }
+    //FOR DEBUGGING
     if (this.s.isDown) {
       this.player.thrustRight(delta * FORWARD_SPEED);
     }
