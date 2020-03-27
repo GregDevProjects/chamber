@@ -1,5 +1,3 @@
-const RADIUS = 9;
-
 class DeathAnimation {
   constructor(scene, player) {
     this.scene = scene;
@@ -8,6 +6,21 @@ class DeathAnimation {
     this.slices = [];
     this.position = { x: 500, y: 500 };
     this.drawCircle();
+
+    var particles = this.scene.add.particles("red");
+    particles.setDepth(0);
+    this.emitter = particles.createEmitter({
+      x: this.player.x,
+      y: this.player.y,
+      lifespan: 2000,
+      speed: { min: 200, max: 400 },
+      angle: this.player.angle - 90 + Phaser.Math.Between(-20, 20),
+      gravityY: 1,
+      quantity: 1,
+      frequency: 20
+    });
+
+    // setEmitter();
   }
 
   drawCircle() {
@@ -45,15 +58,29 @@ class DeathAnimation {
     return slice;
   }
 
+  setEmitter() {
+    this.emitter.setPosition(this.player.x, this.player.y);
+    this.emitter.setEmitterAngle(
+      this.player.angle - 90 + Phaser.Math.Between(-20, 20)
+    );
+    this.emitter.setGravity(
+      Phaser.Math.Between(-1000, 1000),
+      Phaser.Math.Between(-1000, 1000)
+    );
+  }
+
   update() {
+    this.setEmitter();
+    // debugger;
     this.slices.forEach(slice => {
-      console.log(slice.moveAngle);
       const nextPosition = {
         x: Math.cos(slice.moveAngle) * 1,
         y: Math.sin(slice.moveAngle) * 1
       };
       slice.x += nextPosition.x / 2;
       slice.y += nextPosition.y / 2;
+      // debugger;
+      // slice.angle--;
     });
   }
 }

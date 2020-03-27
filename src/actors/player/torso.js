@@ -26,6 +26,7 @@ class Torso {
       0xdeb887
     );
 
+    this.visual.setDepth(1);
     this.scene.add.existing(this.visual);
 
     this.flashing = new Phaser.GameObjects.Rectangle(
@@ -44,7 +45,7 @@ class Torso {
   }
 
   startFlashing() {
-    this.flashing.setDepth(1);
+    this.flashing.setDepth(2);
   }
 
   stopFlashing() {

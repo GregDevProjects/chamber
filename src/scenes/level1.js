@@ -63,9 +63,9 @@ class Level1 extends Phaser.Scene {
     this.time.addEvent({
       delay: 3000,
       callback: () => {
-        this.humanDialogue.setText(
-          "This helmet seems pretty flimsy, better watch my HEAD"
-        );
+        // this.humanDialogue.setText(
+        //   "This helmet seems pretty flimsy, better watch my HEAD"
+        // );
       },
       callbackScope: this
     });

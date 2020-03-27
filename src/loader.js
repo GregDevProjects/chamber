@@ -27,6 +27,7 @@ class Loader extends Phaser.Scene {
     this.load.audio("ticker", "src/assets/music/Ticker.mp3");
     this.load.image("transparent", transparent);
     this.load.image("spark", "src/assets/small_explode.png");
+    this.load.image("red", "src/assets/red.png");
   }
 
   create() {

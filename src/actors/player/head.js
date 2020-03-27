@@ -1,3 +1,5 @@
+import { spark } from "../../effects/spark";
+
 const RADIUS = 9;
 
 class Head {
@@ -39,6 +41,7 @@ class Head {
           collidedWith === this.scene.collisionCategories.world ||
           collidedWith === this.scene.collisionCategories.spinner
         ) {
+          this.player.torso.blockCollision(eventData);
           this.player.death();
         }
       },
