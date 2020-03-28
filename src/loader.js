@@ -6,6 +6,9 @@ import arrowRight from "./assets/arrow_right.png";
 import arrowLeft from "./assets/arrow_left.png";
 import gun from "./assets/gun.png";
 import transparent from "./assets/transparent.png";
+import ticker from "./assets/music/Ticker.mp3";
+import spark from "./assets/small_explode.png";
+import red from "./assets/red.png";
 
 class Loader extends Phaser.Scene {
   constructor(test) {
@@ -24,10 +27,10 @@ class Loader extends Phaser.Scene {
     this.load.image("arrowRight", arrowRight);
     this.load.image("arrowLeft", arrowLeft);
     this.load.image("gun", gun);
-    this.load.audio("ticker", "src/assets/music/Ticker.mp3");
+    this.load.audio("ticker", ticker);
     this.load.image("transparent", transparent);
-    this.load.image("spark", "src/assets/small_explode.png");
-    this.load.image("red", "src/assets/red.png");
+    this.load.image("spark", spark);
+    this.load.image("red", red);
   }
 
   create() {

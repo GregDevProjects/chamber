@@ -8,10 +8,12 @@ export class Music extends Phaser.Scene {
   preload() {}
 
   setVolume(volume) {
+    return;
     this.music.setVolume(volume);
   }
 
   create() {
+    return;
     this.music = this.sound.add("ticker", { loop: true });
     // this.music.play()
   }

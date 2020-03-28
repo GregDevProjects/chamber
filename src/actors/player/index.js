@@ -105,12 +105,11 @@ class Player extends Phaser.Physics.Matter.Image {
 
     this.deathAnimation = new DeathAnimation(this.scene, this);
     this.head.visual.destroy();
-    //
+    //send the player ragdolling backwards
     const angle = this.rotation + 1.5708;
     this.setAngularVelocity(0.1);
-    // debugger;
     this.setVelocity(Math.cos(angle) * 3, Math.sin(angle) * 3);
-    // this.scene.resetScene();
+    this.scene.gameOver();
   }
 
   shoot(mouseVector, force) {

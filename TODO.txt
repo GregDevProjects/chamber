@@ -10,10 +10,11 @@
 
     RIGHT NOW, TO FINISH LEVEL 1
     - refactor
-    - death animations 
+    - move back spawn location for blocks
+
+    - gauge shows time left 
     - pickup gun
     - blocks get more intense 
-    - control bullets with mouse
 
     LEVEL 2
     - running from spinner 

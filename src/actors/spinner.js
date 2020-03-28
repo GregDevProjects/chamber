@@ -9,7 +9,7 @@ const WIDTH = 20;
 const HEIGHT = 80;
 
 const ROTATE_SPEED = 0.02;
-const MOVEMENT_SPEED = 0.00005;
+const MOVEMENT_SPEED = 0.000005;
 const CHARGING_SPEED = 0.00009;
 const COLOR = 0x0000ff;
 const MASS = 0.5;
@@ -200,7 +200,7 @@ class Spinner extends Phaser.Physics.Matter.Image {
     });
   }
 
-  update() {
+  update(delta) {
     if (!this.body) {
       return;
     }
@@ -208,7 +208,8 @@ class Spinner extends Phaser.Physics.Matter.Image {
     this.updateVisuals();
     switch (this.state) {
       case states.NORMAL:
-        setThrustTowardsPoint(this, this.player, MOVEMENT_SPEED);
+        // debugger;
+        setThrustTowardsPoint(this, this.player, delta * MOVEMENT_SPEED);
         this.setAngularVelocity(ROTATE_SPEED);
         break;
       case states.SPINNING:

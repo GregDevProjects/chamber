@@ -71,8 +71,6 @@ class Controller {
       this.player.thrustLeft(delta * FORWARD_SPEED);
     }
 
-    console.log(this.getRotateSpeed(delta));
-
     if (this.a.isDown) {
       const angularVelocity = this.clampRotateSpeed(
         this.player.body.angularVelocity - this.getRotateSpeed(delta)

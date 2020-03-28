@@ -124,6 +124,63 @@ class Level1 extends Phaser.Scene {
     this.scene.restart();
   }
 
+  gameOver() {
+    this.cameras.main.fade(2000, 255, 0, 0, undefined, () => {});
+
+    this.cameras.main.on("camerafadeoutcomplete", () => {
+      this.cameras.main.resetFX();
+      var graphics = this.add.graphics();
+
+      graphics.fillStyle(0xff00000, 1);
+      graphics.fillRect(0, 0, 1000, 1000);
+      graphics.setDepth(100);
+      this.gameOverMenu();
+    });
+  }
+
+  gameOverMenu() {
+    //TODO: need a way to destroy everything in scene
+    const TEXT_STYLE = {
+      fontSize: 60,
+      fontFamily: "Arial",
+      align: "left",
+      // wordWrap: { width: 370, useAdvancedWrap: true },
+      color: "white"
+    };
+
+    const text = [];
+
+    //game over
+    text.push(this.add.text(500, 300, "GAME OVER", TEXT_STYLE));
+
+    //restart
+    TEXT_STYLE.fontSize = 30;
+    text.push(
+      this.add
+        .text(500, 400, "RESTART LEVEL", TEXT_STYLE)
+        .setInteractive()
+        .on("pointerdown", event => {
+          this.resetScene();
+        })
+    );
+
+    //main menu
+    text.push(
+      this.add
+        .text(500, 460, "MAIN MENU", TEXT_STYLE)
+        .setInteractive()
+        .on("pointerdown", event => {
+          this.scene.stop();
+          this.scene.start("main_menu");
+        })
+    );
+
+    text.forEach(aText => {
+      aText.x -= aText.width / 2;
+      aText.setDepth(101);
+    });
+  }
+
   create() {
     // this.circleTest(180, 0);
     //will need this on every scene
@@ -144,18 +201,22 @@ class Level1 extends Phaser.Scene {
 
     this.startGameplay();
 
-    // this._TEST_SPINNER = new Spinner({
-    //   x: 300,
-    //   y: 300,
-    //   scene: this,
-    //   player: this.player
-    // });
+    this._TEST_SPINNER = new Spinner({
+      x: 300,
+      y: 300,
+      scene: this,
+      player: this.player
+    });
     // this.matter.world.setGravity(0, 1, 0.0001);
 
     // this.DeathAnimation = new DeathAnimation(this, this.player);
   }
 
   update(time, delta) {
+    if (this.done) {
+      return;
+    }
+
     this.blocksController.update(delta);
 
     this.player.update(delta);
@@ -165,7 +226,7 @@ class Level1 extends Phaser.Scene {
 
     this.robotDialogue.update();
     this.humanDialogue.update();
-    // this._TEST_SPINNER.update();
+    this._TEST_SPINNER.update(delta);
 
     // this.DeathAnimation.update();
   }
