@@ -10,9 +10,7 @@
 
     RIGHT NOW, TO FINISH LEVEL 1
     - refactor
-    - move back spawn location for blocks
 
-    - gauge shows time left 
     - pickup gun
     - blocks get more intense 
 

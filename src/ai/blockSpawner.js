@@ -88,7 +88,7 @@ class BlockSpawner {
         width: width,
         height: height
       };
-      // debugger;
+
       if (!xOrigin || !yOrigin) {
         return;
       }
