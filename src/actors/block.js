@@ -40,6 +40,7 @@ class Block extends Phaser.GameObjects.Polygon {
 
     if (this.randomRotation) {
       this.setAngle(Phaser.Math.Between(0, 360));
+      // this.setAngle(45);
     }
 
     this.restitution = 1;

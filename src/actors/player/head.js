@@ -21,6 +21,12 @@ class Head {
     this.scene.add.existing(this.visual);
   }
 
+  destroy() {
+    this.visual.destroy();
+    //not sure how to remove the head, so just move it offscreen
+    this.player.body.parts[2].position = { x: 10000, y: 10000 };
+  }
+
   getBody(x, y) {
     const head = Phaser.Physics.Matter.Matter.Bodies.circle(x, y - 15, RADIUS, {
       isSensor: true

@@ -49,7 +49,6 @@ class Torso {
   }
 
   stopFlashing() {
-    console.log("stop");
     this.flashing.setDepth(-1);
   }
 

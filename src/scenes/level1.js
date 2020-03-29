@@ -9,14 +9,15 @@ import {
 import BlocksController from "../ai/blocksController";
 import createPlayerBarrier from "../ai/playerBarrier";
 import DialogueManager from "../dialogue/dialogueManager";
-import drawBackground from "../ai/frameBackground";
 
 import RobotDialogue from "../dialogue/RobotDialogue";
 import HumanDialogue from "../dialogue/HumanDialogue";
 
 import Spinner from "../actors/spinner";
 
-class Level1 extends Phaser.Scene {
+import Level from "./level";
+
+class Level1 extends Level {
   constructor(test) {
     super({
       key: "1",
@@ -24,19 +25,6 @@ class Level1 extends Phaser.Scene {
       width: FRAME_WIDTH,
       height: FRAME_HEIGHT
     });
-  }
-
-  setWallCollisions() {
-    this.wallCollisionIds = {
-      top: this.matter.world.walls.top.id,
-      bottom: this.matter.world.walls.bottom.id,
-      left: this.matter.world.walls.left.id,
-      right: this.matter.world.walls.right.id
-    };
-  }
-
-  init(collisionCategories) {
-    this.collisionCategories = collisionCategories;
   }
 
   setupPlayer() {
@@ -47,28 +35,14 @@ class Level1 extends Phaser.Scene {
     this.humanDialogue.setAnchor(this.player.head, this.player);
   }
 
-  setupCamera() {
-    this.cameras.main.setBackgroundColor("ffffff");
-    this.cameras.main.setZoom(1);
-  }
-
   startGameplay() {
     this.player.giveControls();
     this.musicScene.setVolume(1);
     this.robotDialogue.destroy();
-    this.blocksController.setPadding(70, 150);
+    //this.blocksController.setPadding(70, 150);
     this.blocksController.changeBlockType(2);
     this.blocksController.setRandomRotation(true);
     this.blocksController.startRandomSpawning();
-    this.time.addEvent({
-      delay: 3000,
-      callback: () => {
-        // this.humanDialogue.setText(
-        //   "This helmet seems pretty flimsy, better watch my HEAD"
-        // );
-      },
-      callbackScope: this
-    });
   }
 
   startLevel() {
@@ -113,6 +87,15 @@ class Level1 extends Phaser.Scene {
         this.robotDialogue.setText("Move towards the center");
       }
       if (timesPressed === 8) {
+        this.time.addEvent({
+          delay: 3000,
+          callback: () => {
+            this.humanDialogue.setText(
+              "This helmet seems pretty flimsy, better watch my HEAD"
+            );
+          },
+          callbackScope: this
+        });
         this.startGameplay();
       }
     };
@@ -124,69 +107,11 @@ class Level1 extends Phaser.Scene {
     this.scene.restart();
   }
 
-  gameOver() {
-    this.cameras.main.fade(2000, 255, 0, 0, undefined, () => {});
-
-    this.cameras.main.on("camerafadeoutcomplete", () => {
-      this.cameras.main.resetFX();
-      var graphics = this.add.graphics();
-
-      graphics.fillStyle(0xff00000, 1);
-      graphics.fillRect(0, 0, 1000, 1000);
-      graphics.setDepth(100);
-      this.gameOverMenu();
-    });
-  }
-
-  gameOverMenu() {
-    //TODO: need a way to destroy everything in scene
-    const TEXT_STYLE = {
-      fontSize: 60,
-      fontFamily: "Arial",
-      align: "left",
-      // wordWrap: { width: 370, useAdvancedWrap: true },
-      color: "white"
-    };
-
-    const text = [];
-
-    //game over
-    text.push(this.add.text(500, 300, "GAME OVER", TEXT_STYLE));
-
-    //restart
-    TEXT_STYLE.fontSize = 30;
-    text.push(
-      this.add
-        .text(500, 400, "RESTART LEVEL", TEXT_STYLE)
-        .setInteractive()
-        .on("pointerdown", event => {
-          this.resetScene();
-        })
-    );
-
-    //main menu
-    text.push(
-      this.add
-        .text(500, 460, "MAIN MENU", TEXT_STYLE)
-        .setInteractive()
-        .on("pointerdown", event => {
-          this.scene.stop();
-          this.scene.start("main_menu");
-        })
-    );
-
-    text.forEach(aText => {
-      aText.x -= aText.width / 2;
-      aText.setDepth(101);
-    });
-  }
-
-  create() {
+  levelCreate() {
     // this.circleTest(180, 0);
     //will need this on every scene
-    this.setWallCollisions();
     this.setupPlayer();
-    this.setupCamera();
+
     this.rotatePlayer = false;
     this.blocksController = new BlocksController(this);
 
@@ -196,17 +121,17 @@ class Level1 extends Phaser.Scene {
     this.robotDialogue = new RobotDialogue(this);
     this.robotDialogue.setAnchor({ x: 500, y: 500 });
 
-    drawBackground(this);
+    // drawBackground(this);
     //this.startLevel();
 
     this.startGameplay();
 
-    this._TEST_SPINNER = new Spinner({
-      x: 300,
-      y: 300,
-      scene: this,
-      player: this.player
-    });
+    // this._TEST_SPINNER = new Spinner({
+    //   x: 300,
+    //   y: 300,
+    //   scene: this,
+    //   player: this.player
+    // });
     // this.matter.world.setGravity(0, 1, 0.0001);
 
     // this.DeathAnimation = new DeathAnimation(this, this.player);
@@ -226,7 +151,7 @@ class Level1 extends Phaser.Scene {
 
     this.robotDialogue.update();
     this.humanDialogue.update();
-    this._TEST_SPINNER.update(delta);
+    //this._TEST_SPINNER.update(delta);
 
     // this.DeathAnimation.update();
   }

@@ -21,21 +21,28 @@ const makeSensor = (x, y, width, height, scene) => {
 };
 
 const spawnSensors = scene => {
-  const width = GAME_WIDTH + 600;
-  const height = GAME_HEIGHT + 600;
-  makeSensor(width / 2 - 300, -MAX_BLOCK_WIDTH - 10, width, 10, scene);
+  const width = GAME_WIDTH + 800;
+  const height = GAME_HEIGHT + 800;
+
+  //top
+  makeSensor(width / 2 - 400, -MAX_BLOCK_WIDTH - 150, width, 10, scene);
+
+  //bottom
   makeSensor(
-    width / 2 - 300,
-    GAME_HEIGHT + MAX_BLOCK_HEIGHT + 10,
+    width / 2 - 400,
+    GAME_HEIGHT + MAX_BLOCK_HEIGHT + 150,
     width,
     10,
     scene
   );
 
-  makeSensor(-MAX_BLOCK_WIDTH - 10, height / 2 - 300, 10, height, scene);
+  //left
+  makeSensor(-MAX_BLOCK_WIDTH - 150, height / 2 - 400, 10, height, scene);
+
+  //right
   makeSensor(
-    GAME_WIDTH + MAX_BLOCK_WIDTH + 10,
-    height / 2 - 300,
+    GAME_WIDTH + MAX_BLOCK_WIDTH + 150,
+    height / 2 - 400,
     10,
     height,
     scene

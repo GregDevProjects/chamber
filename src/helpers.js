@@ -48,11 +48,18 @@ const flashTween = (scene, target) =>
     repeat: -1
   });
 
+const highestValue = (value1, value2) => {
+  if (value1 > value2) return value1;
+
+  return value2;
+};
+
 export {
   gamePosition,
   setVelocityTowardsPoint,
   bounceCollision,
   bounceCollisionReversed,
   flashTween,
-  setThrustTowardsPoint
+  setThrustTowardsPoint,
+  highestValue
 };

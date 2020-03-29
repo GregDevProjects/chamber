@@ -1,7 +1,7 @@
 import { SPAWN_LOCATION, GAME_HEIGHT, GAME_WIDTH } from "../constants";
 import Block from "../actors/block";
 import Blinkers from "../blinkers";
-import { gamePosition } from "../helpers";
+import { gamePosition, highestValue } from "../helpers";
 
 const randomProperty = function(obj) {
   var keys = Object.keys(obj);
@@ -79,16 +79,16 @@ class BlockSpawner {
       const width = Phaser.Math.Between(this.width.min, this.width.max);
       const height = Phaser.Math.Between(this.height.min, this.height.max);
 
-      const xOrigin = this.getXOrigin(width, lastSpawn);
+      const xOrigin = this.getXOrigin(width, height, lastSpawn);
       const yOrigin = this.getYOrigin(height, width, lastSpawn);
 
       lastSpawn = {
-        x: (lastSpawn.x = xOrigin),
+        x: xOrigin,
         y: yOrigin,
         width: width,
         height: height
       };
-
+      // debugger;
       if (!xOrigin || !yOrigin) {
         return;
       }
@@ -107,42 +107,76 @@ class BlockSpawner {
     } while (true);
   }
 
-  getXOrigin(width, lastSpawn) {
+  getXOrigin(width, height, lastSpawn) {
+    const longestDistanceBetweenTwoPoints = this.longestDistanceBetweenTwoPoints(
+      height,
+      width
+    );
+
     if (
       this.spawnOrigin === SPAWN_LOCATION.top ||
       this.spawnOrigin === SPAWN_LOCATION.bottom
     ) {
-      let spawnLocationX = this.getGridPadding(1) + width / 2;
+      let spawnLocationX =
+        this.getGridPadding(1) + longestDistanceBetweenTwoPoints;
       if (lastSpawn.x) {
-        spawnLocationX += lastSpawn.width / 2 + lastSpawn.x;
+        spawnLocationX +=
+          this.longestDistanceBetweenTwoPoints(
+            lastSpawn.width,
+            lastSpawn.height
+          ) + lastSpawn.x;
       }
 
-      if (spawnLocationX + width / 2 > GAME_WIDTH) {
+      if (spawnLocationX + longestDistanceBetweenTwoPoints > GAME_WIDTH) {
         return false;
       }
       return spawnLocationX;
-    } else if (this.spawnOrigin === SPAWN_LOCATION.left) {
-      return GAME_WIDTH + width / 2;
-    } else if (this.spawnOrigin === SPAWN_LOCATION.right) {
-      return -width / 2;
+    }
+
+    if (this.spawnOrigin === SPAWN_LOCATION.left) {
+      return GAME_WIDTH + longestDistanceBetweenTwoPoints;
+    }
+
+    if (this.spawnOrigin === SPAWN_LOCATION.right) {
+      return -longestDistanceBetweenTwoPoints;
     }
   }
 
+  //IMPROVEMENT - get the length of the block based it's angle instead
+  // this is just a hack to make sure they don't collide
+  longestDistanceBetweenTwoPoints(width, height) {
+    return highestValue(height, width) / 1.35;
+  }
+
   getYOrigin(height, width, lastSpawn) {
+    const longestDistanceBetweenTwoPoints = this.longestDistanceBetweenTwoPoints(
+      height,
+      width
+    );
+    //use higest value out of width/height
     if (this.spawnOrigin === SPAWN_LOCATION.top) {
-      return -height / 2;
-    } else if (this.spawnOrigin === SPAWN_LOCATION.bottom) {
-      return GAME_HEIGHT + height / 2;
-    } else if (
+      return -longestDistanceBetweenTwoPoints; // - height / 4;
+    }
+
+    if (this.spawnOrigin === SPAWN_LOCATION.bottom) {
+      return GAME_HEIGHT + longestDistanceBetweenTwoPoints; // + height / 4;
+    }
+
+    if (
       this.spawnOrigin === SPAWN_LOCATION.left ||
       this.spawnOrigin === SPAWN_LOCATION.right
     ) {
-      let spawnLocationY = this.getGridPadding(1) + height / 2;
+      let spawnLocationY =
+        this.getGridPadding(1) + longestDistanceBetweenTwoPoints;
       if (lastSpawn.y) {
-        spawnLocationY += lastSpawn.height / 2 + lastSpawn.y;
+        spawnLocationY +=
+          this.longestDistanceBetweenTwoPoints(
+            lastSpawn.width,
+            lastSpawn.height
+          ) + lastSpawn.y; //lastSpawn.height / 2 + lastSpawn.y;
       }
-
-      if (spawnLocationY + width / 2 > GAME_HEIGHT) {
+      //debugger;
+      if (spawnLocationY + longestDistanceBetweenTwoPoints > GAME_HEIGHT) {
         return false;
       }
       return spawnLocationY;
