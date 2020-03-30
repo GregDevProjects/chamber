@@ -25,6 +25,8 @@ class Level1 extends Level {
       width: FRAME_WIDTH,
       height: FRAME_HEIGHT
     });
+
+    this.progressBar = false;
   }
 
   setupPlayer() {
@@ -66,25 +68,23 @@ class Level1 extends Level {
         this.rotatePlayer = false;
       }
       if (timesPressed === 4) {
-        this.robotDialogue.destroy();
         this.robotDialogue.setAnchor({ x: 700, y: 400 });
         this.robotDialogue.setText("Use W to accelerate");
       }
       if (timesPressed === 5) {
-        this.robotDialogue.destroy();
         this.humanDialogue.setText("You didn't answer my question!");
       }
       if (timesPressed === 6) {
-        this.humanDialogue.destroy();
         this.robotDialogue.setAnchor({ x: 250, y: 200 });
         this.robotDialogue.setText(
           "This is low priority information compared to SURVIVAL"
         );
       }
       if (timesPressed === 7) {
-        this.humanDialogue.destroy();
         this.robotDialogue.setAnchor({ x: 800, y: 200 });
-        this.robotDialogue.setText("Move towards the center");
+        this.robotDialogue.setText(
+          "Move towards the center, press E to begin MOVEMENT SYNCHRONIZATION"
+        );
       }
       if (timesPressed === 8) {
         this.time.addEvent({
@@ -97,6 +97,16 @@ class Level1 extends Level {
           callbackScope: this
         });
         this.startGameplay();
+
+        this.progressBar = new ProgressBar(
+          this,
+          3,
+          "MOVEMENT SYNCHRONIZATION",
+          () => {
+            this.robotDialogue.setText("Get the gun");
+            this.progressBar.destroy();
+          }
+        );
       }
     };
 
@@ -121,10 +131,9 @@ class Level1 extends Level {
     this.robotDialogue = new RobotDialogue(this);
     this.robotDialogue.setAnchor({ x: 500, y: 500 });
 
-    // drawBackground(this);
+    this.startLevel();
     //this.startLevel();
-
-    this.startGameplay();
+    // this.startGameplay();
 
     // this._TEST_SPINNER = new Spinner({
     //   x: 300,
@@ -134,8 +143,6 @@ class Level1 extends Level {
     // });
     // this.matter.world.setGravity(0, 1, 0.0001);
 
-    this.progressBar = new ProgressBar(this, 200, "MOVEMENT SYNCHRONIZATION");
-
     // this.DeathAnimation = new DeathAnimation(this, this.player);
   }
 
@@ -143,8 +150,10 @@ class Level1 extends Level {
     if (this.done) {
       return;
     }
-
-    this.progressBar.update();
+    // put everything to update in array?
+    if (this.progressBar) {
+      this.progressBar.update();
+    }
 
     this.blocksController.update(delta);
 
@@ -182,7 +191,7 @@ class SpaceCounter {
 }
 
 class ProgressBar {
-  constructor(scene, seconds, text) {
+  constructor(scene, seconds, text, onFinish) {
     this.scene = scene;
     // this.secondsStart = this.scene.game.time.totalElapsedSeconds();
     // this.seconds = seconds;
@@ -219,7 +228,7 @@ class ProgressBar {
     this.percentText.setOrigin(0.5, 0.5);
     this.percentText.setDepth(100);
 
-    var assetText = scene.make.text({
+    this.assetText = scene.make.text({
       x: this.position.x,
       y: this.position.y + 70,
       text: text,
@@ -229,11 +238,15 @@ class ProgressBar {
       }
     });
 
-    assetText.setOrigin(0.5, 0.5);
-    assetText.setDepth(99);
+    this.assetText.setOrigin(0.5, 0.5);
+    this.assetText.setDepth(99);
 
     this.timedEvent = this.scene.time.addEvent({
-      // callback: this.update,
+      callback: () => {
+        if (this.timedEvent.getRepeatCount() === 0) {
+          onFinish();
+        }
+      },
       callbackScope: this,
       repeat: seconds,
       delay: 1000
@@ -246,6 +259,10 @@ class ProgressBar {
     // const secondsLeft = this.seconds - secondsElapsed;
 
     // debugger;
+
+    if (!this.percentText.active) {
+      return;
+    }
 
     const progressPercentage = this.timedEvent.getOverallProgress();
 
@@ -264,10 +281,11 @@ class ProgressBar {
   }
 
   destroy() {
-    progressBar.destroy();
-    progressBox.destroy();
-    percentText.destroy();
-    assetText.destroy();
+    this.progressBar.destroy();
+    this.progressBox.destroy();
+    this.percentText.destroy();
+    this.assetText.destroy();
+    this.timedEvent.destroy();
   }
 }
 
