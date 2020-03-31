@@ -44,7 +44,8 @@ class Player extends Phaser.Physics.Matter.Image {
       this.scene.collisionCategories.world,
       this.scene.collisionCategories.deathLine,
       this.scene.collisionCategories.block,
-      this.scene.collisionCategories.spinner
+      this.scene.collisionCategories.spinner,
+      this.scene.collisionCategories.pickup
     ]);
 
     this.isKicking = false;

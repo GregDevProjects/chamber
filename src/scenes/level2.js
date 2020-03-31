@@ -39,6 +39,19 @@ class Level2 extends Phaser.Scene {
     //   GAME_HEIGHT
     // )
 
+    //this.startLevel();
+    // this.startGameplay();
+
+    // this._TEST_SPINNER = new Spinner({
+    //   x: 300,
+    //   y: 300,
+    //   scene: this,
+    //   player: this.player
+    // });
+    // this.matter.world.setGravity(0, 1, 0.0001);
+
+    // this.DeathAnimation = new DeathAnimation(this, this.player);
+
     this.player = new Player({ scene: this, x: 250, y: 250 });
 
     // this.blockGroup = this.add.group()

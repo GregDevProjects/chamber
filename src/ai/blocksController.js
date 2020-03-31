@@ -38,6 +38,10 @@ class BlocksController {
     });
   }
 
+  stopSpawning() {
+    this.blockSpawner.stop();
+  }
+
   update(delta) {
     if (!this.allowUpdate) {
       return;

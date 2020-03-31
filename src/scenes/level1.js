@@ -17,6 +17,10 @@ import Spinner from "../actors/spinner";
 
 import Level from "./level";
 
+import GunFloating from "../actors/gun_floating";
+
+const BLOCK_TIME = 120;
+
 class Level1 extends Level {
   constructor(test) {
     super({
@@ -39,7 +43,6 @@ class Level1 extends Level {
 
   startGameplay() {
     this.player.giveControls();
-    this.musicScene.setVolume(1);
     this.robotDialogue.destroy();
     //this.blocksController.setPadding(70, 150);
     this.blocksController.changeBlockType(2);
@@ -54,63 +57,123 @@ class Level1 extends Level {
       this.humanDialogue.destroy();
       this.robotDialogue.destroy();
 
-      if (timesPressed === 1) {
-        this.humanDialogue.setText("Where the hell am I?");
+      if (this.levelFinished) {
+        this.afterBlockStory(timesPressed);
+        return;
       }
-      if (timesPressed === 2) {
-        this.robotDialogue.setAnchor({ x: 500, y: 500 });
-        this.robotDialogue.setText("Do not be afraid, I can help");
-      }
-      if (timesPressed === 3) {
-        this.robotDialogue.setAnchor({ x: 250, y: 600 });
-        this.robotDialogue.setText("Use the A and D keys to rotate");
-        this.player.giveControls();
-        this.rotatePlayer = false;
-      }
-      if (timesPressed === 4) {
-        this.robotDialogue.setAnchor({ x: 700, y: 400 });
-        this.robotDialogue.setText("Use W to accelerate");
-      }
-      if (timesPressed === 5) {
-        this.humanDialogue.setText("You didn't answer my question!");
-      }
-      if (timesPressed === 6) {
-        this.robotDialogue.setAnchor({ x: 250, y: 200 });
-        this.robotDialogue.setText(
-          "This is low priority information compared to SURVIVAL"
-        );
-      }
-      if (timesPressed === 7) {
-        this.robotDialogue.setAnchor({ x: 800, y: 200 });
-        this.robotDialogue.setText(
-          "Move towards the center, press E to begin MOVEMENT SYNCHRONIZATION"
-        );
-      }
-      if (timesPressed === 8) {
-        this.time.addEvent({
-          delay: 3000,
-          callback: () => {
-            this.humanDialogue.setText(
-              "This helmet seems pretty flimsy, better watch my HEAD"
-            );
-          },
-          callbackScope: this
-        });
-        this.startGameplay();
 
-        this.progressBar = new ProgressBar(
-          this,
-          3,
-          "MOVEMENT SYNCHRONIZATION",
-          () => {
-            this.robotDialogue.setText("Get the gun");
-            this.progressBar.destroy();
-          }
-        );
-      }
+      this.beforeBlockStory(timesPressed);
     };
 
     this.spaceCounter = new SpaceCounter(this, onSpacePress);
+  }
+
+  beforeBlockStory(timesPressed) {
+    if (timesPressed === 1) {
+      this.humanDialogue.setText("Where the hell am I?");
+    }
+    if (timesPressed === 2) {
+      this.robotDialogue.setAnchor({ x: 500, y: 500 });
+      this.robotDialogue.setText("Do not be afraid, I can help");
+    }
+    if (timesPressed === 3) {
+      this.robotDialogue.setAnchor({ x: 250, y: 600 });
+      this.robotDialogue.setText("Use the A and D keys to rotate");
+      this.player.giveControls();
+      this.rotatePlayer = false;
+    }
+    if (timesPressed === 4) {
+      this.robotDialogue.setAnchor({ x: 700, y: 400 });
+      this.robotDialogue.setText("Use W to accelerate");
+    }
+    if (timesPressed === 5) {
+      this.humanDialogue.setText("You didn't answer my question!");
+    }
+    if (timesPressed === 6) {
+      this.robotDialogue.setAnchor({ x: 250, y: 200 });
+      this.robotDialogue.setText(
+        "This is low priority information compared to SURVIVAL"
+      );
+    }
+    if (timesPressed === 7) {
+      this.robotDialogue.setAnchor({ x: 800, y: 200 });
+      this.robotDialogue.setText("Move towards the center, press E to begin");
+    }
+    if (timesPressed === 8) {
+      this.time.addEvent({
+        delay: 3000,
+        callback: () => {
+          this.humanDialogue.setText(
+            "This helmet seems pretty flimsy, better watch my HEAD"
+          );
+        },
+        callbackScope: this
+      });
+      this.startGameplay();
+      this.progressBar = new ProgressBar(
+        this,
+        BLOCK_TIME,
+        "MOVEMENT SYNCHRONIZATION",
+        () => {
+          this.blocksController.stopSpawning();
+          this.time.addEvent({
+            delay: 3500,
+            callback: () => {
+              this.humanDialogue.destroy();
+              this.levelFinished = true;
+              this.spaceCounter.reset();
+              this.robotDialogue.setAnchor({ x: 800, y: 800 });
+              this.robotDialogue.setText("Synchronization Complete");
+              this.progressBar.destroy();
+            },
+            callbackScope: this
+          });
+        }
+      );
+    }
+  }
+
+  afterBlockStory(timesPressed) {
+    if (timesPressed === 1) {
+      this.humanDialogue.setText("Synchronization with what?");
+    }
+    if (timesPressed === 2) {
+      this.robotDialogue.setAnchor({ x: 300, y: 800 });
+      this.robotDialogue.setText("PICK UP THE GUN");
+    }
+    if (timesPressed === 3) {
+      this.musicScene.stop();
+      this.humanDialogue.setText("OUCH! FINE!");
+      this.cameras.main.flash();
+      this.player.setAngle(0);
+      this.player.setPosition(700, 300);
+      this.player.setVelocity(0, 0);
+
+      this.gunFloating = new GunFloating(500, 500, this, () => {
+        //picking up gun
+        this.cameras.main.flash();
+        this.player.removeControls();
+        this.player.setPosition(500, 500);
+        this.player.setVelocity(0, 0);
+        this.rotatePlayer = true;
+        this.humanDialogue.destroy();
+        this.time.addEvent({
+          delay: 3000,
+          callback: () => {
+            this.humanDialogue.setText("WHAT THE FUCK IS HAPPENING TO ME");
+          },
+          callbackScope: this
+        });
+
+        this.time.addEvent({
+          delay: 25000,
+          callback: () => {
+            alert("level complete");
+          },
+          callbackScope: this
+        });
+      });
+    }
   }
 
   resetScene() {
@@ -126,24 +189,12 @@ class Level1 extends Level {
     this.blocksController = new BlocksController(this);
 
     this.musicScene = this.scene.get("music");
-    this.musicScene.setVolume(0.2);
+    this.musicScene.play();
 
     this.robotDialogue = new RobotDialogue(this);
     this.robotDialogue.setAnchor({ x: 500, y: 500 });
 
     this.startLevel();
-    //this.startLevel();
-    // this.startGameplay();
-
-    // this._TEST_SPINNER = new Spinner({
-    //   x: 300,
-    //   y: 300,
-    //   scene: this,
-    //   player: this.player
-    // });
-    // this.matter.world.setGravity(0, 1, 0.0001);
-
-    // this.DeathAnimation = new DeathAnimation(this, this.player);
   }
 
   update(time, delta) {
@@ -155,6 +206,10 @@ class Level1 extends Level {
       this.progressBar.update();
     }
 
+    if (this.gunFloating) {
+      this.gunFloating.update();
+    }
+
     this.blocksController.update(delta);
 
     this.player.update(delta);
@@ -164,6 +219,7 @@ class Level1 extends Level {
 
     this.robotDialogue.update();
     this.humanDialogue.update();
+
     //this._TEST_SPINNER.update(delta);
 
     // this.DeathAnimation.update();
@@ -175,6 +231,10 @@ class SpaceCounter {
     this.timesSpaceWasPressed = 0;
     this.onSpacePress = onSpacePress;
     this.counterEvent(scene);
+  }
+
+  reset() {
+    this.timesSpaceWasPressed = 0;
   }
 
   counterEvent(scene) {
