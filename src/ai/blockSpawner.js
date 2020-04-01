@@ -1,4 +1,9 @@
-import { SPAWN_LOCATION, GAME_HEIGHT, GAME_WIDTH } from "../constants";
+import {
+  SPAWN_LOCATION,
+  GAME_HEIGHT,
+  GAME_WIDTH,
+  DEBUG_MODE
+} from "../constants";
 import Block from "../actors/block";
 import Blinkers from "../blinkers";
 import { gamePosition, highestValue } from "../helpers";
@@ -194,7 +199,11 @@ class BlockSpawner {
       }
       block.move(delta, this.spawnOrigin);
     });
-    // for debugging
+
+    if (!DEBUG_MODE) {
+      return;
+    }
+
     if (this.cursors.left.isDown) {
       this.spawnOrigin = SPAWN_LOCATION.left;
     } else if (this.cursors.right.isDown) {

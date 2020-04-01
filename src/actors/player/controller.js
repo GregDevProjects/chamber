@@ -3,6 +3,8 @@ const ROTATE_SPEED = 0.0001; // 0.001;
 
 const FORWARD_SPEED = 0.000015; // 0.000025
 
+import { DEBUG_MODE } from "../../constants";
+
 class Controller {
   constructor(player) {
     this.spaceHeld = false;
@@ -87,6 +89,9 @@ class Controller {
     }
     //FOR DEBUGGING
     if (this.s.isDown) {
+      if (!DEBUG_MODE) {
+        return;
+      }
       this.player.thrustRight(delta * FORWARD_SPEED);
     }
   }
