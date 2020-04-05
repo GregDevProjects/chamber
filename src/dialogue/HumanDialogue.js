@@ -12,6 +12,7 @@ class RobotDialogue extends DialogueManager {
   constructor(scene) {
     super(scene);
     this.style = TEXT_STYLE;
+    this.type = "human";
   }
 
   textPositionAboveAnchor(x, y) {

@@ -13,6 +13,7 @@ export class Music extends Phaser.Scene {
   }
 
   play() {
+    return;
     this.music.play();
   }
 

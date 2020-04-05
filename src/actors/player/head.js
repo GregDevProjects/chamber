@@ -17,7 +17,7 @@ class Head {
       undefined,
       0x0000ff
     );
-
+    this.visual.setDepth(1);
     this.scene.add.existing(this.visual);
   }
 
@@ -29,7 +29,7 @@ class Head {
 
   getBody(x, y) {
     const head = Phaser.Physics.Matter.Matter.Bodies.circle(x, y - 15, RADIUS, {
-      isSensor: true
+      isSensor: true,
     });
     this.collisions(head);
     return head;
@@ -39,7 +39,7 @@ class Head {
     this.scene.matterCollision.addOnCollideStart({
       objectA: head,
       // bullet too?
-      callback: function(eventData) {
+      callback: function (eventData) {
         const collidedWith = eventData.bodyB.collisionFilter.category;
         if (
           collidedWith === this.scene.collisionCategories.block ||
@@ -51,7 +51,7 @@ class Head {
           this.player.death();
         }
       },
-      context: this // Context to apply to the callback function
+      context: this, // Context to apply to the callback function
     });
   }
 

@@ -13,6 +13,7 @@ const TEXT_STYLE = {
 class RobotDialogue extends DialogueManager {
   constructor(scene) {
     super(scene);
+    this.type = "robot";
     this.style = TEXT_STYLE;
     this.step = 30;
     this.radius = 100;

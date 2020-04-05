@@ -19,17 +19,19 @@ class Pickup {
     this.animate = false;
     this.time = 0;
     this.innerRadiusTime = 0;
-    scene.tweens.add({
+    this.tween = scene.tweens.add({
       targets: this.starGraphics,
       repeat: -1,
       yoyo: true,
       alpha: 0.1,
-      duration: 1000
+      duration: 1000,
     });
   }
 
   fillScreen() {
     this.animate = true;
+    this.tween.stop();
+    this.starGraphics.alpha = 1;
   }
 
   update(time) {

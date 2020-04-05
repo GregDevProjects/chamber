@@ -30,11 +30,23 @@ class BlocksController {
   }
 
   changeColorOfAllBLocks(color) {
-    this.blocks.children.iterate(block => {
+    this.blocks.children.iterate((block) => {
       if (!block) {
         return;
       }
       block.setFillStyle(color);
+    });
+  }
+
+  destroyAllBlocks() {
+    // this.allowUpdate = false;
+    // this.blockGroup.destroy(true);
+    this.allowUpdate = false;
+    this.blockGroup.children.iterate((block) => {
+      // debugger;
+      if (block) {
+        block.setPosition(350, -400);
+      }
     });
   }
 

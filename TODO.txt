@@ -59,7 +59,7 @@ Block Rotation?
 
 2
 - gravity 
-
+- shooting too mush makes you overheat and do a charge
 Tunnel level
 
 ---IDEAS-----------------------------------------------
