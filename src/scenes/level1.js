@@ -15,7 +15,7 @@ import GunFloating from "../actors/gun_floating";
 import SpaceCounter from "../tools/KeyCounter";
 import ProgressBar from "../effects/ProgressBar";
 
-const BLOCK_TIME = 3;
+const BLOCK_TIME = 90;
 //robo ttext appears in random corners
 const beginningGameDialogue = [
   { type: "human", text: "What is this..." },
@@ -116,9 +116,11 @@ class Level1 extends Level {
       });
 
       this.time.addEvent({
-        delay: 25000,
+        delay: 7000,
         callback: () => {
-          alert("level complete");
+          this.levelWin(() => {
+            this.scene.start("2", this.collisionCategories);
+          });
         },
         callbackScope: this,
       });
@@ -194,9 +196,6 @@ class Level1 extends Level {
   }
 
   update(time, delta) {
-    if (this.done) {
-      return;
-    }
     // put everything to update in array?
     if (this.progressBar) {
       this.progressBar.update();

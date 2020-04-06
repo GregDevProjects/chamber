@@ -28,10 +28,10 @@ export class MainMenu extends Phaser.Scene {
   levelButton(level) {
     return this.add
       .text(FRAME_WIDTH / 2, 50 + 100 * level + 1, "LEVEL " + level, {
-        font: "30px Arial"
+        font: "30px Arial",
       })
       .setInteractive()
-      .on("pointerdown", event => {
+      .on("pointerdown", (event) => {
         this.scene.stop();
         this.scene.start(level.toString(), this.collisionCategories);
       });
@@ -43,7 +43,7 @@ export class MainMenu extends Phaser.Scene {
     this.levelButton(2);
 
     this.scene.stop();
-    this.scene.start("1", this.collisionCategories);
+    this.scene.start("2", this.collisionCategories);
 
     // const start = this.add.image(
     //   FRAME_WIDTH / 2,

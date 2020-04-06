@@ -19,16 +19,26 @@ class Level extends Phaser.Scene {
   }
 
   gameOver() {
-    this.cameras.main.fade(2000, 255, 0, 0);
+    this.fade(
+      () => {
+        this.gameOverMenu();
+      },
+      [250, 0, 0],
+      0xff00000
+    );
+  }
+
+  fade(onFadeFinish, rbgValues, hex) {
+    this.cameras.main.fade(2000, ...rbgValues);
 
     this.cameras.main.on("camerafadeoutcomplete", () => {
       this.cameras.main.resetFX();
       var graphics = this.add.graphics();
 
-      graphics.fillStyle(0xff00000, 1);
+      graphics.fillStyle(hex, 1);
       graphics.fillRect(0, 0, 1000, 1000);
       graphics.setDepth(100);
-      this.gameOverMenu();
+      onFadeFinish();
     });
   }
 
@@ -75,29 +85,39 @@ class Level extends Phaser.Scene {
     });
   }
 
-  levelWinMenu() {
+  levelWin(onNextLevelClick) {
+    this.fade(
+      () => {
+        this.levelWinMenu(onNextLevelClick);
+      },
+      [255, 255, 255],
+      0xffffff
+    );
+  }
+
+  levelWinMenu(onNextLevelClick) {
     //TODO: need a way to destroy everything in scene
     const TEXT_STYLE = {
       fontSize: 60,
       fontFamily: "Arial",
       align: "left",
       // wordWrap: { width: 370, useAdvancedWrap: true },
-      color: "white",
+      color: "black",
     };
 
     const text = [];
 
     //game over
-    text.push(this.add.text(500, 300, "GAME OVER", TEXT_STYLE));
+    text.push(this.add.text(500, 300, "LEVEL COMPLETE", TEXT_STYLE));
 
     //restart
     TEXT_STYLE.fontSize = 30;
     text.push(
       this.add
-        .text(500, 400, "RESTART LEVEL", TEXT_STYLE)
+        .text(500, 400, "NEXT LEVEL", TEXT_STYLE)
         .setInteractive()
         .on("pointerdown", (event) => {
-          this.resetScene();
+          onNextLevelClick();
         })
     );
 
