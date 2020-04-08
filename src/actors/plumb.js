@@ -7,17 +7,14 @@ import {
 
 const WIDTH = 20;
 const HEIGHT = 80;
-
+const RADIUS = 30;
 const ROTATE_SPEED = 0.02;
 const MOVEMENT_SPEED = 0.000005;
-const CHARGING_SPEED = 0.00009;
-const COLOR = 0x0000ff;
 const MASS = 0.5;
-const BOUNCE_VELOCITY = 8;
 
 const states = { NORMAL: 1, SPINNING: 2, CHARGING: 3, DEAD: 4 };
 
-class Spinner extends Phaser.Physics.Matter.Image {
+class Plumb extends Phaser.Physics.Matter.Image {
   constructor(config) {
     super(config.scene.matter.world, config.x, config.y, "transparent");
     this.player = config.player;
@@ -44,10 +41,6 @@ class Spinner extends Phaser.Physics.Matter.Image {
   }
 
   kill() {
-    this.visualStraight.destroy();
-    this.visualCross.destroy();
-    this.visualCrossFlash.destroy();
-    this.visualStraightFlash.destroy();
     this.destroy();
   }
 
@@ -78,89 +71,21 @@ class Spinner extends Phaser.Physics.Matter.Image {
           collidedWith = eventData.gameObjectB.body.collisionFilter.category;
         }
 
-        if (this.state === states.SPINNING) {
-          this.startFlashing();
-          this.state = states.CHARGING;
-        }
-        if (this.state === states.DEAD) {
-          this.kill();
-          return;
-        }
-
         //collides with a kicking player
-        if (
-          collidedWith === this.scene.collisionCategories.player &&
-          this.player.isKicking
-        ) {
-          if (this.state === states.NORMAL) {
-            this.state = states.SPINNING;
-          }
-          if (this.state === states.CHARGING) {
-            this.deathState();
-          }
-          bounceCollision(eventData, this, BOUNCE_VELOCITY);
-          if (this.player.angularVelocity > 0) {
-            this.setAngularVelocity(0.3);
-          } else {
-            this.setAngularVelocity(-0.3);
-          }
+        if (collidedWith === this.scene.collisionCategories.player) {
+          //PLAYER COLLIDE
         }
 
-        if (
-          collidedWith === this.scene.collisionCategories.bullet &&
-          this.state === states.CHARGING
-        ) {
-          this.deathState();
+        if (collidedWith === this.scene.collisionCategories.bullet) {
+          //BULLET COLLIDE
+          this.kill();
         }
       },
       context: this, // Context to apply to the callback function
     });
   }
 
-  addVisuals(config) {
-    const createRect = (color = COLOR) =>
-      new Phaser.GameObjects.Rectangle(
-        config.scene,
-        config.x,
-        config.y,
-        WIDTH,
-        HEIGHT,
-        color
-      );
-    this.visualStraight = createRect();
-    this.visualCross = createRect();
-    this.visualStraightFlash = createRect(0xdff2800);
-    this.visualCrossFlash = createRect(0xdff2800);
-
-    this.visualCrossFlash.setDepth(-1);
-    this.visualStraightFlash.setDepth(-1);
-
-    this.visualCrossFlash.rotation = 1.5708;
-    this.visualCross.rotation = 1.5708;
-
-    this.visualCrossFlash.setAlpha(0);
-    this.visualStraightFlash.setAlpha(0);
-
-    this.flashTween = flashTween(this.scene, [
-      this.visualCrossFlash,
-      this.visualStraightFlash,
-    ]);
-
-    this.scene.add.existing(this.visualStraight);
-    this.scene.add.existing(this.visualCross);
-    this.scene.add.existing(this.visualStraightFlash);
-    this.scene.add.existing(this.visualCrossFlash);
-  }
-
-  startFlashing() {
-    this.visualCrossFlash.setDepth(1);
-    this.visualStraightFlash.setDepth(1);
-  }
-
-  stopFlashing() {
-    this.visualCrossFlash.setDepth(-1);
-    this.visualStraightFlash.setDepth(-1);
-  }
+  addVisuals(config) {}
 
   updateVisuals() {
     this.visualStraight.setPosition(this.x, this.y);
@@ -177,13 +102,15 @@ class Spinner extends Phaser.Physics.Matter.Image {
   getBody(config) {
     var M = Phaser.Physics.Matter.Matter;
 
-    const one = Phaser.Physics.Matter.Matter.Bodies.rectangle(
+    const one = Phaser.Physics.Matter.Matter.Bodies.circle(
       config.x,
       config.y,
-      WIDTH,
-      HEIGHT,
-      { angle: 1.5708 }
+      RADIUS
+      //   HEIGHT,
+      //   { angle: 1.5708 }
     );
+
+    // Phaser.Physics.Matter.Bodies.
 
     const two = Phaser.Physics.Matter.Matter.Bodies.rectangle(
       config.x,
@@ -205,22 +132,10 @@ class Spinner extends Phaser.Physics.Matter.Image {
       return;
     }
 
-    this.updateVisuals();
-    switch (this.state) {
-      case states.NORMAL:
-        // debugger;
-        setThrustTowardsPoint(this, this.player, delta * MOVEMENT_SPEED);
-        this.setAngularVelocity(ROTATE_SPEED);
-        break;
-      case states.SPINNING:
-        break;
-      case states.CHARGING:
-        setThrustTowardsPoint(this, this.player, CHARGING_SPEED);
-        this.setAngularVelocity(0.1);
-        break;
-      case states.DEAD:
-    }
+    //this.updateVisuals();
+    setThrustTowardsPoint(this, this.player, delta * MOVEMENT_SPEED);
+    this.setAngularVelocity(ROTATE_SPEED);
   }
 }
 
-export default Spinner;
+export default Plumb;

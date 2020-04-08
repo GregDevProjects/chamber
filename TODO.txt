@@ -1,5 +1,4 @@
 ---TODO------------------------------------------------
-- game over screen
 - cursor become crosshair
 - patterns for blocks
 - overload mode
@@ -7,14 +6,16 @@
     - invulnerable 
     - bouncy
     - kill stuff on contact
+- robot text appears in random corners
 
-    RIGHT NOW, TO FINISH LEVEL 1
-    - refactor
-
-    - pickup gun
-    - blocks get more intense 
 
     LEVEL 2
+    -Plumb
+        - add eyes, closed before the enemy is active, open when onscreen
+        - circle around player?
+            - tries to circle opposite of other plumbs
+            - rushes for player after set time
+        - unmoving black blocks as obstacles 
     - running from spinner 
     - learn kick 
 

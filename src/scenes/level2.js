@@ -1,4 +1,8 @@
 import Player from "../actors/player/index";
+
+import Spinner from "../actors/spinner";
+import Plumb from "../actors/plumb";
+
 import {
   GAME_HEIGHT,
   GAME_WIDTH,
@@ -23,54 +27,36 @@ class Level2 extends Level {
   }
 
   levelCreate() {
-    // this.cameras.main.setPosition(
-    //   (FRAME_WIDTH - GAME_WIDTH) / 2,
-    //   (FRAME_HEIGHT - GAME_HEIGHT) / 2
-    // );
-    // this.cameras.main.setSize(GAME_WIDTH, GAME_HEIGHT);
-    // this.cameras.main.setBackgroundColor("ffffff");
-
-    // this.matter.world.setBounds(
-    //   0,
-    //   0,
-    //   GAME_WIDTH,
-    //   GAME_HEIGHT
-    // )
-
-    //this.startLevel();
-    // this.startGameplay();
-
-    // this._TEST_SPINNER = new Spinner({
-    //   x: 300,
-    //   y: 300,
-    //   scene: this,
-    //   player: this.player
-    // });
-    // this.matter.world.setGravity(0, 1, 0.0001);
-
-    // this.DeathAnimation = new DeathAnimation(this, this.player);
-
     this.player = new Player({ scene: this, x: 250, y: 250 });
 
-    // this.blockGroup = this.add.group()
+    this.updateArray = [];
 
-    // this.blocksController = new BlocksController(this)
-    // this.blocksController.startRandomSpawning()
-    // createBlockBarrier(this)
-    // createPlayerBarrier(this)
+    const spinner = new Spinner({
+      scene: this,
+      player: this.player,
+      x: 500,
+      y: 500,
+    });
 
-    // this.matter.world.setGravity(
-    //   0,
-    //   1,
-    //   0.0001
-    // )
+    const plumb = new Plumb({
+      scene: this,
+      player: this.player,
+      x: 500,
+      y: 500,
+    });
+    //
+    plumb.tintFill = true;
+    plumb.setTint(0x6a0dad);
+    // debugger;
+    this.updateArray.push(plumb);
   }
 
   update(time, delta) {
-    // debugger
-    // this.blocksController.update(delta)
-
     this.player.update(delta);
+
+    this.updateArray.forEach((item) => {
+      item.update(delta);
+    });
   }
 }
 

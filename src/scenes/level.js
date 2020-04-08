@@ -18,6 +18,10 @@ class Level extends Phaser.Scene {
     this.levelCreate();
   }
 
+  resetScene() {
+    this.scene.restart();
+  }
+
   gameOver() {
     this.fade(
       () => {

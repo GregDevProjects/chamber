@@ -169,10 +169,6 @@ class Level1 extends Level {
     this.spaceCounter = new SpaceCounter(this, onSpacePress);
   }
 
-  resetScene() {
-    this.scene.restart();
-  }
-
   levelCreate() {
     //when blocks start moving
     this.started = false;
