@@ -55,17 +55,13 @@ class Head {
     });
   }
 
-  degreesToRadians(degrees) {
-    return (degrees * Math.PI) / 180;
-  }
-
   update() {
     // TODO: find a way to attach the visuals directly to the body
     const playerAngle = this.player.angle;
     const x =
-      this.player.x + 17 * Math.cos(this.degreesToRadians(playerAngle - 90));
+      this.player.x + 17 * Math.cos(Phaser.Math.DegToRad(playerAngle - 90));
     const y =
-      this.player.y + 17 * Math.sin(this.degreesToRadians(playerAngle - 90));
+      this.player.y + 17 * Math.sin(Phaser.Math.DegToRad(playerAngle - 90));
     this.visual.setPosition(x, y);
   }
 }

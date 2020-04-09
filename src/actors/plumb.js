@@ -5,9 +5,8 @@ import {
   setThrustTowardsPoint,
 } from "../helpers";
 
-const WIDTH = 20;
-const HEIGHT = 80;
-const RADIUS = 30;
+const PLAYER_DISTANCE = 200;
+const RADIUS = 15;
 const ROTATE_SPEED = 0.02;
 const MOVEMENT_SPEED = 0.000005;
 const MASS = 0.5;
@@ -25,6 +24,8 @@ class Plumb extends Phaser.Physics.Matter.Image {
     this.setMass(MASS);
     this.collisionEvent();
     this.state = states.NORMAL;
+
+    this.movementDirection = Phaser.Math.RND.pick([1, -1]);
   }
 
   collisions() {
@@ -34,13 +35,16 @@ class Plumb extends Phaser.Physics.Matter.Image {
       this.scene.collisionCategories.blockBarrier,
       this.scene.collisionCategories.block,
       this.scene.collisionCategories.spinner,
-      this.scene.collisionCategories.world,
+      // this.scene.collisionCategories.world,
     ]);
     //TODO: apply collisions filter to all body parts
     this.setCollisionCategory(this.scene.collisionCategories.spinner);
   }
 
   kill() {
+    this.circleVisual.destroy();
+    this.leftTriangleVisual.destroy();
+    this.rightTriangleVisual.destroy();
     this.destroy();
   }
 
@@ -85,46 +89,113 @@ class Plumb extends Phaser.Physics.Matter.Image {
     });
   }
 
-  addVisuals(config) {}
+  addVisuals(config) {
+    const triangle = () => {
+      const triangleVisual = config.scene.add.graphics({
+        fillStyle: { color: 0xababab },
+      });
+      var a = new Phaser.Geom.Point(0, 20);
+      var b = new Phaser.Geom.Point(-10, 0);
+      var c = new Phaser.Geom.Point(10, 0);
+
+      triangleVisual.fillTriangle(a.x, a.y, b.x, b.y, c.x, c.y);
+      return triangleVisual;
+    };
+
+    this.leftTriangleVisual = triangle();
+    this.rightTriangleVisual = triangle();
+    const circle = new Phaser.Geom.Circle(0, 0, RADIUS);
+    //debugger;
+    this.circleVisual = config.scene.add.graphics({
+      fillStyle: { color: 0xff0000 },
+    });
+    this.circleVisual.fillCircleShape(circle);
+    triangle();
+  }
 
   updateVisuals() {
-    this.visualStraight.setPosition(this.x, this.y);
-    this.visualCross.setPosition(this.x, this.y);
-    this.visualCrossFlash.setPosition(this.x, this.y);
-    this.visualStraightFlash.setPosition(this.x, this.y);
+    this.circleVisual.setPosition(this.x, this.y);
 
-    this.visualCross.setRotation(this.rotation);
-    this.visualStraight.setRotation(this.rotation - 1.5708);
-    this.visualCrossFlash.setRotation(this.rotation);
-    this.visualStraightFlash.setRotation(this.rotation - 1.5708);
+    const leftTriangleCoords = () => {
+      const x = this.x + 10 * Math.cos(this.rotation);
+      const y = this.y + 10 * Math.sin(this.rotation);
+      const rotation = this.rotation + 4.71239;
+      return { x, y, rotation };
+    };
+
+    //LEFT TRIANGLE
+    const left = leftTriangleCoords();
+
+    this.leftTriangleVisual.setPosition(left.x, left.y, left.rotation);
+    this.leftTriangleVisual.setRotation(this.rotation + 4.71239);
+
+    //RIGHT TRIANGLE
+    const newX = this.x + 10 * Math.cos(this.rotation + Math.PI);
+    const newY = this.y + 10 * Math.sin(this.rotation + Math.PI);
+
+    this.rightTriangleVisual.setPosition(newX, newY);
+    this.rightTriangleVisual.setRotation(this.rotation - 4.71239);
   }
 
   getBody(config) {
-    var M = Phaser.Physics.Matter.Matter;
-
+    const M = Phaser.Physics.Matter.Matter;
+    const distance = 18;
     const one = Phaser.Physics.Matter.Matter.Bodies.circle(
       config.x,
       config.y,
       RADIUS
-      //   HEIGHT,
-      //   { angle: 1.5708 }
     );
 
-    // Phaser.Physics.Matter.Bodies.
-
-    const two = Phaser.Physics.Matter.Matter.Bodies.rectangle(
-      config.x,
+    const two = Phaser.Physics.Matter.Matter.Bodies.polygon(
+      config.x - distance,
       config.y,
-      WIDTH,
-      HEIGHT
+      3,
+      10
+    );
+
+    const three = Phaser.Physics.Matter.Matter.Bodies.polygon(
+      config.x + distance,
+      config.y,
+      3,
+      10,
+      { angle: Math.PI }
     );
 
     one.collisionFilter.category = this.scene.collisionCategories.spinner;
     two.collisionFilter.category = this.scene.collisionCategories.spinner;
-    // debugger;
+    three.collisionFilter.category = this.scene.collisionCategories.spinner;
+
     return M.Body.create({
-      parts: [one, two],
+      parts: [one, two, three],
     });
+  }
+
+  deathAnimation() {
+    const triangle = () => {
+      const triangleVisual = config.scene.add.graphics({
+        fillStyle: { color: 0xababab },
+      });
+      var a = new Phaser.Geom.Point(0, 20);
+      var b = new Phaser.Geom.Point(-10, 0);
+      var c = new Phaser.Geom.Point(10, 0);
+
+      triangleVisual.fillTriangle(a.x, a.y, b.x, b.y, c.x, c.y);
+      return triangleVisual;
+    };
+  }
+
+  getMovementCoords() {
+    const distanceFromPlayer = PLAYER_DISTANCE;
+
+    const newAngle =
+      Phaser.Math.Angle.BetweenPoints(this, this.player) +
+      Math.PI +
+      this.movementDirection;
+
+    const x = this.player.x + distanceFromPlayer * Math.cos(newAngle);
+    const y = this.player.y + distanceFromPlayer * Math.sin(newAngle);
+
+    return { x, y };
   }
 
   update(delta) {
@@ -132,9 +203,16 @@ class Plumb extends Phaser.Physics.Matter.Image {
       return;
     }
 
-    //this.updateVisuals();
-    setThrustTowardsPoint(this, this.player, delta * MOVEMENT_SPEED);
+    this.updateVisuals();
+
+    setThrustTowardsPoint(
+      this,
+      this.getMovementCoords(),
+      delta * MOVEMENT_SPEED
+    );
     this.setAngularVelocity(ROTATE_SPEED);
+
+    this.updateVisuals();
   }
 }
 

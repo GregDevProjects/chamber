@@ -27,28 +27,34 @@ class Level2 extends Level {
   }
 
   levelCreate() {
-    this.player = new Player({ scene: this, x: 250, y: 250 });
+    this.player = new Player({ scene: this, x: 500, y: 500 });
 
     this.updateArray = [];
 
-    const spinner = new Spinner({
-      scene: this,
-      player: this.player,
-      x: 500,
-      y: 500,
-    });
+    // const spinner = new Spinner({
+    //   scene: this,
+    //   player: this.player,
+    //   x: 500,
+    //   y: 500,
+    // });
 
     const plumb = new Plumb({
       scene: this,
       player: this.player,
-      x: 500,
-      y: 500,
+      x: 600,
+      y: 600,
     });
     //
-    plumb.tintFill = true;
-    plumb.setTint(0x6a0dad);
+
+    const plumb2 = new Plumb({
+      scene: this,
+      player: this.player,
+      x: 100,
+      y: 100,
+    });
+
     // debugger;
-    this.updateArray.push(plumb);
+    this.updateArray.push(plumb, plumb2);
   }
 
   update(time, delta) {
