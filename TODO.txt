@@ -12,13 +12,12 @@
     LEVEL 2
     -Plumb
         - add eyes, closed before the enemy is active, open when onscreen
-        - circle around player?
-            - tries to circle opposite of other plumbs
-            - rushes for player after set time
+        - triangles shoot out on death 
         - unmoving black blocks as obstacles 
+        - rotation changes?
     - running from spinner 
     - learn kick 
-
+        --kick shoots
     Level 3
     - teleport movement?
 

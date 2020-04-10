@@ -2,16 +2,11 @@ import {
   SPAWN_LOCATION,
   GAME_HEIGHT,
   GAME_WIDTH,
-  DEBUG_MODE
+  DEBUG_MODE,
 } from "../constants";
 import Block from "../actors/block";
 import Blinkers from "../blinkers";
-import { gamePosition, highestValue } from "../helpers";
-
-const randomProperty = function(obj) {
-  var keys = Object.keys(obj);
-  return obj[keys[(keys.length * Math.random()) << 0]];
-};
+import { gamePosition, highestValue, randomProperty } from "../helpers";
 
 class BlockSpawner {
   constructor(scene, blocks) {
@@ -68,7 +63,7 @@ class BlockSpawner {
         }
       },
       callbackScope: this,
-      repeat: -1
+      repeat: -1,
     });
   }
 
@@ -77,7 +72,7 @@ class BlockSpawner {
       x: 0,
       y: 0,
       width: 0,
-      height: 0
+      height: 0,
     };
 
     do {
@@ -91,7 +86,7 @@ class BlockSpawner {
         x: xOrigin,
         y: yOrigin,
         width: width,
-        height: height
+        height: height,
       };
 
       if (!xOrigin || !yOrigin) {
@@ -105,7 +100,7 @@ class BlockSpawner {
         y: gamePosition(yOrigin),
         scene: this.scene,
         type: this.type,
-        randomRotation: this.randomRotation
+        randomRotation: this.randomRotation,
       });
 
       this.blocks.add(block);
@@ -193,7 +188,7 @@ class BlockSpawner {
   }
 
   update(delta) {
-    this.blocks.children.iterate(block => {
+    this.blocks.children.iterate((block) => {
       if (!block) {
         return;
       }

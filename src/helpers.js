@@ -1,4 +1,4 @@
-const gamePosition = coordinate => {
+const gamePosition = (coordinate) => {
   return coordinate + 150;
 };
 
@@ -12,7 +12,7 @@ const setThrustTowardsPoint = (matterObj, point, velocity) => {
   // debugger;
   const vector = {
     x: velocity * Math.cos(angle),
-    y: velocity * Math.sin(angle)
+    y: velocity * Math.sin(angle),
   };
   Phaser.Physics.Matter.Matter.Body.applyForce(
     matterObj.body,
@@ -45,13 +45,18 @@ const flashTween = (scene, target) =>
     callbackScope: this,
     yoyo: true,
     alpha: 1,
-    repeat: -1
+    repeat: -1,
   });
 
 const highestValue = (value1, value2) => {
   if (value1 > value2) return value1;
 
   return value2;
+};
+
+const randomProperty = function (obj) {
+  var keys = Object.keys(obj);
+  return obj[keys[(keys.length * Math.random()) << 0]];
 };
 
 export {
@@ -61,5 +66,6 @@ export {
   bounceCollisionReversed,
   flashTween,
   setThrustTowardsPoint,
-  highestValue
+  highestValue,
+  randomProperty,
 };

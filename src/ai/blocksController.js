@@ -1,4 +1,5 @@
-import BlockSpawner from "./blockSpawner";
+import RandomBlockSpawner from "./randomBlockSpawner";
+import SinWaveBlockSpawner from "./sinWaveBlockSpawner";
 import createBlockBarrier from "../ai/blockBarrier";
 // createBlockBarrier(this)
 class BlocksController {
@@ -6,13 +7,18 @@ class BlocksController {
     this.scene = scene;
     this.blockGroup = this.scene.add.group();
     this.allowUpdate = false;
-
-    this.blockSpawner = new BlockSpawner(this.scene, this.blockGroup);
   }
 
   startRandomSpawning() {
+    this.blockSpawner = new RandomBlockSpawner(this.scene, this.blockGroup);
     this.allowUpdate = true;
+    this.blockSpawner.start();
+    createBlockBarrier(this.scene);
+  }
 
+  startSinWaveSpawning() {
+    this.blockSpawner = new SinWaveBlockSpawner(this.scene, this.blockGroup);
+    this.allowUpdate = true;
     this.blockSpawner.start();
     createBlockBarrier(this.scene);
   }
@@ -54,11 +60,11 @@ class BlocksController {
     this.blockSpawner.stop();
   }
 
-  update(delta) {
+  update(delta, gameTime) {
     if (!this.allowUpdate) {
       return;
     }
-    this.blockSpawner.update(delta);
+    this.blockSpawner.update(delta, gameTime);
   }
 }
 
