@@ -11,6 +11,10 @@ import { gamePosition, highestValue, randomProperty } from "../helpers";
 const BLOCK_WIDTH = 100;
 const BLOCK_HEIGHT = 100;
 
+const NEW_DIRECTION_CHECK = 6;
+
+const SIN_RADIAN_INCREMENT = 0.1309;
+
 class SinWaveBlockSpawner {
   constructor(scene, blocks) {
     this.blinkers = new Blinkers(scene);
@@ -20,40 +24,61 @@ class SinWaveBlockSpawner {
     // space between blocks
     this.spawnFrequency = 2500;
     this.nextSpawn = randomProperty(SPAWN_LOCATION);
-    this.spawnOrigin = SPAWN_LOCATION.right; // randomProperty(SPAWN_LOCATION);
+    this.spawnOrigin = SPAWN_LOCATION.top; // randomProperty(SPAWN_LOCATION);
     this.spawnCount = 1;
     this.type = null;
     this.randomRotation = false;
-    this.gameTime = 0;
+    this.sinRadian = 0;
   }
 
   spawnOnTimer() {
+    const nextSpawnWillChangeDirection = () => {
+      return (
+        (this.spawnCount + 1) % NEW_DIRECTION_CHECK === 0 &&
+        this.nextSpawn !== this.spawnOrigin
+      );
+    };
+
+    const thisSpawnWillChangeDirection = () => {
+      return this.spawnCount % NEW_DIRECTION_CHECK === 0;
+    };
+
     this.timer = this.scene.time.addEvent({
       delay: this.spawnFrequency,
       callback: () => {
-        this.spawnBlock();
         this.spawnCount++;
-        if (
-          (this.spawnCount + 1) % 4 === 0 &&
-          this.nextSpawn !== this.spawnOrigin
-        ) {
+        if (nextSpawnWillChangeDirection()) {
           this.blinkers.showArrow(this.nextSpawn);
+          this.newDirection = true;
         }
-        if (this.spawnCount % 4 === 0) {
+        if (thisSpawnWillChangeDirection()) {
+          if (this.newDirection) {
+            this.sinRadian = -SIN_RADIAN_INCREMENT;
+            this.newDirection = false;
+            this.skipWave = true;
+          }
+
           this.spawnOrigin = this.nextSpawn;
           this.nextSpawn = randomProperty(SPAWN_LOCATION);
           this.blinkers.hideAllArrows();
         }
+
+        if (!this.skipWave) {
+          this.sinRadian += SIN_RADIAN_INCREMENT;
+          this.spawnSinBlock();
+          this.spawnInverseSinBlock();
+        }
+        this.skipWave = false;
       },
       callbackScope: this,
       repeat: -1,
     });
   }
 
-  spawnBlock() {
-    const x = this.getXOrigin();
-    const y = this.getYOrigin();
-    console.log(x, y);
+  spawnSinBlock() {
+    const x = this.getXOrigin(false);
+    const y = this.getYOrigin(false);
+
     const block = new Block({
       w: BLOCK_WIDTH,
       h: BLOCK_HEIGHT,
@@ -64,10 +89,25 @@ class SinWaveBlockSpawner {
     });
 
     this.blocks.add(block);
-    this.gameTime += 0.2;
   }
 
-  getYOrigin() {
+  spawnInverseSinBlock() {
+    const x = this.getXOrigin(true);
+    const y = this.getYOrigin(true);
+
+    const block = new Block({
+      w: BLOCK_WIDTH,
+      h: BLOCK_HEIGHT,
+      x: gamePosition(x),
+      y: gamePosition(y),
+      scene: this.scene,
+      type: 1,
+    });
+
+    this.blocks.add(block);
+  }
+
+  getYOrigin(inverseSin) {
     if (this.spawnOrigin === SPAWN_LOCATION.top) {
       return -BLOCK_WIDTH / 2;
     }
@@ -78,26 +118,24 @@ class SinWaveBlockSpawner {
       this.spawnOrigin === SPAWN_LOCATION.left ||
       this.spawnOrigin === SPAWN_LOCATION.right
     ) {
-      return this.getSinModifier(GAME_HEIGHT, BLOCK_HEIGHT);
+      return this.getSinModifier(GAME_HEIGHT, inverseSin);
     }
   }
 
-  getSinModifier(range, blockSize) {
-    const modifier = range - blockSize / 2;
-    let result = Math.abs(Math.sin(this.gameTime) * modifier);
-
-    if (result < blockSize / 2) {
-      result = blockSize / 2;
+  getSinModifier(range, inverseSin) {
+    const sin = Math.abs(Math.sin(this.sinRadian));
+    if (inverseSin) {
+      return (-sin + 1) * range;
     }
-    return result;
+    return sin * range;
   }
 
-  getXOrigin() {
+  getXOrigin(inverseSin) {
     if (
       this.spawnOrigin === SPAWN_LOCATION.top ||
       this.spawnOrigin === SPAWN_LOCATION.bottom
     ) {
-      return this.getSinModifier(GAME_WIDTH, BLOCK_WIDTH);
+      return this.getSinModifier(GAME_WIDTH, inverseSin);
     }
 
     if (this.spawnOrigin === SPAWN_LOCATION.left) {
@@ -111,7 +149,8 @@ class SinWaveBlockSpawner {
 
   start() {
     this.spawnOnTimer();
-    this.spawnBlock();
+    this.spawnSinBlock();
+    this.spawnInverseSinBlock();
   }
 
   update(delta, gameTime) {

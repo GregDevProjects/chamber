@@ -1,10 +1,5 @@
 import { spark } from "../../effects/spark";
-import {
-  bounceCollisionReversed,
-  flashTween,
-  setThrustTowardsPoint,
-  setVelocityTowardsPoint
-} from "../../helpers";
+import { bounceCollisionReversed, flashTween } from "../../helpers";
 
 const WIDTH = 20;
 const HEIGHT = 30; // 30
@@ -95,7 +90,7 @@ class Torso {
   collisions(torso) {
     this.scene.matterCollision.addOnCollideStart({
       objectA: torso,
-      callback: function(eventData) {
+      callback: function (eventData) {
         const collidedWith = eventData.bodyB.collisionFilter.category;
 
         if (collidedWith === this.scene.collisionCategories.deathLine) {
@@ -114,7 +109,7 @@ class Torso {
           this.worldBoundryCollision(eventData);
         }
       },
-      context: this // Context to apply to the callback function
+      context: this, // Context to apply to the callback function
     });
   }
 

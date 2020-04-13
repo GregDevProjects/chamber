@@ -2,7 +2,7 @@ import Player from "../actors/player/index";
 import BlocksController from "../ai/blocksController";
 import Spinner from "../actors/spinner";
 import Plumb from "../actors/plumb";
-
+import { BLOCK_WAVE_TYPE } from "../constants";
 import {
   GAME_HEIGHT,
   GAME_WIDTH,
@@ -40,16 +40,25 @@ class Level2 extends Level {
   levelCreate() {
     this.player = new Player({ scene: this, x: 500, y: 500 });
 
-    this.blocksController = new BlocksController(this);
+    this.blocksController = new BlocksController(this, BLOCK_WAVE_TYPE.SIN);
 
     this.updateArray = [];
 
-    this.makePlumb(100, 100);
-    this.makePlumb(100, 600);
-    this.makePlumb(600, 100);
-    this.makePlumb(100, 600);
+    // this.timer = this.time.addEvent({
+    //   delay: 5000,
+    //   callback: () => {
+    //     this.makePlumb(100, 100);
+    //   },
+    //   callbackScope: this,
+    //   repeat: -1,
+    // });
 
-    this.blocksController.startSinWaveSpawning();
+    // this.makePlumb(100, 100);
+    // this.makePlumb(100, 600);
+    // this.makePlumb(600, 100);
+    // this.makePlumb(100, 600);
+
+    this.blocksController.startSpawning();
 
     // // debugger;
     // this.updateArray.push(plumb, plumb2, plumb3, plumb4);

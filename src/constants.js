@@ -8,10 +8,15 @@ const SPAWN_LOCATION = {
   top: 1,
   bottom: 2,
   right: 3,
-  left: 4
+  left: 4,
 };
 
 const DEBUG_MODE = false;
+
+const BLOCK_WAVE_TYPE = {
+  RANDOM: 1,
+  SIN: 2,
+};
 
 export {
   GAME_HEIGHT,
@@ -19,5 +24,6 @@ export {
   SPAWN_LOCATION,
   FRAME_WIDTH,
   FRAME_HEIGHT,
-  DEBUG_MODE
+  DEBUG_MODE,
+  BLOCK_WAVE_TYPE,
 };

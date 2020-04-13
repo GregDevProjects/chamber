@@ -38,6 +38,15 @@ const bounceCollisionReversed = (eventData, matterObj, force) => {
   matterObj.setVelocity(Math.cos(angle) * force, Math.sin(angle) * force);
 };
 
+const bounceCollisionReversedFromCenter = (eventData, matterObj, force) => {
+  const contactPointA = eventData.pair.collision.bodyA.position;
+  const contactPointB = eventData.pair.collision.bodyB.position;
+  const angle =
+    Phaser.Math.Angle.BetweenPoints(contactPointA, contactPointB) + Math.PI;
+
+  matterObj.setVelocity(Math.cos(angle) * force, Math.sin(angle) * force);
+};
+
 const flashTween = (scene, target) =>
   scene.tweens.add({
     targets: target,
@@ -68,4 +77,5 @@ export {
   setThrustTowardsPoint,
   highestValue,
   randomProperty,
+  bounceCollisionReversedFromCenter,
 };

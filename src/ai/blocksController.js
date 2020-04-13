@@ -1,26 +1,32 @@
 import RandomBlockSpawner from "./randomBlockSpawner";
 import SinWaveBlockSpawner from "./sinWaveBlockSpawner";
 import createBlockBarrier from "../ai/blockBarrier";
+import { BLOCK_WAVE_TYPE } from "../constants";
 // createBlockBarrier(this)
 class BlocksController {
-  constructor(scene) {
+  constructor(scene, blockWaveType) {
     this.scene = scene;
     this.blockGroup = this.scene.add.group();
     this.allowUpdate = false;
+
+    switch (blockWaveType) {
+      case BLOCK_WAVE_TYPE.RANDOM:
+        this.blockSpawner = new RandomBlockSpawner(this.scene, this.blockGroup);
+        createBlockBarrier(this.scene, true);
+        break;
+      case BLOCK_WAVE_TYPE.SIN:
+        this.blockSpawner = new SinWaveBlockSpawner(
+          this.scene,
+          this.blockGroup
+        );
+        createBlockBarrier(this.scene, false);
+        break;
+    }
   }
 
-  startRandomSpawning() {
-    this.blockSpawner = new RandomBlockSpawner(this.scene, this.blockGroup);
+  startSpawning() {
     this.allowUpdate = true;
     this.blockSpawner.start();
-    createBlockBarrier(this.scene);
-  }
-
-  startSinWaveSpawning() {
-    this.blockSpawner = new SinWaveBlockSpawner(this.scene, this.blockGroup);
-    this.allowUpdate = true;
-    this.blockSpawner.start();
-    createBlockBarrier(this.scene);
   }
 
   setPadding(min, max) {

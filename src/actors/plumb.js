@@ -1,15 +1,17 @@
 import {
-  setVelocityTowardsPoint,
-  bounceCollision,
-  flashTween,
+  bounceCollisionReversed,
+  bounceCollisionReversedFromCenter,
   setThrustTowardsPoint,
 } from "../helpers";
 
-const PLAYER_DISTANCE = 200;
+import { spark } from "../effects/spark";
+
+const PLAYER_DISTANCE = Phaser.Math.Between(150, 200);
 const RADIUS = 15;
 const ROTATE_SPEED = 0.02;
 const MOVEMENT_SPEED = 0.000005;
 const MASS = 0.5;
+const BOUNCE_VELOCITY = 2;
 
 const states = { NORMAL: 1, SPINNING: 2, CHARGING: 3, DEAD: 4 };
 
@@ -55,6 +57,14 @@ class Plumb extends Phaser.Physics.Matter.Image {
     this.state = states.DEAD;
   }
 
+  bounce(eventData) {
+    spark(eventData.pair.collision.supports[0], this.scene);
+    bounceCollisionReversedFromCenter(eventData, this, BOUNCE_VELOCITY);
+
+    const angularVelocity = this.player.angularVelocity > 0 ? 0.1 : -0.1;
+    this.setAngularVelocity(angularVelocity);
+  }
+
   //this is nuts, refactor it
   collisionEvent() {
     this.scene.matterCollision.addOnCollideStart({
@@ -73,6 +83,10 @@ class Plumb extends Phaser.Physics.Matter.Image {
           eventData.gameObjectB.body.collisionFilter
         ) {
           collidedWith = eventData.gameObjectB.body.collisionFilter.category;
+        }
+
+        if (collidedWith !== this.scene.collisionCategories.spinner) {
+          this.bounce(eventData);
         }
 
         //collides with a kicking player

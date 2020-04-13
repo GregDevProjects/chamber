@@ -1,10 +1,5 @@
 import Player from "../actors/player/index";
-import {
-  FRAME_WIDTH,
-  FRAME_HEIGHT,
-  GAME_HEIGHT,
-  GAME_WIDTH,
-} from "../constants";
+import { FRAME_WIDTH, FRAME_HEIGHT } from "../constants";
 
 import BlocksController from "../ai/blocksController";
 import RobotDialogue from "../dialogue/RobotDialogue";
@@ -13,7 +8,8 @@ import Level from "./level";
 import GunFloating from "../actors/gun_floating";
 
 import SpaceCounter from "../tools/KeyCounter";
-import ProgressBar from "../effects/ProgressBar";
+import ProgressBarTimed from "../effects/progress_bar/ProgressBarTimed";
+import { BLOCK_WAVE_TYPE } from "../constants";
 
 const BLOCK_TIME = 90;
 //robo ttext appears in random corners
@@ -67,7 +63,7 @@ class Level1 extends Level {
   startBlockDodging() {
     this.blocksController.changeBlockType(2);
     this.blocksController.setRandomRotation(true);
-    this.blocksController.startRandomSpawning();
+    this.blocksController.startSpawning();
 
     this.time.addEvent({
       delay: 3000,
@@ -77,7 +73,7 @@ class Level1 extends Level {
       callbackScope: this,
     });
 
-    this.progressBar = new ProgressBar(
+    this.progressBar = new ProgressBarTimed(
       this,
       BLOCK_TIME,
       "MOVEMENT SYNCHRONIZATION",
@@ -180,7 +176,7 @@ class Level1 extends Level {
 
     this.setupPlayer();
 
-    this.blocksController = new BlocksController(this);
+    this.blocksController = new BlocksController(this, BLOCK_WAVE_TYPE.RANDOM);
 
     this.musicScene = this.scene.get("music");
     this.musicScene.play();
